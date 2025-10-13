@@ -37,7 +37,7 @@
             U_nameUser VARCHAR(20) UNIQUE,
             U_name VARCHAR(100), 
             U_lastName VARCHAR(100),
-            U_email VARCHAR(100),
+            U_email VARCHAR(100) INIQUE,
             U_pass VARCHAR(100),
             U_dateBirth DATE,
             U_registrationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
