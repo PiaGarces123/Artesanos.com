@@ -54,6 +54,8 @@
                 A_title VARCHAR(30),
                 A_creationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
                 A_idUser INT,
+                A_idPortada INT DEFAULT NULL,
+                FOREIGN KEY (A_idPortada) REFERENCES images(I_id),
                 FOREIGN KEY (A_idUser) REFERENCES users(U_id)
             )";
             //Si salió bien
