@@ -1,0 +1,1105 @@
+/*VARIABLES DE COLOR*/
+    :root { 
+        --background-color: #fff7f1; 
+        --primary-color: #c2976a8f;
+        --secondary-color: #c2976a;
+        --principal-text: #333;
+        --secondary-text: #666;
+
+
+    }
+/*  SETEO GLOBAL: Elimina márgenes y paddings por defecto y usa box-sizing moderno */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+/*  ESTILOS GENERALES DEL BODY */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--background-color);
+        line-height: 1.4; /* Espaciado entre líneas */
+        margin-left: 250px; /* Deja espacio para la barra lateral fija */
+    }
+
+
+/* -------------------------------  SIDEBAR (BARRA LATERAL) ------------------------------- */
+    .sidebar {
+        position: fixed; /* Se mantiene fija al hacer scroll */
+        left: 0; /* Pegada al borde izquierdo */
+        top: 0; /* Desde el tope de la pantalla */
+        width: 10%; /* Ocupa el 10% del ancho de la pantalla */
+        height: 100vh; /* Ocupa todo el alto visible */
+        background: var(--background-color);
+        border-right: 1px solid var(--primary-color); /* Línea divisoria */
+        z-index: 1001; /* Aparece por encima de otros elementos */
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto; /* Permite desplazamiento si hay mucho contenido */
+    }
+
+    /* Encabezado de la barra lateral */
+    .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--primary-color);
+    }
+
+    /* Logo dentro del sidebar */
+    .sidebar-logo {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%; /* Forma circular */
+        height: 80px; /* altura del contenedor */
+        width: 80px;  /* ancho igual a la altura*/
+        margin: 0 auto 16px auto; /* centrar horizontalmente */
+        background-color: var(--background-color);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1); /*  sombra suave */
+    }
+    /* Imagen del logo */
+    .sidebar-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* cubre todo el contenedor sin deformarse */
+        display: block;
+    }
+
+    /*  BOTONES PRINCIPALES */
+    .btn-primary {
+        background: var(--secondary-color);
+        color: var(--background-color);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-color);
+        transform: translateY(-1px); /* Pequeña animación al pasar el mouse */
+    }
+
+    .btn-secondary {
+        background: var(--secondary-color);
+        color: var(--principal-text);
+    }
+
+    .btn-secondary:hover {
+        background: var(--primary-color);
+    }
+
+    /* Navegación dentro del sidebar */
+    .sidebar-nav {
+        padding: 0 20px;
+        border-top: 1px solid var(--background-color);
+    }
+
+    /* Contenedor de botones */
+    .sidebar-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Estilo base para los botones de opciones del sidebar*/
+    #myAlbumsBtn,
+    #createAlbumBtn {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        width: 70px;
+        background-color: var(--background-color, #fff);
+        border: none;
+        border-radius: 12px; 
+        box-shadow: 0 0 12px rgba(126, 93, 24, 0.1);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* efecto hover */
+    #myAlbumsBtn:hover,
+    #createAlbumBtn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 16px rgba(126, 93, 24, 0.3);
+    }
+
+    /* Imagen dentro de los botones */
+    #myAlbumsBtn img,
+    #createAlbumBtn img {
+        width: 100%;          /* ocupa el 100% del botón */
+        height: auto;        /* mantiene proporción */
+        object-fit: cover; 
+        display: block;
+    }
+
+    /* Elementos de navegación en el sidebar */
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        color: var(--secondary-text);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+        cursor: pointer;
+    }
+
+    .nav-item:hover {
+        color: var(--primary-color);
+    }
+    
+    .nav-item.active {
+        color: var(--secondary-color);
+        font-weight: 600;
+    }
+    /* Íconos en los ítems del menú */
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* --- Lista de álbumes --- */
+    .albums-list {
+        padding: 0 20px;
+        margin-top: 20px;
+    }
+    /* Título de sección álbumes */
+    .albums-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--principal-text);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    /* Cada álbum individual */
+    .album-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .album-item:hover {
+        background: var(--background-color);
+        margin: 0 -12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+    }
+    /* Miniatura del álbum */
+    .album-thumb {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: linear-gradient(45deg, #c2976a, #c2976a8f);
+        overflow: hidden;
+    }
+
+    .album-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    /* Información del álbum */
+    .album-info {
+        flex: 1;
+    }
+
+    .album-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--principal-text);
+        margin-bottom: 2px;
+    }
+
+    .album-count {
+        font-size: 11px;
+        color: var(--secondary-text);
+    }
+
+/* -------------------------------  HEADER ------------------------------- */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 10%;  /* Deja espacio para el sidebar */
+        right: 0;
+        justify-content: space-between; /* separa izquierda y derecha */
+        background: var(--background-color);
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--primary-color);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    
+/* RESPONSIVEEEEEE Botón de menú móvil (solo visible en pantallas pequeñas) */
+    .mobile-menu-btn {
+        font-size: 22px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* Contenedor de búsqueda */
+    /* Barra de búsqueda */
+    .search-container {
+        flex: 1; /* ocupa el espacio central */
+        margin: 0 16px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--secondary-text);
+        border-radius: 20px;
+    }
+
+    /* Contenedor de buscar por */
+    .buscarPor {
+        display: visible;
+    }
+
+    /* Contenedor de usuario a la derecha */
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fcfcfc; 
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-left: auto; /* empuja a la derecha */
+    }
+
+    /* Avatar del usuario */
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--secondary-color, #555);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--background-color, #fff);
+        font-weight: bold;
+        font-size: 16px;
+        overflow: hidden;
+    }
+
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Detalles de usuario */
+    .user-details h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--principal-text, #333);
+        margin-bottom: 2px;
+    }
+
+    .user-details p {
+        font-size: 12px;
+        color: var(--secondary-text, #777);
+    }
+
+    /*Contenedor de Botones*/
+    .sidebar-actions {
+        padding: 20px;
+        flex: 1;
+    }
+    /*Botones de publoicar contenido y de albumes*/
+    .action-button {
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 12px;
+        border: none;
+        border-radius: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s;
+        text-align: left;
+    }
+
+    /*No mostrar el botoon de menu de celular*/
+    .mobile-menu-btn {
+        display: none;
+    }
+    /* --- Buscador --- */
+    .search-container {
+        flex: 1;
+        max-width: 40%;
+    }
+    /*Texto a buscar*/
+    .search-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--primary-color);
+        border-radius: 24px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    /*Cuando se clickea y se empieza  a escribir*/
+    .search-input:focus {
+        border-color: var(--secondary-color);
+    }
+    /*Opciones*/
+    .buscarPor {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .buscarPor-btn {
+        padding: 8px 16px;
+        border: none;
+        background: var(--background-color);
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .buscarPor-btn:hover,
+    .buscarPor-btn.active {
+        background: var(--secondary-color);
+        color: var(--background-color);
+    }
+
+
+
+/* ------------------------------- MAIN CONTENT ------------------------------- */
+/* Contenedor principal que contiene toda la grilla */
+    .main-content {
+        margin-top: 80px;/* Espaciado interno */
+        padding: 20px;
+    }
+
+/* -------------------------------------------------------------------------- */
+/*                              GRID DE PUBLICACIONES                        */
+/* -------------------------------------------------------------------------- */
+    /* Este contenedor principal se usa en el feed (div con id="postsGrid")
+        y guarda las tarjetas (.pin-card) de cada publicación cargada desde el JS. */
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* las columnas se adaptan automáticamente al ancho disponible */
+        gap: 1.5rem; /* separación entre cards */
+    }
+
+/* -------------------------------------------------------------------------- */
+/*                            CARD DE PUBLICACIÓN                       */
+/* -------------------------------------------------------------------------- */
+/* Cada publicación (post) se representa como una card dinámica generada
+   por JS en createPostElement(). */
+    .pin-card {
+        background: var(--background-color);
+        border-radius: 16px; /* esquinas redondeadas */
+        margin-bottom: 16px;
+        break-inside: avoid; /* evita que se rompa en layout de imagenes adaptativas(masorny se llama) */
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;  /* efecto suave al hover */
+        cursor: pointer;
+        position: relative; /* necesario para posicionar la capa overlay */
+    }
+    /* Efecto al pasar el mouse: eleva la card visualmente */
+    .pin-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    /* Imagen principal del post */
+    .pin-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 16px 16px 0 0;  /* redondeo superior */
+    }
+    /* Capa oscura que aparece al hacer hover para mostrar el botón "Guardar" */
+    .pin-overlay {
+        position: absolute; /* cubre toda la card */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3); /* semitransparente */
+        opacity: 0;  /* inicialmente oculta */
+        transition: opacity 0.2s; 
+        display: flex; /* centra el botón */
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px 16px 0 0;
+    }
+    /* Mostrar overlay al pasar el mouse */
+    .pin-card:hover .pin-overlay {
+        opacity: 1;
+    }
+    /* Botón para dar like */
+    .save-btn {
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .save-btn:hover {
+        background: var(--secondary-color);
+        transform: scale(1.05);
+    }
+
+/* -------------------------------------------------------------------------- */
+/*                               INFO DE LA PUBLICACIÓN                      */
+/* -------------------------------------------------------------------------- */
+    .pin-info {
+        padding: 16px;
+    }
+    /* Título del post */
+    .pin-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: var(--principal-text);
+    }
+    /* Etiqueta con nombre del álbum */
+    .buscarPor-tag {
+        background: var(--background-color);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        color: var(--secondary-text);
+        margin-bottom: 8px;
+        display: inline-block;
+    }
+    /* Pie de la card: info del artesano + stats */
+    .pin-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--secondary-text);
+        margin-top: 8px;
+    }   
+    /* Bloque de info del artesano */
+    .artisan-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    /* Avatar circular con iniciales del artesano */
+    .artisan-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--secondary-color);
+        overflow: hidden;
+    }
+
+    .artisan-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .artisan-name {
+        font-weight: 500;
+        color: var(--principal-text);
+    }
+    /* Sección de likes y comentarios */
+    .pin-stats {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+/* -------------------------------------------------------------------------- */
+/*                         ESTADOS DE CARGA Y RESULTADOS                     */
+/* -------------------------------------------------------------------------- */
+    /* Indicador mientras se cargan más posts (scroll infinito) */
+    .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 16px;
+        color: var(--secondary-text);
+    }
+    /* Spinner animado */
+    .loading-spinner {
+        border: 3px solid var(--background-color);
+        border-top: 3px solid var(--secondary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    /* Cuando no se encuentran publicaciones */
+    .no-results {
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--secondary-text);
+    }
+
+    .no-results h3 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+    /* Mensaje de error */
+    .error {
+        text-align: center;
+        padding: 40px;
+        color: var(--secondary-color);
+    }
+
+
+/* ------------------------------- ESTILOS DE MODAL ------------------------------- */
+/* Los modales se activan desde JS al añadir la clase .active */
+    .modal {
+        display: none; /* oculto por defecto */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(49, 27, 12, 0.5); /* capa oscura */
+        z-index: 2000;
+        align-items: center; /* centra contenido */
+        justify-content: center;
+    }
+    /* Cuando el modal tiene .active, se muestra en pantalla */
+    .modal.active {
+        display: flex;
+    }
+    /* Caja interna del modal */
+    .modal-content {
+        background: var(--background-color);
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;  /* scroll si es largo */
+    }
+    /* Cabecera del modal con título y botón cerrar */
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+
+    .modal-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--principal-text);
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--secondary-text);
+        padding: 4px;
+        line-height: 1;
+    }
+/* -------------------------------------------------------------------------- */
+/*                             CAMPOS DE FORMULARIOS                         */
+/* -------------------------------------------------------------------------- */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--principal-text);
+        margin-bottom: 8px;
+    }
+    /* Inputs, textareas y selects */
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--background-color);
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+        font-family: inherit;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    /* Zona de carga de archivos (drag & drop) */
+    .file-upload {
+        border: 2px dashed var(--background-color);
+        border-radius: 8px;
+        padding: 32px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .file-upload:hover {
+        border-color: var(--secondary-color);
+        background: var(--background-color);
+    }
+
+    .file-upload.dragover {
+        border-color: var(--secondary-color);
+        background: var(--background-color);
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        color: var(--background-color);
+        margin-bottom: 16px;
+    }
+
+    .upload-text {
+        color: var(--secondary-text);
+        margin-bottom: 8px;
+    }
+
+    .upload-hint {
+        font-size: 12px;
+        color: var(--secondary-text);
+    }
+
+    #imageInput {
+        display: none;  /* oculto, se activa con JS */
+    }
+    /*previsualizacion de las imagenes*/
+    .image-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .preview-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--background-color);
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--background-color);
+        border: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .album-card {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .album-card:hover {
+        transform: translateY(-4px);
+    }
+
+
+/* -------------------------------------------------------------------------- */
+/*                             LOGIN Y REGISTRARSE                            */
+/* -------------------------------------------------------------------------- */
+
+/* ===== Botón de cerrar modal ===== */
+.closeLogin-modal {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff7f1ce;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    transform: rotateY(180deg); 
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    
+}
+
+
+.closeLogin-modal:hover {
+    transform: rotateY(180deg) scale(1.2) rotate(90deg);
+}
+
+
+/* ===== Switch login / signup ===== */
+.checkbox {
+    display: none; /* oculta el input */
+}
+.sectionLogin h6 span{ 
+    font-size: 1.2rem;
+    padding: 0 2rem; 
+    font-weight:bold; 
+    cursor: context-menu; 
+    transition: color 0.3s; 
+    color: var(--background-color);
+    text-shadow: 10px 10px 6px rgba(0,0,0,1);
+}
+
+/* El label que lo reemplaza */
+label[for="reg-log"] {
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    background: var(--secondary-color);
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+    box-shadow:
+        10px 8px 6px rgba(0,0,0,0.5),    /* sombra inferior */
+        inset 0 -2px 4px rgba(0,0,0,0.1), /* leve sombra interna abajo */
+        inset 0 2px 4px rgba(255,255,255,0.8); /* luz superior */
+}
+
+/* Círculo del switch */
+label[for="reg-log"]::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow:
+        2px 5px 6px rgba(0,0,0,0.3),    /* sombra inferior */
+        inset 0 -2px 4px rgba(0,0,0,0.1), /* leve sombra interna abajo */
+        inset 0 2px 4px rgba(255,255,255,0.8); /* luz superior */
+}
+
+/* Efecto cuando está activado */
+.checkbox:checked + label[for="reg-log"] {
+    background: var(--primary-color);
+}
+
+.checkbox:checked + label[for="reg-log"]::after {
+    transform: translateX(24px);
+}
+
+
+
+/* ========== ANIMACIÓN 3D LOGIN / SIGNUP ========== */
+
+.sectionLogin {
+    position: relative;
+    min-width: 30vw;
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.sectionLogin h4 {
+    font-family: 'Poppins', sans-serif; /* elegante y moderno */
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    position: relative;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+
+    /* efecto degradado de texto opcional */
+    background: linear-gradient(135deg, var(--background-color), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.containerLogin {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    perspective: 1000px; /* Profundidad para el efecto 3D */
+    
+}
+
+/* Contenedor principal de la tarjeta */
+.card-3d-wrap {
+    position: relative;
+    width: 25vw;
+    height: 60vh;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-in-out;
+    
+}
+
+/* Cuando se marca el checkbox, rota */
+.checkbox:checked ~ .card-3d-wrap {
+    transform: rotateY(180deg);
+}
+
+/* Wrapper interno que contendrá ambas caras */
+.card-3d-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* Estilos generales de cada cara */
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: var(--primary-color);
+    
+    box-shadow:
+        50px 50px 25px rgba(0,0,0,0.5),    /* sombra inferior */
+        inset 0 -2px 4px rgba(0,0,0,0.4), /* leve sombra interna abajo */
+        inset 0 12px 24px rgb(214, 206, 188); /* luz superior */
+    backface-visibility: hidden; /* Evita que se ponga en espejo */
+    top: 0;
+    left: 0;
+}
+
+/* Cara delantera (login) */
+.card-front {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+/* Cara trasera (signup) */
+.card-back {
+    transform: rotateY(180deg);
+}
+
+/* Contenido centrado */
+.center-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+/* Inputs y botones */
+.form-style {
+    width: 100%;
+    padding: 0.8rem 6rem 0.9rem 3rem;
+    background: var(--background-color);
+    border: none;
+    border-radius: 6px;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    box-shadow:
+        2px 5px 6px rgba(0,0,0,0.5),    /* sombra inferior */
+        inset 0 -2px 4px rgba(0,0,0,0.4), /* leve sombra interna abajo */
+        inset 0 2px 4px rgba(255,255,255,1); /* luz superior */
+}
+
+.form-style:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--secondary-color);
+}
+
+.btnLogin {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow:
+        2px 5px 6px rgba(0,0,0,0.5),    /* sombra inferior */
+        inset 0 -2px 14px rgba(0,0,0,0.4), /* leve sombra interna abajo */
+        inset 0 2px 10px rgba(197, 150, 97, 0.842); /* luz superior */
+    position: relative;
+    overflow: hidden;
+
+}
+
+.btnLogin:hover {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 6px 10px 16px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.btnLogin:active {
+    transform: scale(0.98);
+    box-shadow: inset 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+.btnLogin::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: skewX(-25deg);
+    transition: left 0.6s ease;
+}
+
+.btnLogin:hover::before {
+    left: 125%;
+}
+
+.linkLogin {
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    color: var(--principal-text);
+    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.linkLogin:hover {
+    color: var(--principal-text);
+    text-decoration: none;
+    transform: scale(1.1);
+}
+
+
+/* Agrupar input + icono correctamente */
+.form-groupLogin {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Íconos dentro del input */
+.input-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 61%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    font-size: 1rem;
+}
+
+
+
+
+
+/* ---------------------- RESPONSIVE ---------------------- */
+
+
+    
+    @media (max-width: 1200px) {
+        .posts-grid {
+            column-count: 4;
+        }
+    }
+
+    @media (max-width: 900px) {
+        body {
+            margin-left: 0;
+        }
+        
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .header {
+            left: 0;
+        }
+        
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .posts-grid {
+            column-count: 3;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .posts-grid {
+            column-count: 2;
+        }
+        
+        .main-content {
+            padding: 20px 12px;
+        }
+
+        .categories {
+            display: none;
+        }
+    }
