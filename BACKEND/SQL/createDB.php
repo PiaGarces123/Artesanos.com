@@ -56,7 +56,7 @@
                 I_currentProfile TINYINT(1) DEFAULT 0, 
                 I_revisionStatus TINYINT(1) DEFAULT 0, 
                 I_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
-                I_ruta VARCHAR(255) NOT NULL UNIQUE,
+                I_ruta VARCHAR(100) NOT NULL UNIQUE,
                 I_idAlbum INT DEFAULT NULL,
                 I_idUser INT NOT NULL,
                 FOREIGN KEY (I_idUser) REFERENCES users(U_id)
