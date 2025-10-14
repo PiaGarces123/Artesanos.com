@@ -19,8 +19,8 @@ class Imagen {
         $currentProfile = $esPerfil ? 1 : 0;
         $isProfile = $esPerfil ? 1 : 0;
 
-        $sql = "INSERT INTO images (I_title, I_visibility, I_idAlbum, I_idUser, I_isProfile, I_currentProfile)
-                VALUES ('$titulo', $visibility, $idAlbum, $idUsuario, $isProfile, $currentProfile)";
+        $sql = "INSERT INTO images (I_title, I_visibility, I_idAlbum, I_idUser, I_ruta, I_isProfile, I_currentProfile)
+                VALUES ('$titulo', $visibility, $idAlbum, $idUsuario, '$ruta', $isProfile, $currentProfile)";
 
         return mysqli_query($conn, $sql);
     }
