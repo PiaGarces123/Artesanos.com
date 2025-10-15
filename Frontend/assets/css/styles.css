@@ -838,6 +838,23 @@ label[for="reg-log"]::after {
 
 /* ========== ANIMACIÓN 3D LOGIN / SIGNUP ========== */
 
+/* Logo dentro del Login */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem; /* espacio debajo del logo */
+}
+
+.logo img {
+    width: 10rem;       /* tamaño del logo */
+    height: 10rem;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: var(--background-color);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
 .sectionLogin {
     position: relative;
     min-width: 40vw;
@@ -855,13 +872,14 @@ label[for="reg-log"]::after {
     color: var(--secondary-color);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 1rem;
+    margin: 0;
     position: relative;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
 
     /* efecto degradado de texto opcional */
     background: linear-gradient(135deg, var(--background-color), #fff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -878,8 +896,8 @@ label[for="reg-log"]::after {
 .card-3d-wrap {
     margin-top: 1.5rem;
     position: relative;
-    width: 30vw;
-    height: 75vh;
+    width: 25vw;
+    height: 80vh;
     transform-style: preserve-3d;
     transition: transform 0.5s ease-in-out;
     
@@ -939,15 +957,20 @@ label[for="reg-log"]::after {
 }
 
 /* Inputs y botones */
+.fNacSignUp{    
+    margin-top: 0;
+    margin-bottom: 0.2rem;
+}
+
 .form-style {
     width: 100%;
-    padding: 0.8rem 6rem 0.9rem 3rem;
+    padding: 0.7rem 8rem 0.7rem 2.5rem;
     background: var(--background-color);
     border: none;
     border-radius: 6px;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     transition: all 0.3s ease;
-    font-size: 1rem;
+    font-size: 0.8rem;
     box-shadow:
         2px 5px 6px rgba(0,0,0,0.5),    /* sombra inferior */
         inset 0 -2px 4px rgba(0,0,0,0.4), /* leve sombra interna abajo */
@@ -958,6 +981,51 @@ label[for="reg-log"]::after {
     outline: none;
     box-shadow: 0 0 0 2px var(--secondary-color);
 }
+
+/* Ícono de ojo para ver/ocultar contraseña */
+.toggle-pass {
+    position: absolute;
+    right: 0.5rem;  
+    top: 55%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    color: var(--secondary-color);
+    cursor: pointer;
+    z-index: 10;
+    
+}
+
+/*PARA LA FECHA DE NACIMIENTO*/
+/* Para el input que Flatpickr genera */
+/* Igualar el estilo del input visible de Flatpickr con los demás */
+.flatpickr-input,
+.flatpickr-alt-input {
+    width: 100% !important;
+    height: 45px !important;
+    padding: 0.7rem 8rem 0.7rem 2.5rem !important;
+    background: var(--background-color) !important;
+    border: none !important;
+    border-radius: 6px !important;
+    margin-top: 0.5rem !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 0.8rem !important;
+    color: var(--principal-text) !important;
+    transition: all 0.3s ease !important;
+    box-shadow:
+        2px 5px 6px rgba(0,0,0,0.5),
+        inset 0 -2px 4px rgba(0,0,0,0.4),
+        inset 0 2px 4px rgba(255,255,255,1) !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+/* Efecto focus */
+.flatpickr-input:focus,
+.flatpickr-alt-input:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--secondary-color) !important;
+}
+
 
 .btnLogin {
     display: inline-block;
@@ -1032,19 +1100,50 @@ label[for="reg-log"]::after {
     position: relative;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 /* Íconos dentro del input */
 .input-icon {
     position: absolute;
     left: 0.8rem;
-    top: 61%;
+    top: 60%;
     transform: translateY(-50%);
     color: var(--secondary-color);
     font-size: 1rem;
 }
 
+/* ===============================
+    MENSAJES DE ERROR- VALIDACIÓN
+   =============================== */
+
+.error {
+    color: #852424;
+    font-size: 0.7rem;
+    text-align: left;
+    margin-top: 0.5rem;
+    margin-bottom: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-left: 0.2rem solid #ff4d4d;
+    border-right: 0.2rem solid #ff4d4d;
+    background-color: rgba(231, 54, 54, 0.219);
+    border-radius: 6px;
+    display: none;              /*  oculto por defecto */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/*  Solo se muestra cuando se agrega la clase "visible-error" */
+.error.visible-error {
+    display: block;
+    opacity: 1;
+}
+
+/*  Input con error */
+input.form-style.errorInput {
+    border-color: #ff4d4d;
+    box-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
+}
 
 
 

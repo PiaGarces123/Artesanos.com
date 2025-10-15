@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../assets/css/styles.css">
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     </head>
 
     <body>
@@ -34,21 +35,37 @@
                                     <div class="card-3d-wrap mx-auto">
                                         <div class="card-3d-wrapper">
                                             <button class="closeLogin-modal" id="closeCreateModal">&times;</button>
+
+
                                             <!-- LOGIN -->
                                             <div class="card-front">
-                                                <div class="center-wrap">
+                                                <div class="center-wrap">                                                            
+                                                    <div class="logo">
+                                                        <img src="../assets/images/appImages/logo.png" alt="logo">
+                                                    </div>
                                                     <div class="section text-center">
                                                         <h4 class="mb-4 pb-3">LOG IN</h4>
 
+                                                        <!-- Email -->
                                                         <div class="form-groupLogin">
                                                             <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
                                                             <i class="input-icon uil uil-at"></i>
+                                                        </div>                                                        
+                                                        <div class="error" id="errorEmailLogin">
+                                                            <!-- Se genera con js -->
                                                         </div>
+
+                                                        <!-- Contraseña -->
                                                         <div class="form-groupLogin mt-2">
                                                             <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
+                                                            <i class="toggle-pass uil uil-eye"></i> <!-- ojo  -->
                                                             <i class="input-icon uil uil-lock-alt"></i>
                                                         </div>
-                                                        <a href="#" class="btnLogin mt-4">Login</a>
+                                                        <div class="error" id="errorPassLogin">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
+                                                        <a href="../../BACKEND/Validation/login.php" class="btnLogin mt-4" method="post" role="button" >Login</a>
                                                         <p class="mb-0 mt-4 text-center">
                                                             <a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a>
                                                         </p>
@@ -61,32 +78,63 @@
                                                 <div class="center-wrap">
                                                     <div class="section text-center">
                                                         <h4 class="mb-3 pb-3">SIGN UP</h4>
+
+                                                        <!-- Fecha de Nacimiento -->
+                                                        <div class="form-groupLogin fNacSignUp">
+                                                            <input type="date" class="form-style flatpickr-input" placeholder="Fecha de Nacimiento" name="fNac" id="fNac" required>
+                                                            <i class="input-icon uil uil-calendar-alt"></i>
+                                                        </div>
+                                                        <div class="error" id="errorFnac">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
                                                         <!-- Nombre -->
                                                         <div class="form-groupLogin">
                                                             <input type="text" class="form-style" placeholder="Nombre" name="nbre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
                                                             <i class="input-icon uil uil-user"></i>
                                                         </div>
+                                                        <div class="error" id="errorNbre">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+                                                        
                                                         <!-- Apellido -->   
                                                         <div class="form-groupLogin">
                                                             <input type="text" class="form-style" placeholder="Apellido" name="ape"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
                                                             <i class="input-icon uil uil-user"></i>
                                                         </div>
+                                                        <div class="error" id="errorApe">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
                                                         <!-- Usuario -->
                                                         <div class="form-groupLogin mt-2">
                                                             <input type="text" class="form-style" placeholder="Nombre de Usuario" name="userName" minlength="4" maxlength="20" required >
                                                             <i class="input-icon uil uil-user-circle"></i>
                                                         </div>
+                                                        <div class="error" id="errorUser">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
                                                         <!-- Email -->
                                                         <div class="form-groupLogin mt-2">
                                                             <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
                                                             <i class="input-icon uil uil-at"></i>
                                                         </div>
+                                                        <div class="error" id="errorEmailSignUp">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
                                                         <!-- Contraseña -->
                                                         <div class="form-groupLogin mt-2">
                                                             <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
+                                                            <i class="toggle-pass uil uil-eye"></i> <!-- ojo  -->
                                                             <i class="input-icon uil uil-lock-alt"></i>
                                                         </div>
-                                                        <a href="#" class="btnLogin mt-4">Registrarse</a>
+                                                        <div class="error" id="errorPassSignUp">
+                                                            <!-- Se genera con js -->
+                                                        </div>
+
+                                                        <a href="#" class="btnLogin mt-4" method="post"  role="button">Registrarse</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,6 +149,8 @@
         </div>
 
         <!-- JS -->
-        <script src="../assets/js/modals.js"></script>
+        <script src="../assets/js/modal_login.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="../assets/js/flatpickr.js"></script>
     </body>
     </html>

@@ -26,6 +26,21 @@ class User {
         $this->biography = $biography;
     }
 
+    // 🔹 Setter y Getter
+    public function __set($var, $value){
+        if(property_exists($this, $var)){
+            $this->$var= $value;
+        }
+    }
+
+    public function __get($var){
+        if(property_exists($this, $var)){
+            return $this->$var;
+        }else{
+            return null;
+        }
+    }
+
     // ====================================================
     // 🔹 Registrar un nuevo usuario
     // ====================================================
