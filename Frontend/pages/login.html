@@ -1,20 +1,4 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Artesanos - Login</title>
 
-        <!-- Estilos -->
-        <link rel="stylesheet" href="../assets/css/styles.css">
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    </head>
-
-    <body>
-        <p id="logo">login</p>
-        
         <!-- MODAL LOGIN -->
         <div class="modal" id="loginModal">
             <div class="modalLogin-content">
@@ -34,14 +18,14 @@
 
                                     <div class="card-3d-wrap mx-auto">
                                         <div class="card-3d-wrapper">
-                                            <button class="closeLogin-modal" id="closeCreateModal">&times;</button>
+                                            <button class="closeLoginModal" id="closeLoginModal">&times;</button>
 
 
                                             <!-- LOGIN -->
                                             <div class="card-front">
                                                 <div class="center-wrap">                                                            
                                                     <div class="logo">
-                                                        <img src="../assets/images/appImages/logo.png" alt="logo">
+                                                        <img src="./Frontend/assets/images/appImages/logo.png" alt="logo">
                                                     </div>
                                                     <div class="section text-center">
                                                         <h4 class="mb-4 pb-3">LOG IN</h4>
@@ -65,7 +49,7 @@
                                                             <!-- Se genera con js -->
                                                         </div>
 
-                                                        <a href="../../BACKEND/Validation/login.php" class="btnLogin mt-4" method="post" role="button" >Login</a>
+                                                        <a href="./BACKEND/Validation/login.php" class="btnLogin mt-4" role="button" >Login</a>
                                                         <p class="mb-0 mt-4 text-center">
                                                             <a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a>
                                                         </p>
@@ -134,7 +118,7 @@
                                                             <!-- Se genera con js -->
                                                         </div>
 
-                                                        <a href="#" class="btnLogin mt-4" method="post"  role="button">Registrarse</a>
+                                                        <a href="#" class="btnLogin mt-4" role="button">Registrarse</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,9 +132,4 @@
             </div>
         </div>
 
-        <!-- JS -->
-        <script src="../assets/js/modal_login.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="../assets/js/flatpickr.js"></script>
-    </body>
-    </html>
+

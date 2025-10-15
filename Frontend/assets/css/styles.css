@@ -238,6 +238,22 @@
         gap: 20px;
     }
 
+
+    .btn-login-header {
+        background: none;
+        border: 1px solid var(--secondary-color);
+        color: var(--secondary-color);
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login-header:hover {
+        background: var(--secondary-color);
+        color: white;
+    }
     
 /* RESPONSIVEEEEEE Botón de menú móvil (solo visible en pantallas pequeñas) */
     .mobile-menu-btn {
@@ -753,8 +769,13 @@
 /*                             LOGIN Y REGISTRARSE                            */
 /* -------------------------------------------------------------------------- */
 
+/*Cuando se abre el modal el index no es clickeable*/
+body.modal-open {
+    overflow: hidden;
+}
+
 /* ===== Botón de cerrar modal ===== */
-.closeLogin-modal {
+.closeLoginModal {
     position: absolute;
     top: 0;
     right: 5%;
@@ -772,7 +793,7 @@
 }
 
 
-.closeLogin-modal:hover {
+.closeLoginModal:hover {
     transform: rotateY(180deg) scale(1.2) rotate(90deg);
 }
 

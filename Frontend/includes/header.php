@@ -57,13 +57,18 @@
             <button class="buscarPor-btn" data-buscar-por="ambos">🔍Ambos</button>
         </div>
 
-        <div class="user-info" id="userInfo">
-            <div class="user-avatar">
-                <span id="userInitials">JD</span>
-            </div>
-            <div class="user-details">
-                <h3 id="userName">Cargando...</h3>
-                <p id="userUsername">@usuario</p>
+        <div class="navbar-right">
+            <div class="user-info">
+                 <span>
+                    <?php 
+                        if (isset($_SESSION['username'])){
+                            echo "<img src='./Frontend/assets/images/userImages/default.png' alt='user'> ";
+                            echo htmlspecialchars($_SESSION['username']);
+                        }else{
+                            echo"<button id='loginBtn' class='btn-login-header'>Iniciar sesión</button>";
+                        }
+                    ?>
+                </span>
             </div>
         </div>
     </header>

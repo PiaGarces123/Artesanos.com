@@ -2,7 +2,7 @@
 function conexion() {
     $servidor = "localhost";
     $usuario = "root";
-    $password = "";
+    $password = "1234";
     $bd = "artesanos_db";
 
     // Conexión en estilo procedural

@@ -52,7 +52,7 @@
     // =====================================================
     //  Si hay errores → responder y salir
     // =====================================================
-    if (!empty($errores['email']) || !empty($errores['password'])) {
+    if (array_filter($errores)) {
         // "json_encode" función de PHP que convierte un array o un objeto PHP en una cadena de texto con formato JSON
         echo json_encode([
             "status" => "error",

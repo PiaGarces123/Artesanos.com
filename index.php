@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    $showLogin = !isset($_SESSION['user_id']); // TRUE si no hay sesión
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,13 +11,16 @@
     <title>Artesanos</title>
     <!-- Estilos Personalizados -->
     <link rel="stylesheet" href="./Frontend/assets/css/styles.css" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     
     <?php
 
     //Incluir Header
-    include("./Frontend/includes/header.html");
+    include("./Frontend/includes/header.php");
 
     ?>
 
@@ -59,7 +67,11 @@
         </div>
     </div>
 
+    <!-- Contenedor vacío para cargar el modal -->
+    <div id="modalContainer"></div>
+
     <!-- Link al archivo JS -->
     <script src="./Frontend/assets/js/index.js"></script>
+    <script src="./Frontend/assets/js/modal.js"></script>
 </body>
 </html>
