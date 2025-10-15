@@ -756,7 +756,7 @@
 /* ===== Botón de cerrar modal ===== */
 .closeLogin-modal {
     position: absolute;
-    top: 5%;
+    top: 0;
     right: 5%;
     background: none;
     border: none;
@@ -782,10 +782,10 @@
     display: none; /* oculta el input */
 }
 .sectionLogin h6 span{ 
-    font-size: 1.2rem;
-    padding: 0 2rem; 
+    font-size: 1.1rem;
+    padding: 0 6rem; 
     font-weight:bold; 
-    cursor: context-menu; 
+    cursor: pointer; 
     transition: color 0.3s; 
     color: var(--background-color);
     text-shadow: 10px 10px 6px rgba(0,0,0,1);
@@ -794,13 +794,13 @@
 /* El label que lo reemplaza */
 label[for="reg-log"] {
     display: inline-block;
-    width: 50px;
-    height: 26px;
+    width: 3.2rem;
+    height: 2rem;
     background: var(--secondary-color);
     border-radius: 20px;
     position: relative;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: -15rem;
     transition: background 0.3s ease;
     box-shadow:
         10px 8px 6px rgba(0,0,0,0.5),    /* sombra inferior */
@@ -812,10 +812,10 @@ label[for="reg-log"] {
 label[for="reg-log"]::after {
     content: '';
     position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 20px;
-    height: 20px;
+    top: 0.5rem;
+    left: 0.3rem;
+    width: 1.2rem;
+    height: 1.2rem;
     background: #fff;
     border-radius: 50%;
     transition: transform 0.3s ease;
@@ -840,8 +840,8 @@ label[for="reg-log"]::after {
 
 .sectionLogin {
     position: relative;
-    min-width: 30vw;
-    min-height: 50vh;
+    min-width: 40vw;
+    min-height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -876,9 +876,10 @@ label[for="reg-log"]::after {
 
 /* Contenedor principal de la tarjeta */
 .card-3d-wrap {
+    margin-top: 1.5rem;
     position: relative;
-    width: 25vw;
-    height: 60vh;
+    width: 30vw;
+    height: 75vh;
     transform-style: preserve-3d;
     transition: transform 0.5s ease-in-out;
     

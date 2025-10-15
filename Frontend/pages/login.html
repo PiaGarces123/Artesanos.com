@@ -1,100 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artesanos - Login</title>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Artesanos - Login</title>
 
-    <!-- Estilos -->
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
-</head>
+        <!-- Estilos -->
+        <link rel="stylesheet" href="../assets/css/styles.css">
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    </head>
 
-<body>
-    <p id="logo">login</p>
-    
-    <!-- MODAL LOGIN -->
-    <div class="modal" id="loginModal">
-        <div class="modalLogin-content">
+    <body>
+        <p id="logo">login</p>
+        
+        <!-- MODAL LOGIN -->
+        <div class="modal" id="loginModal">
+            <div class="modalLogin-content">
 
-            <div class="sectionLogin">
-                <div class="containerLogin">
-                    <div class="row full-height justify-content-center">
-                        <div class="col-12 text-center align-self-center py-5">
-                            <div class="section pb-5 pt-5 text-center">
-                                <h6 class="mb-0 pb-3">
-                                    <span>Log In </span><span>Sign Up</span>
-                                </h6>
+                <div class="sectionLogin">
+                    <div class="containerLogin">
+                        <div class="row full-height justify-content-center">
+                            <div class="col-12 text-center align-self-center py-5">
+                                <div class="section pb-5 pt-5 text-center">
+                                    <h6 class="mb-0 pb-3">
+                                        <span id="btn-login">Log In </span>
+                                        <span id="btn-signup">Sign Up</span>
+                                    </h6>
 
-                                <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" title="Toggle between Log In and Sign Up"/>
-                                <label for="reg-log"></label>
+                                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" title="Toggle between Log In and Sign Up"/>
+                                    <label for="reg-log"></label>
 
-                                <div class="card-3d-wrap mx-auto">
-                                    <div class="card-3d-wrapper">
-                                        <button class="closeLogin-modal" id="closeCreateModal">&times;</button>
-                                        <!-- LOGIN -->
-                                        <div class="card-front">
-                                            <div class="center-wrap">
-                                                <div class="section text-center">
-                                                    <h4 class="mb-4 pb-3">LOG IN</h4>
+                                    <div class="card-3d-wrap mx-auto">
+                                        <div class="card-3d-wrapper">
+                                            <button class="closeLogin-modal" id="closeCreateModal">&times;</button>
+                                            <!-- LOGIN -->
+                                            <div class="card-front">
+                                                <div class="center-wrap">
+                                                    <div class="section text-center">
+                                                        <h4 class="mb-4 pb-3">LOG IN</h4>
 
-                                                    <div class="form-groupLogin">
-                                                        <input type="email" class="form-style" placeholder="Email / Usuario">
-                                                        <i class="input-icon uil uil-at"></i>
+                                                        <div class="form-groupLogin">
+                                                            <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+                                                            <i class="input-icon uil uil-at"></i>
+                                                        </div>
+                                                        <div class="form-groupLogin mt-2">
+                                                            <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
+                                                            <i class="input-icon uil uil-lock-alt"></i>
+                                                        </div>
+                                                        <a href="#" class="btnLogin mt-4">Login</a>
+                                                        <p class="mb-0 mt-4 text-center">
+                                                            <a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a>
+                                                        </p>
                                                     </div>
-                                                    <div class="form-groupLogin mt-2">
-                                                        <input type="password" class="form-style" placeholder="Password">
-                                                        <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                            </div>
+
+                                            <!-- SIGNUP -->
+                                            <div class="card-back">
+                                                <div class="center-wrap">
+                                                    <div class="section text-center">
+                                                        <h4 class="mb-3 pb-3">SIGN UP</h4>
+                                                        <!-- Nombre -->
+                                                        <div class="form-groupLogin">
+                                                            <input type="text" class="form-style" placeholder="Nombre" name="nbre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
+                                                            <i class="input-icon uil uil-user"></i>
+                                                        </div>
+                                                        <!-- Apellido -->   
+                                                        <div class="form-groupLogin">
+                                                            <input type="text" class="form-style" placeholder="Apellido" name="ape"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
+                                                            <i class="input-icon uil uil-user"></i>
+                                                        </div>
+                                                        <!-- Usuario -->
+                                                        <div class="form-groupLogin mt-2">
+                                                            <input type="text" class="form-style" placeholder="Nombre de Usuario" name="userName" minlength="4" maxlength="20" required >
+                                                            <i class="input-icon uil uil-user-circle"></i>
+                                                        </div>
+                                                        <!-- Email -->
+                                                        <div class="form-groupLogin mt-2">
+                                                            <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+                                                            <i class="input-icon uil uil-at"></i>
+                                                        </div>
+                                                        <!-- Contraseña -->
+                                                        <div class="form-groupLogin mt-2">
+                                                            <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
+                                                            <i class="input-icon uil uil-lock-alt"></i>
+                                                        </div>
+                                                        <a href="#" class="btnLogin mt-4">Registrarse</a>
                                                     </div>
-                                                    <a href="#" class="btnLogin mt-4">Login</a>
-                                                    <p class="mb-0 mt-4 text-center">
-                                                        <a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a>
-                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- SIGNUP -->
-                                        <div class="card-back">
-                                            <div class="center-wrap">
-                                                <div class="section text-center">
-                                                    <h4 class="mb-3 pb-3">SIGN UP</h4>
-                                                    <div class="form-groupLogin">
-                                                        <input type="text" class="form-style" placeholder="Nombre" name="nbre">
-                                                        <i class="input-icon uil uil-user"></i>
-                                                    </div>
-                                                    <div class="form-groupLogin">
-                                                        <input type="text" class="form-style" placeholder="Apellido" name="ape">
-                                                        <i class="input-icon uil uil-user"></i>
-                                                    </div>
-                                                    <div class="form-groupLogin mt-2">
-                                                        <input type="text" class="form-style" placeholder="Nombre de Usuario"  name="userName">
-                                                        <i class="input-icon uil uil-user-circle"></i>
-                                                    </div>
-                                                    <div class="form-groupLogin mt-2">
-                                                        <input type="email" class="form-style" placeholder="Email"  name="mail">
-                                                        <i class="input-icon uil uil-at"></i>
-                                                    </div>
-                                                    <div class="form-groupLogin mt-2">
-                                                        <input type="password" class="form-style" placeholder="Contraseña"  name="pass">
-                                                        <i class="input-icon uil uil-lock-alt"></i>
-                                                    </div>
-                                                    <a href="#" class="btnLogin mt-4">Registrarse</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> <!-- card-3d-wrap -->
+                                    </div> <!-- card-3d-wrap -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- JS -->
-    <script src="../assets/js/modals.js"></script>
-</body>
-</html>
+        <!-- JS -->
+        <script src="../assets/js/modals.js"></script>
+    </body>
+    </html>

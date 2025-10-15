@@ -1,3 +1,6 @@
+// -------------------------- LOG IN --------------------------
+
+
 // Esperar a que todo el contenido del DOM esté cargado
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -34,6 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
+
+// Para cambiar entre Log In y Sign Up 
+    const checkbox = document.getElementById("reg-log");
+    const btnLogin = document.getElementById("btn-login");
+    const btnSignup = document.getElementById("btn-signup");
+
+    btnLogin.addEventListener("click", () => {
+        checkbox.checked = false; // muestra el login
+    });
+
+    btnSignup.addEventListener("click", () => {
+        checkbox.checked = true; // muestra el signup
+    });
 
 
 //------------------------------INICIAR SESION------------------------------
