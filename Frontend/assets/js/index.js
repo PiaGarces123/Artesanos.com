@@ -67,8 +67,7 @@
                 });
             }
 
-            // Eventos de Modales
-            this.bindModalEvents();
+            
             
             // Navegación por el sidebar
             this.bindSidebarNavigation();
@@ -90,89 +89,7 @@
                 });
             });
         }
-        // ------------------------- Eventos de Modales ------------------------- 
-        bindModalEvents() {
-            // Modal publicar Contenido
-            const createAlbumBtn = document.getElementById('createAlbumBtn');
-            const createAlbumModal = document.getElementById('createAlbumModal');
-            const closeCreateModal = document.getElementById('closeCreateModal');
-            const cancelCreate = document.getElementById('cancelCreate');
-            const createAlbumForm = document.getElementById('createAlbumForm');
-            const fileUpload = document.getElementById('fileUpload');
-            const imageInput = document.getElementById('imageInput');
-
-            //Abre el modal
-            createAlbumBtn.addEventListener('click', () => {
-                createAlbumModal.classList.add('active');
-            });
-
-             // Cierra el modal desde botones
-            [closeCreateModal, cancelCreate].forEach(btn => {
-                btn.addEventListener('click', () => {
-                    createAlbumModal.classList.remove('active');
-                    this.resetCreateForm();
-                });
-            });
-            // Cierra modal si se clickea fuera
-            createAlbumModal.addEventListener('click', (e) => {
-                if (e.target === createAlbumModal) {
-                    createAlbumModal.classList.remove('active');
-                    this.resetCreateForm();
-                }
-            });
-
-            // --- Subida de archivos --- 
-            fileUpload.addEventListener('click', () => imageInput.click());
-
-            fileUpload.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                fileUpload.classList.add('dragover');
-            });
-
-            fileUpload.addEventListener('dragleave', () => {
-                fileUpload.classList.remove('dragover');
-            });
-
-            fileUpload.addEventListener('drop', (e) => {
-                e.preventDefault();
-                fileUpload.classList.remove('dragover');
-                this.handleFiles(e.dataTransfer.files);  // Maneja las imágenes arrastradas
-            });
-
-            imageInput.addEventListener('change', (e) => {
-                this.handleFiles(e.target.files); // Maneja selección normal
-            });
-
-
-            // Envía el formulario de creación
-            createAlbumForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.createAlbum();
-            });
-
-            // Modal: mis álbumes
-            const myAlbumsBtn = document.getElementById('myAlbumsBtn');
-            const myAlbumsModal = document.getElementById('myAlbumsModal');
-            const closeAlbumsModal = document.getElementById('closeAlbumsModal');
-
-            // Abre y carga los álbumes
-            myAlbumsBtn.addEventListener('click', async () => {
-                myAlbumsModal.classList.add('active');
-                await this.loadAlbums();
-                this.renderAlbumsGrid();
-            });
-
-            // Cierra modal
-            closeAlbumsModal.addEventListener('click', () => {
-                myAlbumsModal.classList.remove('active');
-            });
-
-            myAlbumsModal.addEventListener('click', (e) => {
-                if (e.target === myAlbumsModal) {
-                    myAlbumsModal.classList.remove('active');
-                }
-            });
-        }
+        
 
 
         // ------------------------ NAVEGACIÓN DEL SIDEBAR ------------------------ 

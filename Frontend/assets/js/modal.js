@@ -1,30 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.getElementById("loginBtn");
-    const feedImgs = document.querySelectorAll(".feed-img");
-    const container = document.getElementById("modalContainer");
+    // Activadores
+    
+    //feedImgs.forEach(img => img.addEventListener("click", openModal));
+    //const feedImgs = document.querySelectorAll(".feed-img");
+    //const container = document.getElementById("modalContainer");
 
-    const loadModalHTML = async () => {
-        if (!container.innerHTML.trim()) {
-            const res = await fetch("/ProgIII/Artesanos.com/Frontend/pages/login.html");
-            container.innerHTML = await res.text();
 
-            // Inicializar flatpickr si existe
-            const fNac = document.querySelector("#fNac");
-            if (fNac && !window.flatpickr) {
-                const s = document.createElement("script");
-                s.src = "https://cdn.jsdelivr.net/npm/flatpickr";
-                s.onload = () => {
-                    flatpickr(fNac, { dateFormat: "d-m-Y", altInput: true, altFormat: "d-m-Y", allowInput: true });
-                };
-                document.body.appendChild(s);
-            } else if (fNac && window.flatpickr) {
-                flatpickr(fNac, { dateFormat: "d-m-Y", altInput: true, altFormat: "d-m-Y", allowInput: true });
-            }
-        }
-    };
+    // Inicializar flatpickr si existe
+    const fNac = document.querySelector("#fNac");
+    if (fNac && !window.flatpickr) {
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/flatpickr";
+        s.onload = () => {
+            flatpickr(fNac, { dateFormat: "d-m-Y", altInput: true, altFormat: "d-m-Y", allowInput: true });
+        };
+        document.body.appendChild(s);
+    } else if (fNac && window.flatpickr) {
+        flatpickr(fNac, { dateFormat: "d-m-Y", altInput: true, altFormat: "d-m-Y", allowInput: true });
+    }
 
-    const openModal = async () => {
-        await loadModalHTML();
+    
+
+    window.openModal = async () => {
         const loginModal = document.getElementById("loginModal");
         if (!loginModal) return;
 
@@ -49,14 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
         initModalLogic();
     };
 
-    // Activadores
     loginBtn?.addEventListener("click", openModal);
-    feedImgs.forEach(img => img.addEventListener("click", openModal));
 
     // ----- LÓGICA INTERNA DEL MODAL -----
     function initModalLogic() {
-        //Ojo de la contraseña
-        const input = eye.closest('.form-groupLogin').querySelector('input.form-style');
+        
 
         const loginModal = document.getElementById("loginModal");
         const checkbox = document.getElementById("reg-log");
@@ -89,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorPassSignUp = document.getElementById("errorPassSignUp");
 
         // Regex
+        const userRegex = /^[a-zA-Z0-9._%+-]{4,20}$/;
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}$/;
         const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
@@ -134,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.append("pass", loginPass.value.trim());
 
             try {
-                const res = await fetch("../BACKEND/Validation/login.php", { method: "POST", body: formData });
+                const res = await fetch("./BACKEND/Validation/login.php", { method: "POST", body: formData });
                 const data = await res.json();
                 if (data.status === "success") { alert(`✅ Bienvenid@ ${data.user.username}`); loginModal.style.display="none"; document.body.style.overflow="auto"; }
                 else mostrarError(errorPassLogin, null, data.message);
@@ -147,8 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let valido = validarFecha(signupFnac, errorFnac);
             valido &= validarCampo(signupName, nameRegex, errorNbre, "Solo letras (2-30)");
             valido &= validarCampo(signupLast, nameRegex, errorApe, "Solo letras (2-30)");
-            valido &= validarCampo(signupUser, null, errorUser, "Usuario obligatorio");
-            if (signupUser?.value.length<4 || signupUser?.value.length>20){ mostrarError(errorUser, signupUser, "Entre 4 y 20 caracteres"); valido=false; }
+            valido &= validarCampo(signupUser, userRegex, errorUser, "Entre 4 y 20 caracteres");
             valido &= validarCampo(signupEmail, emailRegex, errorEmailSignUp, "Email inválido");
             valido &= validarCampo(signupPass, passRegex, errorPassSignUp, "Debe tener mayúscula, minúscula, número y símbolo");
             if (!valido) return;
@@ -162,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.append("pass", signupPass.value.trim());
 
             try {
-                const res = await fetch("../../../BACKEND/Validation/signup.php", { method: "POST", body: formData });
+                const res = await fetch("./BACKEND/Validation/signup.php", { method: "POST", body: formData });
                 const data = await res.json();
                 if (data.status==="success"){ alert("✅ Registro exitoso"); checkbox.checked=false; }
                 else if (data.errores){
@@ -179,6 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Toggle password
         document.querySelectorAll(".toggle-pass").forEach(eye => {
             eye.addEventListener("click", () => {
+                //Ojo de la contraseña
+                const input = eye.closest('.form-groupLogin').querySelector('input.form-style');
                 if (!input) return;
                 if (input.type==="password"){ input.type="text"; eye.classList.replace("uil-eye","uil-eye-slash"); }
                 else{ input.type="password"; eye.classList.replace("uil-eye-slash","uil-eye"); }

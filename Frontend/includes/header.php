@@ -18,15 +18,15 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a class="nav-item active" data-view="home">
+            <a  id="navHome" class="nav-item active" data-view="home">
                 <span class="nav-icon">🏠</span>
                 Inicio
             </a>
-            <a class="nav-item" data-view="favorites">
+            <a id="navFavorites" class="nav-item" data-view="favorites">
                 <span class="nav-icon">❤️</span>
                 Favoritos
             </a>
-            <a class="nav-item" data-view="profile">
+            <a id="navProfile" class="nav-item" data-view="profile">
                 <span class="nav-icon">👤</span>
                 Mi perfil
             </a>
