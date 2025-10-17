@@ -9,207 +9,164 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artesanos</title>
-    <!-- Estilos Personalizados -->
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./Frontend/assets/css/styles.css" />
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     
     <?php
-
-    //Incluir Header
     include("./Frontend/includes/header.php");
-
     ?>
 
-
-    <!-- Publicar Contenido Modal -->
-    <div class="modal" id="createAlbumModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Publicar Contenido</h2>
-                <button class="close-modal" id="closeCreateModal">&times;</button>
-            </div>
-            
-            <form id="createAlbumForm">                
-                <div class="form-group">
-                    <label class="form-label">Subir imágenes</label>
-                    <div class="file-upload" id="fileUpload">
-                        <div class="upload-icon">📷</div>
-                        <div class="upload-text">Arrastra imágenes aquí o haz clic para seleccionar</div>
-                        <div class="upload-hint">PNG, JPG hasta 5MB cada una</div>
-                    </div>
-                    <input type="file" id="imageInput" multiple accept="image/*">
-                    <div class="image-preview" id="imagePreview"></div>
+    <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h2 class="modal-title fs-4" id="createAlbumModalLabel">Publicar Contenido</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCreateModal"></button>
                 </div>
                 
-                <div style="display: flex; gap: 12px; margin-top: 32px;">
-                    <button type="button" class="action-button btn-secondary" id="cancelCreate" style="flex: 1;">Cancelar</button>
-                    <button type="submit" class="action-button btn-primary" style="flex: 1;">Continuar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- My Albums Modal -->
-    <div class="modal" id="myAlbumsModal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2 class="modal-title">Mis álbumes</h2>
-                <button class="close-modal" id="closeAlbumsModal">&times;</button>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 24px;" id="albumsGrid">
-                <!-- Los álbumes se cargarán aquí -->
-            </div>
-        </div>
-    </div>
-
-    <!-- favorites modal -->
-    <div class="modal" id="favoritesModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Mis Favoritos</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <!-- Contenido de favoritos aquí -->
-        </div>
-    </div>
-
-
-    <!-- Contenedor vacío para cargar el modal -->
-    <div id="modalContainer">
-        <div class="modal" id="loginModal">
-            <div class="modalLogin-content">
-
-                <div class="sectionLogin">
-                    <div class="containerLogin">
-                        <div class="row full-height justify-content-center">
-                            <div class="col-12 text-center align-self-center py-5">
-                                <div class="section pb-5 pt-5 text-center">
-                                    <h6 class="mb-0 pb-3">
-                                        <span id="btn-login">Log In </span>
-                                        <span id="btn-signup">Sign Up</span>
-                                    </h6>
-
-                                    <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" title="Toggle between Log In and Sign Up"/>
-                                    <label for="reg-log"></label>
-
-                                    <div class="card-3d-wrap mx-auto">
-                                        <div class="card-3d-wrapper">
-                                            <button class="closeLoginModal" id="closeLoginModal">&times;</button>
-
-
-                                            <!-- LOGIN -->
-                                            <div class="card-front">
-                                                <div class="center-wrap">                                                            
-                                                    <div class="logo">
-                                                        <img src="./Frontend/assets/images/appImages/logo.png" alt="logo">
-                                                    </div>
-                                                    <div class="section text-center">
-                                                        <h4 class="mb-4 pb-3">LOG IN</h4>
-
-                                                        <!-- Email -->
-                                                        <div class="form-groupLogin">
-                                                            <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
-                                                            <i class="input-icon uil uil-at"></i>
-                                                        </div>                                                        
-                                                        <div class="error" id="errorEmailLogin">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <!-- Contraseña -->
-                                                        <div class="form-groupLogin mt-2">
-                                                            <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
-                                                            <i class="toggle-pass uil uil-eye"></i> <!-- ojo  -->
-                                                            <i class="input-icon uil uil-lock-alt"></i>
-                                                        </div>
-                                                        <div class="error" id="errorPassLogin">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <a href="#" class="btnLogin mt-4" role="button" >Login</a>
-                                                        <p class="mb-0 mt-4 text-center">
-                                                            <a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- SIGNUP -->
-                                            <div class="card-back">
-                                                <div class="center-wrap">
-                                                    <div class="section text-center">
-                                                        <h4 class="mb-3 pb-3">SIGN UP</h4>
-
-                                                        <!-- Fecha de Nacimiento -->
-                                                        <div class="form-groupLogin fNacSignUp">
-                                                            <input type="date" class="form-style flatpickr-input" placeholder="Fecha de Nacimiento" name="fNac" id="fNac" required>
-                                                            <i class="input-icon uil uil-calendar-alt"></i>
-                                                        </div>
-                                                        <div class="error" id="errorFnac">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <!-- Nombre -->
-                                                        <div class="form-groupLogin">
-                                                            <input type="text" class="form-style" placeholder="Nombre" name="nbre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
-                                                            <i class="input-icon uil uil-user"></i>
-                                                        </div>
-                                                        <div class="error" id="errorNbre">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-                                                        
-                                                        <!-- Apellido -->   
-                                                        <div class="form-groupLogin">
-                                                            <input type="text" class="form-style" placeholder="Apellido" name="ape"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}" required>
-                                                            <i class="input-icon uil uil-user"></i>
-                                                        </div>
-                                                        <div class="error" id="errorApe">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <!-- Usuario -->
-                                                        <div class="form-groupLogin mt-2">
-                                                            <input type="text" class="form-style" placeholder="Nombre de Usuario" name="userName" minlength="4" maxlength="20" required >
-                                                            <i class="input-icon uil uil-user-circle"></i>
-                                                        </div>
-                                                        <div class="error" id="errorUser">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <!-- Email -->
-                                                        <div class="form-groupLogin mt-2">
-                                                            <input type="email" class="form-style" placeholder="Email" name="mail"  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
-                                                            <i class="input-icon uil uil-at"></i>
-                                                        </div>
-                                                        <div class="error" id="errorEmailSignUp">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <!-- Contraseña -->
-                                                        <div class="form-groupLogin mt-2">
-                                                            <input type="password" class="form-style" placeholder="Contraseña" name="pass" minlength="6" required>
-                                                            <i class="toggle-pass uil uil-eye"></i> <!-- ojo  -->
-                                                            <i class="input-icon uil uil-lock-alt"></i>
-                                                        </div>
-                                                        <div class="error" id="errorPassSignUp">
-                                                            <!-- Se genera con js -->
-                                                        </div>
-
-                                                        <a href="#" class="btnLogin mt-4" role="button">Registrarse</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> <!-- card-3d-wrap -->
-                                </div>
-                            </div>
+                <form id="createAlbumForm" class="mt-3">                
+                    <div class="mb-3">
+                        <label class="form-label">Subir imágenes</label>
+                        <div class="file-upload" id="fileUpload">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-text">Arrastra imágenes aquí o haz clic para seleccionar</div>
+                            <div class="upload-hint">PNG, JPG hasta 5MB cada una</div>
                         </div>
+                        <input type="file" id="imageInput" multiple accept="image/*">
+                        <div class="image-preview row g-3 mt-2" id="imagePreview"></div>
                     </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button type="button" class="btn btn-secondary action-button" id="cancelCreate">Cancelar</button>
+                        <button type="submit" class="btn btn-primary action-button">Continuar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h2 class="modal-title fs-4" id="myAlbumsModalLabel">Mis álbumes</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeAlbumsModal"></button>
+                </div>
+                
+                <div class="row row-cols-md-4 row-cols-lg-4 g-4 mt-3" id="albumsGrid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h2 class="modal-title fs-4" id="favoritesModalLabel">Mis Favoritos</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Contenido de la sección de favoritos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4 shadow-lg custom-login-card"> 
+                
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Close" id="closeLoginModal"></button>
+
+                <ul class="nav nav-pills nav-justified mb-4 custom-login-tabs" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Log In</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-signup-tab" data-bs-toggle="pill" data-bs-target="#pills-signup" type="button" role="tab" aria-controls="pills-signup" aria-selected="false">Sign Up</button>
+                    </li>
+                </ul>
+
+                <div class="text-center logo mb-3">
+                    <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle" style="width: 80px; height: 80px;">
+                </div>
+
+                <div class="tab-content" id="pills-tabContent">
+                    
+                    <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+                        <h4 class="text-center text-uppercase mb-4">Log In</h4>
+                        <form id="loginForm">
+                            
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="email" class="form-style form-control" placeholder="Email" name="mail" id="mailLogin" required>
+                                <i class="input-icon uil uil-at"></i>
+                            </div>
+                            <div class="error" id="errorEmailLogin"></div>
+
+                            <div class="form-groupLogin mt-2 mb-3 position-relative">
+                                <input type="password" class="form-style form-control" placeholder="Contraseña" name="pass" id="passLogin" required>
+                                <i class="toggle-pass uil uil-eye"></i>
+                                <i class="input-icon uil uil-lock-alt"></i>
+                            </div>
+                            <div class="error" id="errorPassLogin"></div>
+
+                            <button type="button" class="btnLogin btn btn-primary w-100 mt-4" id="loginBtnSubmit">Login</button>
+                            <p class="mb-0 mt-3 text-center small"><a href="#" class="linkLogin">¿Olvidaste tu contraseña?</a></p>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
+                        <h4 class="text-center text-uppercase mb-4">Sign Up</h4>
+                        <form id="signupForm">
+                            
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="date" class="form-style form-control" placeholder="Fecha de Nacimiento" name="fNac" id="fNac" required>
+                                <i class="input-icon uil uil-calendar-alt"></i>
+                            </div>
+                            <div class="error" id="errorFnac"></div>
+
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="text" class="form-style form-control" placeholder="Nombre" name="nbre" id="nbre" required>
+                                <i class="input-icon uil uil-user"></i>
+                            </div>
+                            <div class="error" id="errorNbre"></div>
+                            
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="text" class="form-style form-control" placeholder="Apellido" name="ape" id="ape" required>
+                                <i class="input-icon uil uil-user"></i>
+                            </div>
+                            <div class="error" id="errorApe"></div>
+
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="text" class="form-style form-control" placeholder="Nombre de Usuario" name="userName" id="userName" required >
+                                <i class="input-icon uil uil-user-circle"></i>
+                            </div>
+                            <div class="error" id="errorUser"></div>
+
+                            <div class="form-groupLogin mb-3 position-relative">
+                                <input type="email" class="form-style form-control" placeholder="Email" name="mail" id="mailSignUp" required>
+                                <i class="input-icon uil uil-at"></i>
+                            </div>
+                            <div class="error" id="errorEmailSignUp"></div>
+
+                            <div class="form-groupLogin mt-2 mb-3 position-relative">
+                                <input type="password" class="form-style form-control" placeholder="Contraseña" name="pass" id="passSignUp" required>
+                                <i class="toggle-pass uil uil-eye"></i>
+                                <i class="input-icon uil uil-lock-alt"></i>
+                            </div>
+                            <div class="error" id="errorPassSignUp"></div>
+
+                            <button type="button" class="btnLogin btn btn-primary w-100 mt-4" id="signupBtnSubmit">Registrarse</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -217,7 +174,9 @@
 
     
 </body>
-<!-- Link al archivo JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
     // Variable global JS que indica si el usuario inició sesión
     window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
@@ -225,6 +184,3 @@
 <script src="./Frontend/assets/js/actionNormal.js"></script>
 <script src="./Frontend/assets/js/modal.js"></script>
 <script src="./Frontend/assets/js/restrictedActions.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</html>

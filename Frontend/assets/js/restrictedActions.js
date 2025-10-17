@@ -1,78 +1,83 @@
+// restrictedActions.js
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Variable que indica si hay sesión activa (desde tu script)
     const userLoggedIn = window.isLoggedIn || false;
 
-    // Botones que requieren sesión
+    // ----------------- INICIALIZACIÓN DE MODALES DE BOOTSTRAP -----------------
+    const createAlbumModalEl = document.getElementById("createAlbumModal");
+    const myAlbumsModalEl = document.getElementById("myAlbumsModal");
+    const favoritesModalEl = document.getElementById("favoritesModal");
+    const loginModalEl = document.getElementById("loginModal"); 
+
+    const createAlbumModal = createAlbumModalEl ? new bootstrap.Modal(createAlbumModalEl) : null;
+    const myAlbumsModal = myAlbumsModalEl ? new bootstrap.Modal(myAlbumsModalEl) : null;
+    const favoritesModal = favoritesModalEl ? new bootstrap.Modal(favoritesModalEl) : null;
+    const loginModal = loginModalEl ? new bootstrap.Modal(loginModalEl) : null;
+
+
+    // Botones que requieren verificación de sesión (EXCLUIMOS navHome)
     const restrictedButtons = [
+        // Botones de acción (Publicar/Álbumes) - Desktop (IDs originales)
         { id: "createAlbumBtn", action: () => openCreateAlbumModal() },
         { id: "myAlbumsBtn", action: () => openMyAlbumsModal() },
-        { id: "navFavorites", action: () => openFavoritesModal() },
-        { id: "navProfile", action: () => {} /*window.location.href = "/profile"*/ }
-        // Agregar aquí todos los botones que requieren sesión
+        // Botones de acción (Publicar/Álbumes) - Mobile (IDs Mobile)
+        { id: "createAlbumBtnMobile", action: () => openCreateAlbumModal() },
+        { id: "myAlbumsBtnMobile", action: () => openMyAlbumsModal() },
+        
+        // Botones de navegación - Desktop
+        { id: "navFavoritesDesktop", action: () => openFavoritesModal() },
+        { id: "navProfileDesktop", action: () => {} /* Abrir modal de perfil */ },
+        
+        // Botones de navegación - Mobile
+        { id: "navFavoritesMobile", action: () => openFavoritesModal() },
+        { id: "navProfileMobile", action: () => {} /* Abrir modal de perfil */ }
     ];
 
-    // Función para asignar el evento correcto según sesión
     restrictedButtons.forEach(btnData => {
         const btn = document.getElementById(btnData.id);
         if (!btn) return;
 
         btn.addEventListener("click", (e) => {
+            // Prevenimos la acción predeterminada para TODOS los botones en esta lista
             e.preventDefault();
+            
             if (userLoggedIn) {
-                btnData.action(); // Ejecuta la función normal
+                // 1. Ejecutar acción normal
+                btnData.action(); 
+                
+                // 2. Si la acción viene de un botón móvil, cerramos el Offcanvas
+                const offcanvasEl = document.getElementById('sidebarOffcanvas');
+                const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+                if (offcanvasInstance) {
+                    offcanvasInstance.hide();
+                }
             } else {
-                window.openModal(); // Abre modal de login
+                // Si no está logueado, forzamos la apertura del modal de Login/Signup
+                if (loginModal) {
+                    loginModal.show();
+                    
+                    // Cerramos el Offcanvas antes de mostrar el Login
+                    const offcanvasEl = document.getElementById('sidebarOffcanvas');
+                    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
+                    if (offcanvasInstance) {
+                        offcanvasInstance.hide();
+                    }
+                }
             }
         });
     });
 
-    // ----------------- FUNCIONES DE LOS MODALES -----------------
+    // ----------------- FUNCIONES DE LOS MODALES DE CONTENIDO -----------------
 
     function openCreateAlbumModal() {
-        const modal = document.getElementById("createAlbumModal");
-        if (!modal) return;
-
-        modal.classList.add("active");
-        document.body.style.overflow = "hidden";
-
-        // Cerrar modal
-        const closeBtn = document.getElementById("closeCreateModal");
-        closeBtn?.addEventListener("click", () => closeModal(modal));
-        modal.addEventListener("click", e => { if (e.target === modal) closeModal(modal); });
+        if (createAlbumModal) createAlbumModal.show();
     }
 
     function openMyAlbumsModal() {
-        const modal = document.getElementById("myAlbumsModal");
-        if (!modal) return;
-
-        modal.classList.add("active");
-        document.body.style.overflow = "hidden";
-
-        // Cerrar modal
-        const closeBtn = document.getElementById("closeAlbumsModal");
-        closeBtn?.addEventListener("click", () => closeModal(modal));
-        modal.addEventListener("click", e => { if (e.target === modal) closeModal(modal); });
+        if (myAlbumsModal) myAlbumsModal.show();
     }
 
     function openFavoritesModal() {
-        const favoritesModal = document.getElementById("favoritesModal");
-        if (!favoritesModal) return;
-
-        favoritesModal.classList.add("active");
-        document.body.style.overflow = "hidden";
-
-        const closeBtn = favoritesModal.querySelector(".close-modal");
-        closeBtn?.addEventListener("click", () => closeModal(favoritesModal));
-
-        favoritesModal.addEventListener("click", (e) => {
-            if (e.target === favoritesModal) closeModal(favoritesModal);
-        });
-    }
-
-
-
-    function closeModal(modal) {
-        modal.classList.remove("active");
-        document.body.style.overflow = "auto";
+        if (favoritesModal) favoritesModal.show();
     }
 });

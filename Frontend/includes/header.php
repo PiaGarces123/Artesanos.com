@@ -1,95 +1,124 @@
-<!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <img src="./Frontend/assets/images/appImages/logo.png" alt="logo">
-            </div>
-            
-        </div>
+<header class="header navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
         
-        <div class="sidebar-actions">
-            <button class="action-button btn-primary" id="createAlbumBtn">
-                <img src="./Frontend/assets/images/appImages/publicar.png" alt="publicar">
-            </button>
-            
-            <button class="action-button btn-secondary" id="myAlbumsBtn">
-                <img src="./Frontend/assets/images/appImages/album.png" alt="album">
-            </button>
-        </div>
+        <button class="navbar-toggler p-0 border-0 d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         
-        <nav class="sidebar-nav">
-            <a  id="navHome" class="nav-item active" data-view="home">
-                <span class="nav-icon">🏠</span>
-                Inicio
-            </a>
-            <a id="navFavorites" class="nav-item" data-view="favorites">
-                <span class="nav-icon">❤️</span>
-                Favoritos
-            </a>
-            <a id="navProfile" class="nav-item" data-view="profile">
-                <span class="nav-icon">👤</span>
-                Mi perfil
-            </a>
-        </nav>
-        
-        <div class="albums-list">
-            <div class="albums-title">
-                Álbumes recientes
-                <span style="color: #999; font-size: 12px;" id="albumsCount">0</span>
+        <a class="navbar-brand me-3 d-flex align-items-center" href="#">
+            <div class="app-logo me-2">
+                <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
             </div>
-            <div id="sidebarAlbums">
-                <!-- Los álbumes se cargarán aquí -->
-            </div>
-        </div>
-    </aside>
+            <span class="d-none d-sm-block">Artesanos</span>
+        </a>
 
-    <!-- Header/NavBar -->
-    <header class="header">
-        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-        
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="🔍Buscar..." id="searchInput">
-        </div>
-        
-        <div class="buscarPor" id="buscarContainer">
-            <button class="buscarPor-btn active" data-buscar-por="perfil">🔍Perfil</button>
-            <button class="buscarPor-btn" data-buscar-por="imagen">🔍Imagen</button>
-            <button class="buscarPor-btn" data-buscar-por="ambos">🔍Ambos</button>
+        <div class="d-flex flex-grow-1 mx-3" style="max-width: 500px;">
+            <div class="input-group">
+                <input type="text" class="search-input form-control" placeholder="🔍Buscar artesanías, perfiles..." id="searchInput">
+            </div>
         </div>
 
-        <div class="navbar-right">
-            <div class="user-info">
+        <div class="buscarPor d-flex gap-2 me-4 d-none d-lg-flex">
+            <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
+            <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
+            <button class="buscarPor-btn btn btn-sm" data-buscar-por="ambos">🔍Ambos</button>
+        </div>
+
+        <div class="navbar-right d-flex align-items-center">
+            <div class="user-info d-flex align-items-center gap-2">
                  <span>
                     <?php 
                         if (isset($_SESSION['username'])){
-                            echo "<img src='./Frontend/assets/images/userImages/default.png' alt='user'> ";
+                            echo "<img src='./Frontend/assets/images/userImages/default.png' alt='user' class='rounded-circle' style='width: 32px;'> ";
                             echo htmlspecialchars($_SESSION['username']);
                         }else{
-                            echo"<button id='loginBtn' class='btn-login-header'>Iniciar sesión</button>";
+                            echo"<button type='button' class='btn btn-outline-primary btn-login-header' data-bs-toggle='modal' data-bs-target='#loginModal'>Iniciar sesión</button>";
                         }
                     ?>
                 </span>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="posts-grid" id="postsGrid">
-            <!-- Los posts se cargarán aquí dinámicamente -->
+
+<aside class="sidebar-fixed d-none d-lg-block" id="sidebarDesktop">
+    <div class="sidebar-header d-flex align-items-center justify-content-center p-3 mb-3 border-bottom">
+        <div class="app-logo me-2">
+            <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
+        </div>
+        <span class="fs-5 fw-bold text-secondary">Artesanos</span>
+    </div>
+    
+    <div class="sidebar-actions px-3 mb-3 border-bottom pb-3">
+        <button class="btn btn-primary w-100 mb-2" id="createAlbumBtn">
+            <i class="uil uil-plus-circle me-1"></i> Publicar
+        </button>
+        
+        <button class="btn btn-secondary w-100" id="myAlbumsBtn">
+            <i class="uil uil-folder-open me-1"></i> Mis Álbumes
+        </button>
+    </div>
+    
+    <nav class="list-group list-group-flush">
+        <a href="./index.php" id="navHome" class="list-group-item list-group-item-action nav-item active" data-view="home">
+            <span class="nav-icon me-2">🏠</span> Inicio
+        </a>
+        <a href="#" id="navFavoritesDesktop" class="list-group-item list-group-item-action nav-item" data-view="favorites">
+            <span class="nav-icon me-2">❤️</span> Favoritos
+        </a>
+        <a href="#" id="navProfileDesktop" class="list-group-item list-group-item-action nav-item" data-view="profile">
+            <span class="nav-icon me-2">👤</span> Mi perfil
+        </a>
+    </nav>
+    
+    <div class="albums-list px-3 mt-auto pt-3 border-top">
+        <div class="albums-title d-flex justify-content-between mb-2 small text-uppercase fw-bold">
+            Álbumes recientes
+            <span class="text-secondary small" id="albumsCount">0</span>
+        </div>
+        <div id="sidebarAlbums">
+            </div>
+    </div>
+</aside>
+
+
+<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+    <div class="offcanvas-header bg-light border-bottom">
+        <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">Menú de Navegación</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column p-0">
+        
+        <div class="sidebar-actions p-3 border-bottom">
+            <button class="btn btn-primary w-100 my-1" id="createAlbumBtnMobile">
+                <i class="uil uil-plus-circle me-1"></i> Publicar
+            </button>
+            
+            <button class="btn btn-secondary w-100 my-1" id="myAlbumsBtnMobile">
+                <i class="uil uil-folder-open me-1"></i> Mis Álbumes
+            </button>
         </div>
         
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            Cargando artesanías...
-        </div>
+        <nav class="list-group list-group-flush">
+            <a href="./index.php" id="navHome" class="list-group-item list-group-item-action nav-item active" data-view="home">
+                <span class="nav-icon me-2">🏠</span> Inicio
+            </a>
+            <a href="#" id="navFavoritesMobile" class="list-group-item list-group-item-action nav-item" data-view="favorites">
+                <span class="nav-icon me-2">❤️</span> Favoritos
+            </a>
+            <a href="#" id="navProfileMobile" class="list-group-item list-group-item-action nav-item" data-view="profile">
+                <span class="nav-icon me-2">👤</span> Mi perfil
+            </a>
+        </nav>
         
-        <div class="no-results" id="noResults" style="display: none;">
-            <h3>No se encontraron resultados</h3>
-            <p>Intenta con otros términos de búsqueda</p>
+        <div class="albums-list p-3 mt-auto">
+            <div class="albums-title d-flex justify-content-between mb-2 small text-uppercase fw-bold">
+                Álbumes recientes
+                <span class="text-secondary small" id="albumsCount">0</span>
+            </div>
+            <div id="sidebarAlbums">
+                </div>
         </div>
-        
-        <div class="error" id="error" style="display: none;">
-            Error al cargar las artesanías. Por favor, intenta de nuevo.
-        </div>
-    </main>
+    </div>
+</div>
