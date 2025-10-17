@@ -1,4 +1,7 @@
 <?php
+    require_once "./BACKEND/Clases/Image.php"; 
+    require_once "./BACKEND/conexion.php"; 
+    $conn = conexion();
     session_start();
     $isLoggedIn = isset($_SESSION['user_id']); // TRUE si hay sesión
 ?>
@@ -30,7 +33,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCreateModal"></button>
                 </div>
                 
-                <form id="createAlbumForm" class="mt-3"> 
+                <form id="createAlbumForm" enctype="multipart/form-data" class="mt-3"> 
                     
                     <div class="mb-4 p-3 bg-light rounded-3 border">
                         <label class="form-label fw-semibold text-secondary mb-3">Arrastrar y Soltar Fotos</label>
@@ -41,7 +44,7 @@
                             <div class="upload-hint small text-muted mt-1">PNG, JPG hasta 5MB cada una</div>
                         </div>
                         
-                        <input type="file" id="imageInput" multiple accept="image/*" class="d-none">
+                        <input type="file" name="imageInput[]" id="imageInput" multiple accept="image/*" class="d-none">
                         
                         <div class="image-preview row g-3 mt-3" id="imagePreview">
                             </div>

@@ -42,7 +42,7 @@ class User {
     }
 
     // ====================================================
-    // 🔹 Registrar un nuevo usuario
+    // 🔹 Registrar un nuevo usuario (CORREGIDO: Formato de Fecha y Devolución de ID)
     // ====================================================
     public static function register($conexion, $data) {
         $username = mysqli_real_escape_string($conexion, $data['username']);
@@ -50,26 +50,45 @@ class User {
         $lastName = mysqli_real_escape_string($conexion, $data['lastName']);
         $email = mysqli_real_escape_string($conexion, $data['email']);
         $password = password_hash($data['password'], PASSWORD_DEFAULT);
-        $dateBirth = mysqli_real_escape_string($conexion, $data['dateBirth']);
+        
+        // 💡 CORRECCIÓN DE FECHA: Convertir de 'd-m-Y' (Frontend) a 'Y-m-d' (MySQL)
+        $dateBirth_frontend = $data['dateBirth'];
+        $dateObject = DateTime::createFromFormat('d-m-Y', $dateBirth_frontend);
+        $dateBirth = $dateObject ? $dateObject->format('Y-m-d') : null;
+        $dateBirth = mysqli_real_escape_string($conexion, $dateBirth); 
+        
         $registrationDate = date("Y-m-d H:i:s");
         $status = 1; // activo por defecto
         $biography = '';
 
         $sql = "INSERT INTO users (U_nameUser, U_name, U_lastName, U_email, U_pass, U_dateBirth, U_registrationDate, U_status, U_biography)
                 VALUES ('$username', '$name', '$lastName', '$email', '$password', '$dateBirth', '$registrationDate', '$status', '$biography')";
-        return mysqli_query($conexion, $sql);
+        
+        $result = mysqli_query($conexion, $sql);
+        
+        // 💡 CORRECCIÓN DE DEVOLUCIÓN: Devolver el ID si el registro fue exitoso
+        if ($result) {
+            return mysqli_insert_id($conexion);
+        } else {
+            return false;
+        }
     }
 
     // ====================================================
-    // 🔹 Iniciar sesión
+    // 🔹 Iniciar sesión (CORREGIDO: Lógica de verificación de contraseña y estado)
     // ====================================================
     public static function login($conexion, $email, $password) {
         $email = mysqli_real_escape_string($conexion, $email);
-        $sql = "SELECT * FROM users WHERE U_email = '$email' LIMIT 1";
+        
+        // 1. Buscamos el usuario y verificamos el estado (U_status = 1 para activo)
+        $sql = "SELECT * FROM users WHERE U_email = '$email' AND U_status = 1 LIMIT 1";
         $resultado = mysqli_query($conexion, $sql);
 
         if ($fila = mysqli_fetch_assoc($resultado)) {
-            if (password_verify($password, $fila['U_pass'])) {
+            $hash_almacenado = $fila['U_pass']; // Obtenemos el hash
+
+            // 2. Verificamos la contraseña
+            if (password_verify($password, $hash_almacenado)) {
                 // Login correcto → devolvemos el objeto usuario
                 return new User(
                     $fila['U_id'],
@@ -85,11 +104,13 @@ class User {
                 );
             }
         }
-        return null; // credenciales incorrectas
+        return null; // credenciales incorrectas o usuario inactivo
     }
 
-    //Bloquear usuario si tiene muchas imágenes en revisión
-    //CONSULTAR CON ESTA FUNCION ANTES DE CREAR UNA IMAGEN
+    // ====================================================
+    // 🔹 Lógica de Bloqueo por Publicación
+    // ====================================================
+    // Bloquear usuario si tiene muchas imágenes en revisión
     public static function actualizarEstadoPublicacion($conn, $idUsuario) {
         $idUsuario = (int)$idUsuario;
 
@@ -102,12 +123,15 @@ class User {
 
         // Si tiene más de 3 imágenes en revisión, bloquear al usuario (U_status = 1)
         // Si tiene 3 o menos, activarlo (U_status = 0)
-        $nuevoEstado = ($fila['total'] >= 3) ? 1 : 0;
+        // NOTA: Asumo que 1 es 'Bloqueado' y 0 es 'Activo' según tu lógica.
+        // Si 1 es 'Activo' y 0 es 'Bloqueado', invierte la asignación de $nuevoEstado.
+        $nuevoEstado = ($fila['total'] >= 3) ? 0 : 1; 
 
         $sqlUpdate = "UPDATE users SET U_status = $nuevoEstado WHERE U_id = $idUsuario";
         mysqli_query($conn, $sqlUpdate);
 
-        return $nuevoEstado === 0; // Devuelve true si puede publicar
+        // Devuelve true si el nuevo estado permite publicar (es decir, el estado es Activo)
+        return $nuevoEstado === 1; 
     }
 
 

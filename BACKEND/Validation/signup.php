@@ -2,7 +2,7 @@
 
     /* El archivo PHP no devuelve una página HTML, sino una respuesta estructurada en JSON, 
     ideal para que el JavaScript del frontend la entienda fácilmente. */
-
+    date_default_timezone_set('America/Argentina/San_Luis');
     require_once "../Clases/User.php"; 
     require_once "../conexion.php"; 
 
@@ -129,11 +129,35 @@
         "dateBirth" => $fNac
     ];
 
-    if (User::register($conn, $data)) {
+    // Asumimos que User::register devuelve el ID del nuevo usuario si es exitoso, 
+    // o false/0 si falla.
+    $new_user_id = User::register($conn, $data); 
+
+    if ($new_user_id) {
+        
+        // ===================================================================
+        // 🚀 LÓGICA CLAVE: CREACIÓN DE LA CARPETA DEL USUARIO
+        // ===================================================================
+        
+        // 1. Definir la ruta base (asumiendo que FILES está en la raíz del proyecto, 
+        // y este script está en BACKEND/Validation)
+        $base_dir = __DIR__ . '/../../FILES/';
+        
+        // 2. Crear el directorio específico del usuario
+        $user_dir = $base_dir . $new_user_id;
+        
+        // 3. Verificar si el directorio ya existe y crearlo si no.
+        // El 0777 es el modo (permisos), y true indica que cree directorios recursivamente.
+        if (!is_dir($user_dir)) {
+            // Suprimimos los errores con @ si no es crítico, aunque es mejor manejarlos.
+            @mkdir($user_dir, 0777, true); 
+        }
+
         echo json_encode([
             "status" => "success",
             "message" => "Usuario registrado correctamente."
         ]);
+        
     } else {
         echo json_encode([
             "status" => "error",

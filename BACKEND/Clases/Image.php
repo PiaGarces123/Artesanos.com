@@ -118,6 +118,27 @@ class Imagen {
         return mysqli_query($conn, $sql2);
     }
 
+    public static function getProfileImagePath($conn, $idUsuario) {
+        $idUsuario = (int)$idUsuario;
+        $defaultPath = './Frontend/assets/images/appImages/default.jpg';
+        
+        // 1. Buscar la imagen marcada como I_currentProfile = 1
+        $sql = "SELECT I_ruta FROM images 
+                WHERE I_idUser = $idUsuario AND I_currentProfile = 1 
+                LIMIT 1";
+        
+        $resultado = mysqli_query($conn, $sql);
+        
+        // 2. Si se encuentra una fila, devolver la ruta almacenada
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+            $fila = mysqli_fetch_assoc($resultado);
+            return $fila['I_ruta'];
+        }
+        
+        // 3. Si no se encuentra, devolver la ruta por defecto
+        return $defaultPath;
+    }
+
     // 🔹 Quitar imagen de perfil
     public static function removeProfile($conn, $idImagen, $idUsuario) {
         $idImagen = (int)$idImagen;

@@ -25,7 +25,7 @@
     // Validación Email
     if( empty($email)){
         $errores['email']= "Campo Obligatorio.";
-    } elseif(!filter_var($eMail,FILTER_VALIDATE_EMAIL)){
+    } elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)){
         $errores['email']= "Formato Invalido.";
     } else{
         $email = htmlspecialchars($email);

@@ -29,6 +29,9 @@
         line-height: 1.4; 
     }
 
+    .border-primary {
+        border-color: var(--secondary-color) !important;
+    }
     /* Anulación de colores de Bootstrap para usar la paleta */
     .btn-primary {
         --bs-btn-bg: var(--secondary-color) !important;

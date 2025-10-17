@@ -29,11 +29,24 @@
 
         <div class="navbar-right d-flex align-items-center">
             <div class="user-info d-flex align-items-center gap-2">
-                 <span>
+                <span>
                     <?php 
                         if (isset($_SESSION['username'])){
-                            echo "<img src='./Frontend/assets/images/userImages/default.png' alt='user' class='rounded-circle' style='width: 32px;'> ";
-                            echo htmlspecialchars($_SESSION['username']);
+                            $profileImagePath = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
+                            // 💡 ESTILOS MEJORADOS PARA EL USUARIO LOGUEADO
+                            echo '
+                            <div class="d-flex align-items-center">
+                                <img 
+                                    src="' . htmlspecialchars($profileImagePath) . '" 
+                                    alt="Avatar de usuario" 
+                                    class="rounded-circle me-2 border border-2 border-primary" 
+                                    style="width: 32px; height: 32px; object-fit: cover;"
+                                >
+                                <span class="fw-semibold text-truncate" style="max-width: 120px;">' . 
+                                    htmlspecialchars($_SESSION['username']) . 
+                                '</span>
+                            </div>';
+                            
                         }else{
                             echo"<button type='button' class='btn btn-outline-primary btn-login-header' data-bs-toggle='modal' data-bs-target='#loginModal'>Iniciar sesión</button>";
                         }

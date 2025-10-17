@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const res = await fetch("./BACKEND/Validation/login.php", { method: "POST", body: formData });
                     const data = await res.json();
                     
-                    if (data.status === "success") { 
+                    if (data.status == "success") { 
                         alert(`✅ Bienvenid@ ${data.user.username}`); 
                         window.location.reload(); 
                     }
