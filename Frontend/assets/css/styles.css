@@ -33,8 +33,15 @@
     .btn-primary {
         --bs-btn-bg: var(--secondary-color) !important;
         --bs-btn-border-color: var(--secondary-color) !important;
+        
         --bs-btn-hover-bg: var(--primary-color) !important;
         --bs-btn-hover-border-color: var(--primary-color) !important;
+        
+        /* MODIFICACIÓN CLAVE: Anular el color azul en los estados activo y enfocado */
+        --bs-btn-active-bg: var(--secondary-color) !important;
+        --bs-btn-active-border-color: var(--secondary-color) !important;
+        --bs-btn-focus-shadow-rgb: 194, 151, 106; /* Usar el color secundario (194, 151, 106) */
+        
         --bs-btn-color: var(--background-color) !important;
     }
 
@@ -45,6 +52,20 @@
         --bs-btn-hover-bg: var(--primary-color) !important;
         --bs-btn-hover-border-color: var(--secondary-color) !important;
     }
+    
+    /* CORRECCIÓN FINAL: Botón Outline Primary ("Iniciar Sesión") */
+    .btn-outline-primary {
+        --bs-btn-color: var(--secondary-color) !important;
+        --bs-btn-border-color: var(--secondary-color) !important;
+        
+        --bs-btn-hover-bg: var(--primary-color) !important;
+        --bs-btn-hover-border-color: var(--primary-color) !important;
+        --bs-btn-hover-color: var(--principal-text) !important; 
+        
+        --bs-btn-active-bg: var(--secondary-color) !important;
+        --bs-btn-active-border-color: var(--secondary-color) !important;
+    }
+
 
 /* ------------------------------- SIDEBAR (BARRA LATERAL FIJA - Desktop) ------------------------------- */
     .sidebar-fixed {
@@ -65,7 +86,7 @@
         height: 40px; 
         width: 40px;  
         border-radius: 50%;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); 
+        box-shadow: 0 0 8px rgba(0,0,0,0.1); 
     }
 
     .app-logo img {
@@ -74,17 +95,25 @@
         object-fit: cover; 
     }
 
-    /* Estilos de navegación en el sidebar fijo */
+    /* Estilos de navegación en el sidebar fijo y Offcanvas */
     .sidebar-fixed .list-group-item {
         border-radius: 0; 
         border-left: 3px solid transparent; 
         font-size: 1.05rem;
     }
 
-    .sidebar-fixed .list-group-item.active {
-        border-left-color: var(--secondary-color);
-        background-color: var(--primary-color) !important;
-        color: var(--principal-text) !important;
+    /* Corrección de color y eliminación de borde azul para el item activo */
+    .list-group-item-action:focus, 
+    .list-group-item-action.active:focus {
+        box-shadow: none !important;
+        border-color: transparent !important;
+    }
+    
+    .list-group-item-action.active {
+        background-color: var(--secondary-color) !important; 
+        color: var(--background-color) !important;
+        border-color: transparent !important; 
+        box-shadow: none !important; 
     }
     
     .nav-item {
@@ -98,7 +127,6 @@
         cursor: pointer;
     }
     .nav-item:hover { text-decoration: none; color: var(--primary-color) !important; }
-    .nav-item.active { color: var(--secondary-color); font-weight: 600; }
     .nav-icon { width: 20px; height: 20px; }
 
 /* ------------------------------- HEADER & MAIN CONTENT WRAPPER ------------------------------- */
@@ -194,6 +222,29 @@
     .error { color: #852424; font-size: 0.7rem; padding: 0.4rem 0.8rem; border-left: 0.2rem solid #ff4d4d; background-color: rgba(231, 54, 54, 0.219); border-radius: 6px; display: none; }
     .error.visible-error { display: block; }
     input.form-style.errorInput { border-color: var(--bs-danger) !important; }
+    
+/* ------------------------------- CARGA DE ARCHIVOS (MODAL Publicar) ------------------------------- */
+
+    /* Estilo del contenedor de dropzone */
+    .file-upload {
+        border: 2px dashed var(--primary-color);
+        padding: 32px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        /* asegurar que la clase del HTML .bg-white se vea bien */
+        background-color: white; 
+    }
+
+    /* Estilo cuando está arrastrando o enfocado (usando color principal) */
+    .file-upload:hover,
+    .file-upload.dragover { 
+        border-color: var(--secondary-color) !important; /* Color primario del sitio */
+        background-color: var(--background-color) !important; 
+    }
+    .upload-icon {
+        color: var(--secondary-color); /* Color del icono */
+    }
 
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
@@ -224,16 +275,4 @@
     /* Estilos del Offcanvas (Menú Móvil) */
     .offcanvas {
         width: 250px; 
-    }
-
-    /* Corrección para eliminar el borde azul en el estado activo/focus de los items del menú */
-    .list-group-item-action:focus, 
-    .list-group-item-action.active:focus {
-        /* Eliminar el box-shadow azul que usa Bootstrap por defecto */
-        box-shadow: none !important;
-    }
-
-    /* Ajuste adicional para asegurar que el borde inferior del item activo sea invisible */
-    .list-group-item.active {
-        border-color: transparent !important;
     }

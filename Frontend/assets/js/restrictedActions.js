@@ -30,7 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Botones de navegación - Mobile
         { id: "navFavoritesMobile", action: () => openFavoritesModal() },
-        { id: "navProfileMobile", action: () => {} /* Abrir modal de perfil */ }
+        { id: "navProfileMobile", action: () => {} /* Abrir modal de perfil */ },
+        
+        // Botones de busqueda
+        { id: "searchButtonMobile", action: () => {} /* realizar busqueda */},
+        { id: "searchButtonDesktop", action: () => {} /* realizar busqueda */}
     ];
 
     restrictedButtons.forEach(btnData => {
@@ -79,5 +83,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openFavoritesModal() {
         if (favoritesModal) favoritesModal.show();
+    }
+    
+    // ====================================================================
+    // LÓGICA DE DRAG AND DROP (Subida de Archivos)
+    // ====================================================================
+    const fileUploadArea = document.getElementById("fileUpload");
+    const imageInput = document.getElementById("imageInput");
+
+    if (fileUploadArea && imageInput) {
+        // 1. Enlazar el click del área visual al input de archivo oculto
+        fileUploadArea.addEventListener("click", () => {
+            imageInput.click();
+        });
+
+        // 2. Manejar Drag and Drop: Añadir clase 'dragover' al arrastrar
+        fileUploadArea.addEventListener("dragover", (e) => {
+            e.preventDefault(); // Necesario para permitir el drop
+            e.stopPropagation();
+            fileUploadArea.classList.add("dragover");
+        });
+
+        fileUploadArea.addEventListener("dragleave", (e) => {
+            e.stopPropagation();
+            fileUploadArea.classList.remove("dragover");
+        });
+        
+        // 3. Manejar la selección o el drop de archivos
+        const handleFiles = (files) => {
+            // Lógica para previsualización o validación de archivos aquí
+            fileUploadArea.classList.remove("dragover");
+        };
+
+        fileUploadArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (e.dataTransfer.files.length > 0) {
+                // Asigna los archivos arrastrados al input
+                imageInput.files = e.dataTransfer.files; 
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        // 4. Limpiar la clase visual cuando se selecciona un archivo (usando el click)
+        imageInput.addEventListener("change", () => {
+            handleFiles(imageInput.files);
+        });
     }
 });

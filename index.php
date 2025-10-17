@@ -22,28 +22,34 @@
     ?>
 
     <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4 rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <h2 class="modal-title fs-4" id="createAlbumModalLabel">Publicar Contenido</h2>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="createAlbumModalLabel">Seleccionar Imágenes</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCreateModal"></button>
                 </div>
                 
-                <form id="createAlbumForm" class="mt-3">                
-                    <div class="mb-3">
-                        <label class="form-label">Subir imágenes</label>
-                        <div class="file-upload" id="fileUpload">
-                            <div class="upload-icon">📷</div>
-                            <div class="upload-text">Arrastra imágenes aquí o haz clic para seleccionar</div>
-                            <div class="upload-hint">PNG, JPG hasta 5MB cada una</div>
+                <form id="createAlbumForm" class="mt-3"> 
+                    
+                    <div class="mb-4 p-3 bg-light rounded-3 border">
+                        <label class="form-label fw-semibold text-secondary mb-3">Arrastrar y Soltar Fotos</label>
+                        
+                        <div class="file-upload border border-2 border-dashed p-5 text-center bg-white rounded-3 cursor-pointer" id="fileUpload">
+                            <i class="upload-icon uil uil-image-upload fs-1 text-secondary"></i>
+                            <div class="upload-text text-dark fw-medium">Arrastra imágenes aquí o haz clic para seleccionar</div>
+                            <div class="upload-hint small text-muted mt-1">PNG, JPG hasta 5MB cada una</div>
                         </div>
-                        <input type="file" id="imageInput" multiple accept="image/*">
-                        <div class="image-preview row g-3 mt-2" id="imagePreview"></div>
+                        
+                        <input type="file" id="imageInput" multiple accept="image/*" class="d-none">
+                        
+                        <div class="image-preview row g-3 mt-3" id="imagePreview">
+                            </div>
                     </div>
                     
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <button type="button" class="btn btn-secondary action-button" id="cancelCreate">Cancelar</button>
-                        <button type="submit" class="btn btn-primary action-button">Continuar</button>
+                    <div class="d-flex justify-content-end gap-3 mt-4">
+                        <button type="button" class="btn btn-outline-secondary" id="cancelCreate">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Continuar</button>
                     </div>
                 </form>
             </div>

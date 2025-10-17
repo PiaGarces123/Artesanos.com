@@ -5,23 +5,26 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <a class="navbar-brand me-3 d-flex align-items-center" href="#">
+        <a class="navbar-brand me-3 d-flex d-lg-none align-items-center" href="#">
             <div class="app-logo me-2">
                 <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
             </div>
-            <span class="d-none d-sm-block">Artesanos</span>
+            <span class="d-sm-block">Artesanos</span>
         </a>
 
-        <div class="d-flex flex-grow-1 mx-3" style="max-width: 500px;">
-            <div class="input-group">
+        <div id="searchAndFiltersDesktop" class="d-none d-lg-flex flex-grow-1 align-items-center gap-3">
+            
+            <div class="input-group flex-grow-1" style="max-width: 500px;">
                 <input type="text" class="search-input form-control" placeholder="🔍Buscar artesanías, perfiles..." id="searchInput">
+                <button class="btn btn-primary" type="button" id="searchButtonDesktop">
+                    <i class="uil uil-search"></i>
+                </button>
             </div>
-        </div>
-
-        <div class="buscarPor d-flex gap-2 me-4 d-none d-lg-flex">
-            <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
-            <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
-            <button class="buscarPor-btn btn btn-sm" data-buscar-por="ambos">🔍Ambos</button>
+            
+            <div class="buscarPor d-flex gap-2 me-4">
+                <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
+                <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
+            </div>
         </div>
 
         <div class="navbar-right d-flex align-items-center">
@@ -90,6 +93,23 @@
     </div>
     <div class="offcanvas-body d-flex flex-column p-0">
         
+        <div id="searchAndFiltersMobile" class="p-3 border-bottom">
+            <h6 class="small text-uppercase fw-bold mb-2">Buscar</h6>
+            
+            <div class="input-group mb-3">
+                <input type="text" class="search-input form-control" placeholder="🔍Buscar artesanías, perfiles..." id="searchInputMobile">
+                <button class="btn btn-primary" type="button" id="searchButtonMobile">
+                    <i class="uil uil-search"></i>
+                </button>
+            </div>
+            
+            <h6 class="small text-uppercase fw-bold mb-2">Filtrar por:</h6>
+            <div class="buscarPor d-flex gap-2 justify-content-start">
+                <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
+                <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
+            </div>
+        </div>
+        
         <div class="sidebar-actions p-3 border-bottom">
             <button class="btn btn-primary w-100 my-1" id="createAlbumBtnMobile">
                 <i class="uil uil-plus-circle me-1"></i> Publicar
@@ -99,6 +119,7 @@
                 <i class="uil uil-folder-open me-1"></i> Mis Álbumes
             </button>
         </div>
+
         
         <nav class="list-group list-group-flush">
             <a href="./index.php" id="navHome" class="list-group-item list-group-item-action nav-item active" data-view="home">

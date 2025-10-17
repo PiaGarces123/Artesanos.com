@@ -1,3 +1,5 @@
+// modal.js
+
 document.addEventListener("DOMContentLoaded", () => {
     
     // Función para limpiar todos los errores visuales
@@ -14,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ====================================================================
     function initModalLogic() {
         
-        // Inicializar flatpickr (movido aquí para asegurar que el DOM exista)
+        // Inicializar flatpickr
         const fNac = document.querySelector("#fNac");
         if (fNac && typeof flatpickr === 'function') {
             flatpickr(fNac, { dateFormat: "d-m-Y", altInput: true, altFormat: "d-m-Y", allowInput: true });
