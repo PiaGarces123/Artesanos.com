@@ -1,63 +1,3 @@
-<header class="header navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-        
-        <button class="navbar-toggler p-0 border-0 d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <a class="navbar-brand me-3 d-flex d-lg-none align-items-center" href="#">
-            <div class="app-logo me-2">
-                <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
-            </div>
-            <span class="d-sm-block">Artesanos</span>
-        </a>
-
-        <div id="searchAndFiltersDesktop" class="d-none d-lg-flex flex-grow-1 align-items-center gap-3">
-            
-            <div class="input-group flex-grow-1" style="max-width: 500px;">
-                <input type="text" class="search-input form-control" placeholder="🔍Buscar artesanías, perfiles..." id="searchInput">
-                <button class="btn btn-primary" type="button" id="searchButtonDesktop">
-                    <i class="uil uil-search"></i>
-                </button>
-            </div>
-            
-            <div class="buscarPor d-flex gap-2 me-4">
-                <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
-                <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
-            </div>
-        </div>
-
-        <div class="navbar-right d-flex align-items-center">
-            <div class="user-info d-flex align-items-center gap-2">
-                <span>
-                    <?php 
-                        if (isset($_SESSION['username'])){
-                            $profileImagePath = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
-                            // 💡 ESTILOS MEJORADOS PARA EL USUARIO LOGUEADO
-                            echo '
-                            <div class="d-flex align-items-center">
-                                <img 
-                                    src="' . htmlspecialchars($profileImagePath) . '" 
-                                    alt="Avatar de usuario" 
-                                    class="rounded-circle me-2 border border-2 border-primary" 
-                                    style="width: 32px; height: 32px; object-fit: cover;"
-                                >
-                                <span class="fw-semibold text-truncate" style="max-width: 120px;">' . 
-                                    htmlspecialchars($_SESSION['username']) . 
-                                '</span>
-                            </div>';
-                            
-                        }else{
-                            echo"<button type='button' class='btn btn-outline-primary btn-login-header' data-bs-toggle='modal' data-bs-target='#loginModal'>Iniciar sesión</button>";
-                        }
-                    ?>
-                </span>
-            </div>
-        </div>
-    </div>
-</header>
-
-
 <aside class="sidebar-fixed d-none d-lg-block" id="sidebarDesktop">
     <div class="sidebar-header d-flex align-items-center justify-content-center p-3 mb-3 border-bottom">
         <div class="app-logo me-2">
@@ -98,6 +38,86 @@
     </div>
 </aside>
 
+<header class="header navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        
+        <button class="navbar-toggler p-0 border-0 d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="navbar-brand me-3 d-flex d-lg-none align-items-center" href="#">
+            <div class="app-logo me-2">
+                <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
+            </div>
+            <span class="d-sm-block">Artesanos</span>
+        </a>
+
+        <div id="searchAndFiltersDesktop" class="d-none d-lg-flex flex-grow-1 align-items-center gap-3">
+            
+            <div class="input-group flex-grow-1" style="max-width: 500px;">
+                <input type="text" class="search-input form-control" placeholder="🔍Buscar artesanías, perfiles..." id="searchInput">
+                <button class="btn btn-primary" type="button" id="searchButtonDesktop">
+                    <i class="uil uil-search"></i>
+                </button>
+            </div>
+            
+            <div class="buscarPor d-flex gap-2 me-4">
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm active" data-buscar-por="perfil">👤 Perfil</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="imagen">🔍 Imagen</button>
+                <!-- <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="ambos">✨ Ambos</button> -->
+            </div>
+        </div>
+
+        <div class="navbar-right d-flex align-items-center gap-2">
+            
+            <?php 
+                // Asumimos que $conn, $_SESSION['user_id'] y la clase Imagen están disponibles.
+                if (isset($_SESSION['user_id'])){
+                    
+                    // 1. Obtener la ruta de la imagen de perfil dinámicamente
+                    $profileImagePath = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
+                    $username = htmlspecialchars($_SESSION['username']);
+
+                    // 2. Mostrar el Dropdown de usuario
+                    echo '
+                    <div class="dropdown d-flex align-items-center">
+                        <img 
+                            src="' . htmlspecialchars($profileImagePath) . '" 
+                            alt="Avatar de usuario" 
+                            class="rounded-circle border border-2 border-primary dropdown-toggle" 
+                            style="width: 32px; height: 32px; object-fit: cover; cursor: pointer;"
+                            id="userDropdownMenu"
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                        >
+                        
+                        <span class="fw-semibold text-truncate d-none d-sm-inline ms-2" style="max-width: 120px;">' . $username . '</span>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdownMenu">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="#" id="navProfileDropdown">
+                                    <i class="uil uil-user me-2"></i> Mi Perfil
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center text-danger" href="./BACKEND/Validation/logout.php">
+                                    <i class="uil uil-sign-out-alt me-2"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>';
+                    
+                }else{
+                    // Botón de Iniciar Sesión para usuarios no logueados
+                    echo"<button id='loginBtn' type='button' class='btn btn-outline-primary ' data-bs-toggle='modal' data-bs-target='#loginModal'>Iniciar sesión</button>";
+                }
+            ?>
+
+        </div>
+        
+    </div>
+</header>
 
 <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
     <div class="offcanvas-header bg-light border-bottom">
@@ -118,8 +138,8 @@
             
             <h6 class="small text-uppercase fw-bold mb-2">Filtrar por:</h6>
             <div class="buscarPor d-flex gap-2 justify-content-start">
-                <button class="buscarPor-btn btn btn-sm active" data-buscar-por="perfil">🔍Perfil</button>
-                <button class="buscarPor-btn btn btn-sm" data-buscar-por="imagen">🔍Imagen</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm active" data-buscar-por="perfil">👤 Perfil</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="imagen">🔍 Imagen</button>
             </div>
         </div>
         
