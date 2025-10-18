@@ -71,7 +71,27 @@
         --bs-btn-active-bg: var(--secondary-color) !important;
         --bs-btn-active-border-color: var(--secondary-color) !important;
     }
+    
+    /* Anular el color azul de fondo en el hover y active de los ítems del Dropdown */
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        /* Usar tu color primario (marrón claro) como fondo de hover */
+        background-color: var(--primary-color) !important;
+        /* Asegurar que el texto sea oscuro sobre el fondo claro */
+        color: var(--principal-text) !important; 
+    }
 
+    /* Regla específica para el enlace de Cerrar Sesión, si usaste text-danger */
+    .dropdown-item.text-danger:hover {
+        /* Mantener el color de fondo personalizado, pero el texto rojo no se invierte tanto */
+        background-color: var(--primary-color) !important;
+        color: var(--bs-danger) !important; /* Mantiene el color de peligro */
+    }
+
+    /* Opcional: Para asegurar que el borde de foco del dropdown desaparezca */
+    .dropdown-menu {
+        border-color: var(--primary-color) !important;
+    }
 
 /* ------------------------------- SIDEBAR (BARRA LATERAL FIJA - Desktop) ------------------------------- */
     .sidebar-fixed {
