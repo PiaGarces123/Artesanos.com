@@ -24,6 +24,8 @@
     include("./Frontend/includes/header.php");
     ?>
 
+
+    <!-- MODAL PARA PUBLICAR CONTENIDOO -->
     <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
@@ -33,7 +35,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCreateModal"></button>
                 </div>
                 
-                <form id="createAlbumForm" enctype="multipart/form-data" class="mt-3"> 
+                <form id="createAlbumForm" enctype="multipart/form-data" method="post" class="mt-3"> 
                     
                     <div class="mb-4 p-3 bg-light rounded-3 border">
                         <label class="form-label fw-semibold text-secondary mb-3">Arrastrar y Soltar Fotos</label>
@@ -47,11 +49,33 @@
                         <input type="file" name="imageInput[]" id="imageInput" multiple accept="image/*" class="d-none">
                         
                         <div class="image-preview row g-3 mt-3" id="imagePreview">
-                            </div>
+                        </div>
                     </div>
+                    <div class="error" id="errorCreateAlbum"></div>
                     
                     <div class="d-flex justify-content-end gap-3 mt-4">
-                        <button type="button" class="btn btn-outline-secondary" id="cancelCreate">Cancelar</button>
+                        <button type="button" class="btn btn-outline-secondary" id="cancelCreate" data-bs-dismiss="modal">Cancelar</button>
+                        <button  type="button" class="btn btn-primary" id="continueCreate">Continuar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal siguiente (Imagenes seleccionadas) -->
+    <div class="modal fade" id="selectImages" tabindex="-1" aria-labelledby="selectImagesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="selectImagesLabel">Imagenes Seleccionadas:</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeSelectImages"></button>
+                </div>
+                
+                <form id="selectImagesForm" class="mt-3"> 
+                    
+                    
+                    <div class="d-flex justify-content-end gap-3 mt-4">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelSelect">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Continuar</button>
                     </div>
                 </form>
@@ -59,6 +83,7 @@
         </div>
     </div>
 
+    <!-- --------------------------------- -->
     <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content p-4 rounded-4">
@@ -193,3 +218,5 @@
 <script src="./Frontend/assets/js/actionNormal.js"></script>
 <script src="./Frontend/assets/js/modal.js"></script>
 <script src="./Frontend/assets/js/restrictedActions.js"></script>
+<script src="./Frontend/assets/js/modalSelectImages.js"></script>
+

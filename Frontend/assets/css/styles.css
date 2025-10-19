@@ -29,12 +29,10 @@
         line-height: 1.4; 
     }
 
-    .text-primary {
-        color: var(--secondary-color) !important;
-    }
     .border-primary {
         border-color: var(--secondary-color) !important;
     }
+    
     /* Anulación de colores de Bootstrap para usar la paleta */
     .btn-primary {
         --bs-btn-bg: var(--secondary-color) !important;
@@ -43,10 +41,10 @@
         --bs-btn-hover-bg: var(--primary-color) !important;
         --bs-btn-hover-border-color: var(--primary-color) !important;
         
-        /* MODIFICACIÓN CLAVE: Anular el color azul en los estados activo y enfocado */
+        /* Anular el color azul en los estados activo y enfocado */
         --bs-btn-active-bg: var(--secondary-color) !important;
         --bs-btn-active-border-color: var(--secondary-color) !important;
-        --bs-btn-focus-shadow-rgb: 194, 151, 106; /* Usar el color secundario (194, 151, 106) */
+        --bs-btn-focus-shadow-rgb: 194, 151, 106; 
         
         --bs-btn-color: var(--background-color) !important;
     }
@@ -71,29 +69,8 @@
         --bs-btn-active-bg: var(--secondary-color) !important;
         --bs-btn-active-border-color: var(--secondary-color) !important;
     }
-    
-    /* Anular el color azul de fondo en el hover y active de los ítems del Dropdown */
-    .dropdown-item:hover,
-    .dropdown-item:focus {
-        /* Usar tu color primario (marrón claro) como fondo de hover */
-        background-color: var(--primary-color) !important;
-        /* Asegurar que el texto sea oscuro sobre el fondo claro */
-        color: var(--principal-text) !important; 
-    }
 
-    /* Regla específica para el enlace de Cerrar Sesión, si usaste text-danger */
-    .dropdown-item.text-danger:hover {
-        /* Mantener el color de fondo personalizado, pero el texto rojo no se invierte tanto */
-        background-color: var(--primary-color) !important;
-        color: var(--bs-danger) !important; /* Mantiene el color de peligro */
-    }
-
-    /* Opcional: Para asegurar que el borde de foco del dropdown desaparezca */
-    .dropdown-menu {
-        border-color: var(--primary-color) !important;
-    }
-
-/* ------------------------------- SIDEBAR (BARRA LATERAL FIJA - Desktop) ------------------------------- */
+    /* ------------------------------- SIDEBAR (BARRA LATERAL FIJA - Desktop) ------------------------------- */
     .sidebar-fixed {
         position: fixed; 
         left: 0; 
@@ -237,7 +214,7 @@
         background: var(--background-color) !important;
         border: 1px solid var(--primary-color) !important;
         border-radius: 6px !important;
-        height: 45px;
+        height: 45px; /* Altura fija para uniformidad */
         font-size: 0.8rem;
     }
     
@@ -258,24 +235,61 @@
         text-align: center;
         cursor: pointer;
         transition: all 0.2s;
-        /* asegurar que la clase del HTML .bg-white se vea bien */
         background-color: white; 
     }
 
-    /* Estilo cuando está arrastrando o enfocado (usando color principal) */
+    /* Estilo cuando está arrastrando o enfocado */
     .file-upload:hover,
     .file-upload.dragover { 
-        border-color: var(--secondary-color) !important; /* Color primario del sitio */
+        border-color: var(--secondary-color) !important; 
         background-color: var(--background-color) !important; 
     }
     .upload-icon {
-        color: var(--secondary-color); /* Color del icono */
+        color: var(--secondary-color); 
+    }
+
+/* ------------------------------- CORRECCIÓN DE CARRUSEL DE IMÁGENES ------------------------------- */
+
+    /* 1. VISIBILIDAD DE FLECHAS Y CONTROLES */
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: var(--secondary-color);
+        filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+        border-radius: 5px;
+        padding: 1rem;
+        opacity: 0.8 !important;
+    }
+
+    .carousel-indicators [data-bs-target] {
+        /* Indicadores inferiores (Puntos de navegación) */
+        background-color: var(--secondary-color);
+        opacity: 0.7;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        border: 1px solid var(--principal-text);
+        
+        /* 💡 CORRECCIÓN DE SUPERPOSICIÓN: Desplazamos hacia abajo */
+        position: relative;
+        bottom: -30px !important; 
+    }
+
+    /* 2. Z-INDEX PARA QUE LOS INPUTS NO SEAN TAPADOS */
+    .carousel-item .container-fluid {
+        position: relative;
+        z-index: 100; /* Alto z-index para que los inputs queden sobre las flechas y puntos */
+    }
+
+    /* 3. Indicador Activo */
+    .carousel-indicators .active {
+        opacity: 1;
+        height: 10px;
+        width: 10px;
     }
 
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
-    @media (min-width: 992px) { /* Desktop: Mover el Header y el Contenido 250px a la derecha */
-        
+    @media (min-width: 992px) { 
         .header {
             margin-left: 250px; 
             width: calc(100% - 250px);
@@ -285,20 +299,17 @@
             margin-left: 250px;
         }
         
-        /* Ocultar el botón hamburguesa en desktop */
         .navbar-toggler {
             display: none !important;
         }
     }
 
-    @media (max-width: 991px) { /* Móvil: Ocultar Sidebar fijo y liberar espacio */
-        
+    @media (max-width: 991px) { 
         .sidebar-fixed {
-            display: none !important; /* Ocultar el sidebar fijo en móvil */
+            display: none !important; 
         }
     }
     
-    /* Estilos del Offcanvas (Menú Móvil) */
     .offcanvas {
         width: 250px; 
     }
