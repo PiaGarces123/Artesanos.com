@@ -134,13 +134,13 @@
                         <h4 class="text-center text-uppercase mb-4">Log In</h4>
                         <form id="loginForm">
                             
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mb-2 position-relative">
                                 <input type="email" class="form-style form-control" placeholder="Email" name="mail" id="mailLogin" required>
                                 <i class="input-icon uil uil-at"></i>
                             </div>
                             <div class="error" id="errorEmailLogin"></div>
 
-                            <div class="form-groupLogin mt-2 mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="password" class="form-style form-control" placeholder="Contraseña" name="pass" id="passLogin" required>
                                 <i class="toggle-pass uil uil-eye"></i>
                                 <i class="input-icon uil uil-lock-alt"></i>
@@ -156,37 +156,37 @@
                         <h4 class="text-center text-uppercase mb-4">Sign Up</h4>
                         <form id="signupForm">
                             
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mb-2 position-relative">
                                 <input type="date" class="form-style form-control" placeholder="Fecha de Nacimiento" name="fNac" id="fNac" required>
                                 <i class="input-icon uil uil-calendar-alt"></i>
                             </div>
                             <div class="error" id="errorFnac"></div>
 
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="text" class="form-style form-control" placeholder="Nombre" name="nbre" id="nbre" required>
                                 <i class="input-icon uil uil-user"></i>
                             </div>
                             <div class="error" id="errorNbre"></div>
                             
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="text" class="form-style form-control" placeholder="Apellido" name="ape" id="ape" required>
                                 <i class="input-icon uil uil-user"></i>
                             </div>
                             <div class="error" id="errorApe"></div>
 
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="text" class="form-style form-control" placeholder="Nombre de Usuario" name="userName" id="userName" required >
                                 <i class="input-icon uil uil-user-circle"></i>
                             </div>
                             <div class="error" id="errorUser"></div>
 
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="email" class="form-style form-control" placeholder="Email" name="mail" id="mailSignUp" required>
                                 <i class="input-icon uil uil-at"></i>
                             </div>
                             <div class="error" id="errorEmailSignUp"></div>
 
-                            <div class="form-groupLogin mt-2 mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <input type="password" class="form-style form-control" placeholder="Contraseña" name="pass" id="passSignUp" required>
                                 <i class="toggle-pass uil uil-eye"></i>
                                 <i class="input-icon uil uil-lock-alt"></i>
