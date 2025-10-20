@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <div class="col-md-5">
                                     <div class="form-groupLogin mb-3 position-relative">
                                         <select name="visibilityImage[${i}]" class="form-style form-control" required>
-                                            <option value="0">Pública</option>
+                                            <option value="0" selected>Pública</option>
                                             <option value="1">Privada</option>
                                         </select>
                                         <i class="input-icon uil uil-lock-alt"></i>
@@ -154,6 +154,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 await buildCarousel(inputFile.files, selectImagesForm);
             });
         }
+
+        // Esto es solamente para quitar el cartel de error caundo selecciona imagenes
+        inputFile.addEventListener('change', (e) => {
+            limpiarErrores();
+        });
     }
     
     // Inicializar lógica

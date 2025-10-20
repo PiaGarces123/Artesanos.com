@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await res.json();
                     
                     if (data.status == "success") { 
-                        alert(`✅ Bienvenid@ ${data.user.username}`); 
+                        alert(`✅ Bienvenid @${data.user.username}`); 
                         window.location.reload(); 
                     }
                     else { 

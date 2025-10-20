@@ -29,6 +29,10 @@
         line-height: 1.4; 
     }
 
+    .text-primary {
+        color: var(--secondary-color) !important;
+    }
+
     .border-primary {
         border-color: var(--secondary-color) !important;
     }
@@ -70,6 +74,10 @@
         --bs-btn-active-border-color: var(--secondary-color) !important;
     }
 
+    .btn-close:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem var(--secondary-color) !important;
+    }
     /* ------------------------------- SIDEBAR (BARRA LATERAL FIJA - Desktop) ------------------------------- */
     .sidebar-fixed {
         position: fixed; 
@@ -285,6 +293,21 @@
         opacity: 1;
         height: 10px;
         width: 10px;
+    }
+/* --------------------------------------------------------------------------------------------- */
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        /* Usar tu color primario (marrón claro) como fondo de hover */
+        background-color: var(--primary-color) !important;
+        /* Asegurar que el texto sea oscuro sobre el fondo claro para Mi Perfil */
+        color: var(--principal-text) !important; 
+    }
+
+    /* Regla específica para el enlace de Cerrar Sesión (que tiene la clase text-danger) */
+    .dropdown-item.text-danger:hover {
+        /* Mantener el color de fondo personalizado, pero el texto rojo */
+        background-color: var(--primary-color) !important;
+        color: var(--bs-danger) !important;
     }
 
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */

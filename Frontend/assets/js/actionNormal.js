@@ -23,4 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
             searchInput.style.boxShadow = "";
         });
     }
+
+    // ------------------------------
+    const logoutLink = document.getElementById('logoutLink');
+
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            // 1. Prevenir la acción por defecto para controlar la navegación nosotros.
+            e.preventDefault();
+            
+            // 2. Mostrar el diálogo de confirmación.
+            if (confirm('¿Estás seguro de que quieres cerrar tu sesión?')) {
+                
+                // 3. Si confirma, redirigir manualmente a la página de logout PHP.
+                // Asegúrate que la ruta sea correcta:
+                window.location.href = './BACKEND/Validation/logout.php'; 
+            }
+            // Si no confirma, no pasa nada y se queda en la página.
+        });
+    }
 });
