@@ -78,6 +78,30 @@
             </div>
         </div>
     </div>
+    <!-- Modal para seleccionar opcion -->
+    <div class="modal fade" id="optionAlbumModal" tabindex="-1" aria-labelledby="optionAlbumLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="optionAlbumLabel">Selecciona Dónde Publicar:</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeOptionAlbum"></button>
+                </div>
+                
+                <div class="d-grid gap-3 d-md-flex justify-content-center mt-4">
+                    <button type="button" class="btn btn-lg btn-primary" id="createAlbum">
+                        <i class="uil uil-folder-plus me-2"></i> Crear Álbum
+                    </button>
+                    <button type="button" class="btn btn-lg btn-primary" id="selectAlbum">
+                        <i class="uil uil-folder-open me-2"></i> Publicar en Álbum Existente
+                    </button>
+                </div>
+                
+                <div id="optionAlbumContainer">
+                
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- --------------------------------- -->
     <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
@@ -215,4 +239,5 @@
 <script src="./Frontend/assets/js/modal.js"></script>
 <script src="./Frontend/assets/js/restrictedActions.js"></script>
 <script src="./Frontend/assets/js/modalSelectImages.js"></script>
+<script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
 

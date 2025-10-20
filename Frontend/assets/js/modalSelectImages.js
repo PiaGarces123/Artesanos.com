@@ -103,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorInputFile = document.getElementById("errorCreateAlbum");
         const btnContinueCreate = document.getElementById('continueCreate');
 
+        
+
         // Función para limpiar todos los errores visuales
         const limpiarErrores = () => {
             document.querySelectorAll(".error").forEach(div => {
@@ -128,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(input.files.length === 0 || input.files.length > 20){
                 mostrarError(errorDiv, input, msg); 
                 isValid = false;
-            }
+            }//validacion de tamaño
 
             if (!isValid) {
                 document.getElementById('fileUpload').classList.add("errorInput"); 
@@ -152,6 +154,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // 2. Construir el carrusel y cambiar de modal
                 await buildCarousel(inputFile.files, selectImagesForm);
+
+                // Lógica del botón 'Continuar' del segundo modal para pasar al TERCER modal
+                const btnContinueSelectImages = document.getElementById('continueSelectImages');
+                if(btnContinueSelectImages){
+                    btnContinueSelectImages.addEventListener('click', () => {
+                        
+                        const selectImagesModal = bootstrap.Modal.getInstance(document.getElementById('selectImages'));
+                        // Asumo que el modal optionAlbumModal existe en el DOM
+                        const optionAlbumModal = new bootstrap.Modal(document.getElementById('optionAlbumModal')); 
+                        
+                        if (selectImagesModal) selectImagesModal.hide();
+                        optionAlbumModal.show();
+
+                    });
+                }
             });
         }
 
@@ -159,6 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
         inputFile.addEventListener('change', (e) => {
             limpiarErrores();
         });
+
+        
+        
     }
     
     // Inicializar lógica

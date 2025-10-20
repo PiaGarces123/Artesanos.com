@@ -36,18 +36,32 @@
     )";
     if ($conn->query($sqlTable) === TRUE) {
 
-        //-------------------------- CREAR TABLA ALBUMS --------------------------
+        //-------------------------- CREAR TABLA ALBUMS (CON LÓGICA DE SISTEMA) --------------------------
         $sqlTable = "CREATE TABLE albums(
             A_id INT AUTO_INCREMENT PRIMARY KEY,
             A_title VARCHAR(30),
             A_creationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
             A_idUser INT NOT NULL,
+
+            -- 1. Bandera para identificar álbumes del sistema (Likes, etc.)
+            A_isSystemAlbum TINYINT(1) DEFAULT 0, 
+
+            -- 2. FK Opcional para el Usuario Seguido (Solo se usa si A_isSystemAlbum = 1)
+            A_idFollowedUser INT DEFAULT NULL, 
+
+            -- Restricciones de Clave Foránea
             FOREIGN KEY (A_idUser) REFERENCES users(U_id)
-                ON DELETE CASCADE ON UPDATE CASCADE
+                ON DELETE CASCADE ON UPDATE CASCADE,
+            
+            FOREIGN KEY (A_idFollowedUser) REFERENCES users(U_id)
+                ON DELETE CASCADE ON UPDATE CASCADE,
+
+            -- Restricción para asegurar que solo haya UN álbum de sistema por par (A, B)
+            UNIQUE (A_idUser, A_idFollowedUser) 
         )";
         if ($conn->query($sqlTable) === TRUE) {
 
-            //-------------------------- CREAR TABLA IMAGES --------------------------
+            //-------------------------- CREAR TABLA IMAGES (AÑADIDO I_isCover, I_ruta NO ES UNIQUE) --------------------------
             $sqlTable = "CREATE TABLE images(
                 I_id INT AUTO_INCREMENT PRIMARY KEY,
                 I_title VARCHAR(30),
@@ -59,6 +73,7 @@
                 I_ruta VARCHAR(100) NOT NULL UNIQUE,
                 I_idAlbum INT DEFAULT NULL,
                 I_idUser INT NOT NULL,
+                I_isCover TINYINT(1) DEFAULT 0,
                 FOREIGN KEY (I_idUser) REFERENCES users(U_id)
                     ON DELETE CASCADE ON UPDATE CASCADE,
                 FOREIGN KEY (I_idAlbum) REFERENCES albums(A_id)
@@ -66,91 +81,102 @@
             )";
             if ($conn->query($sqlTable) === TRUE) {
 
-                //-------------------------- AGREGAR FK DE PORTADA --------------------------
-                $sqlAlter = "ALTER TABLE albums 
-                    ADD COLUMN A_idPortada INT DEFAULT NULL,
-                    ADD CONSTRAINT fk_album_portada
-                    FOREIGN KEY (A_idPortada) REFERENCES images(I_id)
-                        ON DELETE SET NULL ON UPDATE CASCADE";
-                if ($conn->query($sqlAlter) === TRUE) {
-                    echo "✔️ Columna A_idPortada agregada correctamente.<br>";
-                } else {
-                    echo "⚠️ Error al agregar FK de portada: " . $conn->error . "<br>";
-                }
+                echo "✔️ Tabla IMAGES creada con I_isCover.<br>";
+                
+                // -------------------------- TABLA PIVOTE album_images_link (NUEVA) --------------------------
+                $sqlTable = "CREATE TABLE album_images_link (
+                    L_id INT AUTO_INCREMENT PRIMARY KEY,
+                    L_idAlbum INT NOT NULL,
+                    L_idImage INT NOT NULL,
 
-                //-------------------------- TABLA COMMENTS --------------------------
-                $sqlTable = "CREATE TABLE comments(
-                    C_id INT AUTO_INCREMENT PRIMARY KEY,
-                    C_content VARCHAR(255),
-                    C_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
-                    C_idImage INT NOT NULL,
-                    C_idUser INT NOT NULL,
-                    FOREIGN KEY (C_idUser) REFERENCES users(U_id)
+                    UNIQUE (L_idAlbum, L_idImage),
+                    
+                    FOREIGN KEY (L_idAlbum) REFERENCES albums(A_id)
                         ON DELETE CASCADE ON UPDATE CASCADE,
-                    FOREIGN KEY (C_idImage) REFERENCES images(I_id)
+                        
+                    FOREIGN KEY (L_idImage) REFERENCES images(I_id)
                         ON DELETE CASCADE ON UPDATE CASCADE
                 )";
                 if ($conn->query($sqlTable) === TRUE) {
+                    echo "✔️ Tabla album_images_link (Colección de Álbumes) creada correctamente.<br>";
 
-                    //-------------------------- TABLA LIKES --------------------------
-                    $sqlTable = "CREATE TABLE likes(
-                        L_id INT AUTO_INCREMENT PRIMARY KEY,
-                        L_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
-                        L_idImage INT NOT NULL,
-                        L_idUser INT NOT NULL,
-                        FOREIGN KEY (L_idUser) REFERENCES users(U_id)
+                    //-------------------------- TABLA COMMENTS --------------------------
+                    $sqlTable = "CREATE TABLE comments(
+                        C_id INT AUTO_INCREMENT PRIMARY KEY,
+                        C_content VARCHAR(255),
+                        C_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
+                        C_idImage INT NOT NULL,
+                        C_idUser INT NOT NULL,
+                        FOREIGN KEY (C_idUser) REFERENCES users(U_id)
                             ON DELETE CASCADE ON UPDATE CASCADE,
-                        FOREIGN KEY (L_idImage) REFERENCES images(I_id)
-                            ON DELETE CASCADE ON UPDATE CASCADE,
-                        UNIQUE (L_idUser, L_idImage)
+                        FOREIGN KEY (C_idImage) REFERENCES images(I_id)
+                            ON DELETE CASCADE ON UPDATE CASCADE
                     )";
                     if ($conn->query($sqlTable) === TRUE) {
 
-                        //-------------------------- TABLA COMPLAINTS --------------------------
-                        $sqlTable = "CREATE TABLE complaints(
-                            D_id INT AUTO_INCREMENT PRIMARY KEY,
-                            D_complaintDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                            D_reason VARCHAR(255), 
-                            D_status TINYINT DEFAULT 0,  
-                            D_idImage INT NOT NULL,
-                            D_idUser INT NOT NULL,
-                            FOREIGN KEY (D_idUser) REFERENCES users(U_id)
+                        //-------------------------- TABLA LIKES --------------------------
+                        $sqlTable = "CREATE TABLE likes(
+                            L_id INT AUTO_INCREMENT PRIMARY KEY,
+                            L_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
+                            L_idImage INT NOT NULL,
+                            L_idUser INT NOT NULL,
+                            FOREIGN KEY (L_idUser) REFERENCES users(U_id)
                                 ON DELETE CASCADE ON UPDATE CASCADE,
-                            FOREIGN KEY (D_idImage) REFERENCES images(I_id)
-                                ON DELETE CASCADE ON UPDATE CASCADE
+                            FOREIGN KEY (L_idImage) REFERENCES images(I_id)
+                                ON DELETE CASCADE ON UPDATE CASCADE,
+                            UNIQUE (L_idUser, L_idImage)
                         )";
                         if ($conn->query($sqlTable) === TRUE) {
 
-                            //-------------------------- TABLA FOLLOW --------------------------
-                            $sqlTable = "CREATE TABLE follow(
-                                F_id INT AUTO_INCREMENT PRIMARY KEY,
-                                F_status TINYINT DEFAULT 0,  
-                                F_followDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                                F_resolutionDate DATETIME,
-                                F_idFollower INT NOT NULL,
-                                F_idFollowed INT NOT NULL,
-                                FOREIGN KEY (F_idFollower) REFERENCES users(U_id)
+                            //-------------------------- TABLA COMPLAINTS (QUEJAS) --------------------------
+                            $sqlTable = "CREATE TABLE complaints(
+                                D_id INT AUTO_INCREMENT PRIMARY KEY,
+                                D_complaintDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                D_reason VARCHAR(255), 
+                                D_status TINYINT DEFAULT 0,
+                                D_idImage INT NOT NULL,
+                                D_idUser INT NOT NULL,
+                                FOREIGN KEY (D_idUser) REFERENCES users(U_id)
                                     ON DELETE CASCADE ON UPDATE CASCADE,
-                                FOREIGN KEY (F_idFollowed) REFERENCES users(U_id)
-                                    ON DELETE CASCADE ON UPDATE CASCADE,
-                                UNIQUE (F_idFollower, F_idFollowed)
+                                FOREIGN KEY (D_idImage) REFERENCES images(I_id)
+                                    ON DELETE CASCADE ON UPDATE CASCADE
                             )";
                             if ($conn->query($sqlTable) === TRUE) {
-                                echo "🎉 Todas las tablas fueron creadas correctamente con CASCADE.<br>";
+
+                                //-------------------------- TABLA FOLLOW --------------------------
+                                $sqlTable = "CREATE TABLE follow(
+                                    F_id INT AUTO_INCREMENT PRIMARY KEY,
+                                    F_status TINYINT DEFAULT 0,
+                                    F_followDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                    F_resolutionDate DATETIME,
+                                    F_idFollower INT NOT NULL,
+                                    F_idFollowed INT NOT NULL,
+                                    FOREIGN KEY (F_idFollower) REFERENCES users(U_id)
+                                        ON DELETE CASCADE ON UPDATE CASCADE,
+                                    FOREIGN KEY (F_idFollowed) REFERENCES users(U_id)
+                                        ON DELETE CASCADE ON UPDATE CASCADE,
+                                    UNIQUE (F_idFollower, F_idFollowed)
+                                )";
+                                if ($conn->query($sqlTable) === TRUE) {
+                                    echo "🎉 Todas las tablas fueron creadas correctamente con CASCADE.<br>";
+                                } else {
+                                    echo "❌ Error al crear tabla Follow: " . $conn->error . "<br>";
+                                }
+
                             } else {
-                                echo "❌ Error al crear tabla Follow: " . $conn->error . "<br>";
+                                echo "❌ Error al crear tabla Complaints: " . $conn->error . "<br>";
                             }
 
                         } else {
-                            echo "❌ Error al crear tabla Complaints: " . $conn->error . "<br>";
+                            echo "❌ Error al crear tabla Likes: " . $conn->error . "<br>";
                         }
 
                     } else {
-                        echo "❌ Error al crear tabla Likes: " . $conn->error . "<br>";
+                        echo "❌ Error al crear tabla Comments: " . $conn->error . "<br>";
                     }
-
+                    
                 } else {
-                    echo "❌ Error al crear tabla Comments: " . $conn->error . "<br>";
+                    echo "❌ Error al crear tabla album_images_link: " . $conn->error . "<br>";
                 }
 
             } else {
@@ -168,4 +194,3 @@
     // Cerrar conexión
     $conn->close();
 ?>
-

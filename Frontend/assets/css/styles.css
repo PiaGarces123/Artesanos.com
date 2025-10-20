@@ -309,6 +309,47 @@
         background-color: var(--primary-color) !important;
         color: var(--bs-danger) !important;
     }
+/* -------------------------------------------------------- */
+    /* CHECKBOX DE MODAL DE SELECCIONAR OPCION DE PUBLICACION */
+
+    /* Anulación de estilos de foco predeterminados de Bootstrap */
+    .form-check-input:focus {
+        /* Eliminar el box-shadow azul */
+        box-shadow: none !important;
+        /* Usar tu color de borde cuando está enfocado/activo */
+        border-color: var(--secondary-color) !important;
+    }
+
+    /* Color del interruptor cuando está en estado 'checked' (activo/ON) */
+    .form-check-input:checked {
+        /* Forzar el color de fondo a tu color secundario (marrón) */
+        background-color: var(--secondary-color) !important;
+        /* Forzar el color del borde a tu color secundario (marrón) */
+        border-color: var(--secondary-color) !important;
+    }
+    /* Dentro de styles.css, ajusta o añade las siguientes reglas */
+
+    /* 1. ESTADO BASE (OFF/Izquierda): El punto debe ser tu color secundario. */
+    .form-switch .form-check-input {
+        /* Forzamos el SVG del thumb a ser marrón (--secondary-color) */
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='%23c2976a'/></svg>") !important;
+        
+        /* Aseguramos que el fondo del track sea blanco para el contraste (si está desactivado) */
+        background-color: var(--background-color) !important;
+        
+        /* El borde ya está configurado en el :focus y :checked, pero aseguramos el color base */
+        border-color: var(--secondary-color) !important;
+    }
+
+    /* 2. ESTADO MARCADO (ON/Derecha): El punto debe ser blanco para contrastar con el fondo marrón. */
+    .form-switch .form-check-input:checked {
+        /* Mantenemos el fondo del track en tu color secundario (marrón) */
+        background-color: var(--secondary-color) !important;
+        border-color: var(--secondary-color) !important;
+
+        /* Forzamos el SVG del thumb a ser blanco (para que contraste con el track marrón) */
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='%23fff'/></svg>") !important;
+    }
 
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
@@ -336,3 +377,5 @@
     .offcanvas {
         width: 250px; 
     }
+
+    
