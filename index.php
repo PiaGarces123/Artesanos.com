@@ -74,10 +74,6 @@
                 <form id="selectImagesForm" class="mt-3"> 
                     
                     
-                    <div class="d-flex justify-content-end gap-3 mt-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelSelect">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Continuar</button>
-                    </div>
                 </form>
             </div>
         </div>

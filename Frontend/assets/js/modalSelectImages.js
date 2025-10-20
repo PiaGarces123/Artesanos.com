@@ -83,8 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Adjuntar los botones de acción al pie del modal
         const buttonsHTML = `
             <div class="d-flex justify-content-end gap-3 mt-4">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelSelect">Volver</button>
-                <button type="submit" class="btn btn-primary" id="finalSubmit">Publicar</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelSelect">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="continueSelectImages">Continuar</button>
             </div>
         `;
         targetForm.insertAdjacentHTML('beforeend', buttonsHTML);
