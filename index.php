@@ -80,24 +80,42 @@
     </div>
     <!-- Modal para seleccionar opcion -->
     <div class="modal fade" id="optionAlbumModal" tabindex="-1" aria-labelledby="optionAlbumLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg"> <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
-            
+        <div class="modal-dialog modal-dialog-centered modal-lg"> 
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
                 <div class="modal-header border-0 pb-0 mb-3">
                     <h2 class="modal-title fs-4 fw-bold text-primary" id="optionAlbumLabel">Selecciona Dónde Publicar:</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeOptionAlbum"></button>
                 </div>
                 
-                <div class="d-grid gap-3 d-md-flex justify-content-center mt-4">
-                    <button type="button" class="btn btn-lg btn-primary" id="createAlbum">
-                        <i class="uil uil-folder-plus me-2"></i> Crear Álbum
-                    </button>
-                    <button type="button" class="btn btn-lg btn-primary" id="selectAlbum">
-                        <i class="uil uil-folder-open me-2"></i> Publicar en Álbum Existente
-                    </button>
+                <div class="row g-3 justify-content-center">
+                    
+                    <div class="col-12 col-md-5">
+                        <input type="radio" class="btn-check" name="albumOption" id="createAlbumRadio" value="create" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary p-4 w-100 h-100 custom-option-card" for="createAlbumRadio">
+                            <i class="uil uil-folder-plus fs-1 mb-2"></i>
+                            <div class="fw-bold">Crear Nuevo Álbum</div>
+                            <div class="small text-muted mt-1">Se te pedirá un título para el álbum.</div>
+                        </label>
+                    </div>
+
+                    <div class="col-12 col-md-5">
+                        <input type="radio" class="btn-check" name="albumOption" id="selectAlbumRadio" value="select" autocomplete="off">
+                        <label class="btn btn-outline-secondary p-4 w-100 h-100 custom-option-card" for="selectAlbumRadio">
+                            <i class="uil uil-folder-open fs-1 mb-2"></i>
+                            <div class="fw-bold">Publicar en Álbum Existente</div>
+                            <div class="small text-muted mt-1">Selecciona un álbum de tu lista.</div>
+                        </label>
+                    </div>
+                    
                 </div>
                 
-                <div id="optionAlbumContainer">
+                <div id="optionAlbumContainer" class="mt-4">
+                </div>
                 
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" id="backToCarousel">Volver</button>
+                    <button type="submit" class="btn btn-primary" id="postOptionSelection">PUBLICAR</button>
                 </div>
             </div>
         </div>
