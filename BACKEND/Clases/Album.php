@@ -10,9 +10,10 @@
             
             // Sanitizar el ID del seguido, o dejarlo como NULL para SQL
             $idFollowedUserSQL = $idFollowedUser !== null ? (int)$idFollowedUser : "NULL";
+            $A_creationDate = date("Y-m-d H:i:s");
 
-            $sql = "INSERT INTO albums (A_title, A_idUser, A_isSystemAlbum, A_idFollowedUser) 
-                    VALUES ('$titulo', $idUsuario, $isSystem, $idFollowedUserSQL)";
+            $sql = "INSERT INTO albums (A_title, A_idUser, A_creationDate, A_isSystemAlbum, A_idFollowedUser) 
+                    VALUES ('$titulo', $idUsuario, '$A_creationDate', $isSystem, $idFollowedUserSQL)";
             
             $result = mysqli_query($conn, $sql);
             

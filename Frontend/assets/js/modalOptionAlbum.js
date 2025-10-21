@@ -3,6 +3,83 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------------------------------------------------------
     // FUNCIONES DE UTILIDAD (Deben ser accesibles si no están en otro JS)
     // --------------------------------------------------------------------------------------
+    function returnBasicFormData(){ //Retorna un formData con los datos basicmos de las imagenes
+        const fileInputOriginal = document.getElementById('imageInput');
+
+        if (!fileInputOriginal || fileInputOriginal.files.length === 0) {
+            // Devuelve un FormData vacío si no hay archivos
+            return new FormData(); 
+        }
+        
+        // 1. Obtener los NodeLists de los elementos por su atributo name
+        // (Esto solo funciona porque los inputs del carrusel tienen names como "titleImage[0]", etc.)
+        const titleInputs = document.getElementsByName('titleImage[]');
+        const visibilitySelects = document.getElementsByName('visibilityImage[]');
+
+        const formData = new FormData();
+
+        for (const file of fileInputOriginal.files) {
+            formData.append('imageInput[]', file); 
+        }
+
+        Array.from(titleInputs).forEach(title => {
+            formData.append('titleImage[]', title.value.trim() || ''); 
+        });
+
+        Array.from(visibilitySelects).forEach(visibility => {
+            formData.append('visibilityImage[]', visibility.value); 
+        });
+
+        return formData;
+    }
+
+    // Función para mostrar el modal de notificación fijo
+    const showStaticNotificationModal = (type, message, acceptCallback = null) => {
+        const modalEl = document.getElementById('staticNotificationModal');
+        const modalIcon = document.getElementById('notificationIconStatic');
+        const modalMessage = document.getElementById('notificationMessageStatic');
+        const acceptBtn = document.getElementById('notificationAcceptButton');
+        
+        if (!modalEl || !modalIcon || !modalMessage || !acceptBtn) return;
+
+        // Configurar estilos y contenido
+        const modalContent = modalEl.querySelector('.modal-content');
+        
+        // Limpiamos clases de estado
+        modalContent.classList.remove('alert-success', 'alert-danger');
+        
+        if (type === 'success') {
+            modalIcon.innerHTML = '🎉';
+            modalContent.classList.add('alert-success');
+        } else {
+            modalIcon.innerHTML = '⚠️';
+            modalContent.classList.add('alert-danger');
+        }
+        
+        modalMessage.textContent = message;
+        
+        // 💡 1. Limpiamos y recreamos el listener del botón Aceptar
+        // Clonar para eliminar listeners antiguos
+        const newAcceptBtn = acceptBtn.cloneNode(true);
+        acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
+        
+        const finalAcceptBtn = document.getElementById('notificationAcceptButton');
+        const staticModalInstance = new bootstrap.Modal(modalEl); // Creamos la instancia para mostrar
+
+        finalAcceptBtn.addEventListener('click', () => {
+            // 2. Ejecutar la acción de callback (redirección/recarga)
+            if (acceptCallback) {
+                acceptCallback();
+            }
+            // 3. Cerrar el modal (si la acción no fue una redirección que ya lo cerraría)
+            staticModalInstance.hide();
+        });
+
+        // Mostrar el modal
+        staticModalInstance.show();
+    };
+
+
 
     // Función que necesita saber el índice activo del carrusel para la portada
     function setupCoverSelection() {
@@ -85,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         document.getElementById("optionAlbumContainer").innerHTML = createAlbumTitleHTML;
         setupCoverSelection(); 
-
     }
     
     // --------------------------------------------------------------------------------------
@@ -108,9 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function initModalOptionAlbum(){
-        
+        const titleAlbumRegex = /^[a-zA-Z0-9._+-ÁÉÍÓÚáéíóúÑñ\s]{1,30}$/;
+
         const optionAlbumModalEl = document.getElementById('optionAlbumModal');
-        const continueBtn = document.getElementById('postOptionSelection');
+        const btnPostOptionALbum = document.getElementById('postOptionAlbum');
         
         // Elementos Radio Button (Tarjetas)
         const createRadio = document.getElementById('createAlbumRadio');
@@ -118,6 +195,40 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Contenedores
         const optionAlbumContainer = document.getElementById('optionAlbumContainer');
+
+        // Función para limpiar todos los errores visuales
+        const limpiarErrores = () => {
+            document.querySelectorAll(".error").forEach(div => {
+                div.textContent = "";
+                div.classList.remove("visible-error");
+            });
+            document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
+        };
+        // Mostrar errores
+        const mostrarError = (div, input, msg) => {
+            if (!div) return;
+            div.textContent = msg;
+            div.classList.add("visible-error");
+            if (input) input.classList.add("errorInput");
+        };
+
+        const validarCampo = (input, regex, errorDiv, msg) => {
+            let isValid = true;
+            input.classList.remove("errorInput");
+
+            if (!input?.value.trim()) { 
+                mostrarError(errorDiv, input, "Campo obligatorio."); 
+                isValid = false; 
+            } else if (regex && !regex.test(input.value)) { 
+                mostrarError(errorDiv, input, msg); 
+                isValid = false; 
+            }
+
+            if (!isValid) {
+                input.classList.add("errorInput");
+            }
+            return isValid;
+        };
 
 
         // 1. Lógica de Sincronización (Inyectar contenido al cambiar de radio)
@@ -136,23 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         
-        // 2. Lógica de Transición (Botón 'Continuar') IMPLEMENTACION FUTURA,HACER VALIDACION
-        if(continueBtn){
-            continueBtn.addEventListener('click', async e => {
-                e.preventDefault();
-                
-                const selectedOption = document.querySelector('input[name="albumOption"]:checked').value;
-                const optionAlbumModal = bootstrap.Modal.getInstance(optionAlbumModalEl);
-                
-                // 💡 Implementación futura: Aquí se llamaría a la función final de subida.
-                alert(`Opción seleccionada: ${selectedOption}. Se procede al submit/cierre.`); 
-                
-                // Simulación de éxito: Cierra el modal
-                if (optionAlbumModal) optionAlbumModal.hide();
-            });
-        }
         
-        // 3. Lógica de Volver (Botón fijo)
+        
+        // 2. Lógica de Volver (Botón fijo)
         document.getElementById('backToCarousel')?.addEventListener('click', () => {
             const optionAlbumModal = bootstrap.Modal.getInstance(optionAlbumModalEl);
             const selectImagesModal = new bootstrap.Modal(document.getElementById('selectImages'));
@@ -160,7 +257,90 @@ document.addEventListener("DOMContentLoaded", () => {
             if (optionAlbumModal) optionAlbumModal.hide();
             selectImagesModal.show();
         });
+
+        // 3. Lógica de Transición (Botón 'PUBLICAR') 
+        if(btnPostOptionALbum){
+            btnPostOptionALbum.addEventListener('click', async e => {
+                e.preventDefault();
+
+                const formData = returnBasicFormData();
+                
+                const selectedOption = document.querySelector('input[name="albumOption"]:checked').value;
+                //const optionAlbumModal = bootstrap.Modal.getInstance(optionAlbumModalEl);
+                const errorPostAlbum = document.getElementById('errorPostAlbum');
+
+                if(selectedOption=='create'){
+                    const albumTitleInput = document.getElementById('albumTitleInput');
+                    const coverImageIndex = document.getElementById('coverImageIndex');
+                    const errorDiv = document.getElementById('errorAlbumTitle');
+
+                    let valido = validarCampo(albumTitleInput, titleAlbumRegex, errorDiv, "Título inválido (máx 30 caracteres).");
+                    if (!valido) return;
+
+                    formData.append('actionPost', selectedOption);
+                    formData.append('titleAlbum', albumTitleInput.value.trim());
+                    formData.append('coverImageIndex', coverImageIndex.value);
+
+                    
+                }else{
+                    if(selectedOption=='select'){
+                        // TODAVIA NO LO IMPLEMENTO (DEJAR ASI)
+                    }
+                }
+
+                //PARTE DE CODIGO PARA FINALIZAR LA PUBLICACION
+                try {
+                    const res = await fetch("./BACKEND/FuncionesPHP/publicarContenido.php", { method: "POST", body: formData });
+                    
+                    // Obtenemos la respuesta como texto y la parseamos.
+                    const data = await res.json();
+
+                    let callback = null;
+                    let message = data.message || "Operación completada.";
+                    let type = data.status;
+
+                    // 1. Manejo de Éxito
+                    if (type === 'success') {
+                        // Cierra el modal de opciones ANTES de mostrar la notificación
+                        const optionAlbumModal = bootstrap.Modal.getInstance(document.getElementById('optionAlbumModal'));
+                        if (optionAlbumModal) optionAlbumModal.hide();
+                        
+                        // Recarga la página al aceptar
+                        callback = () => window.location.reload(); 
+                    }
+                    // 2. Manejo de Error de Sesión
+                    else if (type === 'errorSession') {
+                        // Redirige al logout.php al aceptar
+                        message = "Sesión expirada. Por favor, vuelve a iniciar sesión.";
+                        callback = () => window.location.href = './BACKEND/Validation/logout.php';
+                    }
+                    // 3. Manejo de Error de Validación o Interno (General)
+                    else if (type === 'error') {
+                        // No hay callback, solo muestra el mensaje de error
+                        message = "Error: " + message;
+                    } 
+                    // 4. Manejo de Error de Lógica Final (el último 'else' de tu estructura)
+                    else {
+                        // Esto captura cualquier otro error del servidor que no clasificaste.
+                        message = "Error inesperado: " + message;
+                    }
+                    
+                    // Muestra el modal de notificación fijo con el mensaje y el callback
+                    showStaticNotificationModal(type, message, callback);
+                    
+                } catch (error) { 
+                    // Fallo de red o respuesta no válida (e.g., error 500)
+                    // Asumo que tienes una referencia a errorPostAlbum en tu scope local para mostrar el mensaje
+                    mostrarError(errorPostAlbum, null, "Error crítico de conexión o respuesta no válida."); 
+                    console.error("Fallo en el fetch:", error.message);
+                }
+
+            
+            });
+        }
     }
+
+    
     
     initModalOptionAlbum();
 });

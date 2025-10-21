@@ -214,5 +214,16 @@ class User {
         }
         return $usuarios;
     }
+
+    // ====================================================
+    // 🔹 Verificar si el usuario está bloqueado para publicar
+    // ====================================================
+    //NOTA: es una funcion de instancia osea se usa con el objeto creado de USER
+    //Verifica si el usuario tiene status 0 (Bloqueado/Inactivo) y no puede publicar.
+    //@return bool True si está bloqueado, False si puede publicar.
+    public function isBlockedForPublishing() {
+        // Devuelve TRUE si el estado es 0 (Bloqueado/Inactivo)
+        return $this->status === 0;
+    }
 }
 ?>

@@ -3,37 +3,64 @@
     class Imagen {
 
         // 🔹 Subir/crear una imagen (COMPLETA para el nuevo esquema)
-        public static function crear($conn, $titulo, $ruta, $idUsuario, $idAlbum = NULL, $visibility = 0, $esPerfil = 0, $esPortada = 0) {
-            $titulo = mysqli_real_escape_string($conn, $titulo);
-            $ruta = mysqli_real_escape_string($conn, $ruta);
-            $idUsuario = (int)$idUsuario;
-            $idAlbum = $idAlbum !== NULL ? (int)$idAlbum : "NULL";
+        public static function crear($conn, $titulo, $idUsuario, $visibility = 0, $idAlbum = NULL, $ruta = NULL, $esPerfil = 0, $esPortada = 0) {
+
+            // 1. Escapado y Validación de Tipos:
+            // **Obligatorio escapar $titulo y $ruta, ya que son cadenas.**
+            $titulo_escaped = mysqli_real_escape_string($conn, $titulo);
+            $ruta_escaped = mysqli_real_escape_string($conn, $ruta);
+            
+            $idUsuario_sanitized = (int)mysqli_real_escape_string($conn, $idUsuario);
+
             $visibility = (int)$visibility;
             $esPerfil = (int)$esPerfil;
-            $esPortada = (int)$esPortada; 
+            $esPortada = (int)$esPortada;
 
-            // 1. Lógica de perfil (Desmarcar perfil anterior)
-            if ($esPerfil) {
-                $sqlReset = "UPDATE images SET I_currentProfile = 0 WHERE I_idUser = $idUsuario";
-                mysqli_query($conn, $sqlReset);
-            }
+            // Lógica para NULL en $idAlbum: 
+            // Si es NULL, la variable de la query debe ser la palabra 'NULL'.
+            // Si no es NULL, debe ser un entero escapado para su uso directo en la query.
+            $idAlbum_query = "";
+            $idAlbum_value = NULL; // Almacenará el valor entero si existe
             
-            // 2. Lógica para la portada (Desmarcar portada anterior del mismo álbum)
-            // Esto solo aplica si se está asignando a un álbum específico (no NULL)
-            if ($esPortada && $idAlbum !== "NULL") {
-                $sqlResetCover = "UPDATE images SET I_isCover = 0 WHERE I_idAlbum = $idAlbum AND I_idUser = $idUsuario";
-                mysqli_query($conn, $sqlResetCover);
+            if ($idAlbum !== NULL) {
+                $idAlbum_value = (int)mysqli_real_escape_string($conn, $idAlbum);
+                $idAlbum_query = $idAlbum_value; // Usar el número
+            } else {
+                $idAlbum_query = "NULL"; // Usar la palabra reservada SQL
             }
 
             $currentProfile = $esPerfil ? 1 : 0;
             $isProfile = $esPerfil ? 1 : 0;
             $isCover = $esPortada ? 1 : 0;
+            $I_publicationDate = date("Y-m-d H:i:s");
 
-            // 3. Consulta de Inserción
-            $sql = "INSERT INTO images (I_title, I_visibility, I_idAlbum, I_idUser, I_ruta, I_isProfile, I_currentProfile, I_isCover)
-                    VALUES ('$titulo', $visibility, $idAlbum, $idUsuario, '$ruta', $isProfile, $currentProfile, $isCover)";
+            // --- 1. Lógica de perfil (Desmarcar perfil anterior) ---
+            if ($esPerfil) {
+                // Concatenación segura con el valor ya escapado/sanitizado: $idUsuario_sanitized
+                $sqlReset = "UPDATE images SET I_currentProfile = 0 WHERE I_idUser = $idUsuario_sanitized";
+                mysqli_query($conn, $sqlReset);
+            }
+            
+            // --- 2. Lógica para la portada (Desmarcar portada anterior del mismo álbum) ---
+            // Solo aplica si se asigna a un álbum (idAlbum_query NO es la cadena "NULL")
+            if ($esPortada && $idAlbum_query !== "NULL") {
+                // Concatenación segura con $idAlbum_value y $idUsuario_sanitized
+                $sqlResetCover = "UPDATE images SET I_isCover = 0 WHERE I_idAlbum = $idAlbum_value AND I_idUser = $idUsuario_sanitized";
+                mysqli_query($conn, $sqlResetCover);
+            }
 
-            return mysqli_query($conn, $sql);
+            // --- 3. Consulta de Inserción ---
+            // Las cadenas se escapan y se usan entre comillas simples ('$titulo_escaped', '$ruta_escaped').
+            // Los números y NULL se concatenan directamente (sin comillas).
+            $sql = "INSERT INTO images (I_title, I_visibility, I_idAlbum, I_idUser, I_publicationDate, I_ruta, I_isProfile, I_currentProfile, I_isCover)
+                    VALUES ('$titulo_escaped', $visibility, $idAlbum_query, $idUsuario_sanitized, '$I_publicationDate', '$ruta_escaped', $isProfile, $currentProfile, $isCover)";
+
+            $result = mysqli_query($conn, $sql);
+            
+            if ($result) {
+                return mysqli_insert_id($conn);
+            }
+            return false;
         }
 
 
@@ -172,6 +199,14 @@
             
             // 3. Si no se encuentra, devolver la ruta por defecto
             return $defaultPath;
+        }
+
+        public static function actualizarRuta($conn, $idImagen, $rutaImagen) {
+            $idImagen = (int)$idImagen;
+            $rutaImagen = mysqli_real_escape_string($conn, $rutaImagen);
+            
+            $sql = "UPDATE images SET I_ruta = '$rutaImagen' WHERE I_id = $idImagen";
+            return mysqli_query($conn, $sql);
         }
     }
 ?>

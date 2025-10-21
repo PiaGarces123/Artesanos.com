@@ -115,13 +115,31 @@
                 
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-outline-secondary" id="backToCarousel">Volver</button>
-                    <button type="submit" class="btn btn-primary" id="postOptionSelection">PUBLICAR</button>
+                    <button type="button" class="btn btn-primary" id="postOptionAlbum">PUBLICAR</button>
+                </div>
+                <div class="error" id="errorPostAlbum"></div>
+            </div>
+        </div>
+    </div>
+<!----------------------------Modal de notifcacion--------------------->
+    <div class="modal fade" id="staticNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNotificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-3 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="staticNotificationModalLabel">Notificación</h5>
+                </div>
+                <div class="modal-body pt-2 pb-3">
+                    <div id="notificationIconStatic" class="mb-3 fs-2"></div>
+                    <p id="notificationMessageStatic" class="fw-semibold"></p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center border-0 pt-0">
+                    <button type="button" class="btn btn-primary w-100" id="notificationAcceptButton">Aceptar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- --------------------------------- -->
+<!------------------------------------->
     <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content p-4 rounded-4">
