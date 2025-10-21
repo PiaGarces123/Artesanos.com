@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <label class="form-check-label fw-semibold" for="isCoverCheckbox">
                         Usar la imagen actual como portada del nuevo álbum.
                     </label>
+                    <p class="small text-muted mt-1">NOTA: Al desmarcar la opcion se utilizara la primer imagen como portada</p>
                 </div>
                 <input type="hidden" id="coverImageIndex" name="coverImageIndex" value="0">
             </div>
