@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div class="row justify-content-center">
                                 <div class="col-md-5">
                                     <div class="form-groupLogin mb-3 position-relative">
-                                        <input type="text" class="form-style form-control" placeholder="Título para Imagen ${i + 1}" name="titleImage[${i}]" required>
+                                        <input type="text" class="form-style form-control" placeholder="Título para Imagen ${i + 1}" name="titleImage[]" required>
                                         <i class="input-icon uil uil-tag-alt"></i>
                                     </div>
                                     <div class="error" id="errorTitleImage${i}"></div>
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 
                                 <div class="col-md-5">
                                     <div class="form-groupLogin mb-3 position-relative">
-                                        <select name="visibilityImage[${i}]" class="form-style form-control" required>
+                                        <select name="visibilityImage[]" class="form-style form-control" required>
                                             <option value="0" selected>Pública</option>
                                             <option value="1">Privada</option>
                                         </select>

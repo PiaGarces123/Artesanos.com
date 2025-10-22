@@ -295,9 +295,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Obtenemos la respuesta como texto y la parseamos.
                     const data = await res.json();
 
-                    let callback = null;
-                    let message = data.message || "Operación completada.";
-                    let type = data.status;
+                    const callback = null;
+                    const message = data.message || "Operación completada.";
+                    const type = data.status || 'error';
 
                     // 1. Manejo de Éxito
                     if (type === 'success') {

@@ -1,11 +1,12 @@
 <?php 
-    date_default_timezone_set('America/Argentina/San_Luis');
-    session_start();
+    
     require_once "../Clases/Album.php";
     require_once "../Clases/Image.php";
     require_once "../Clases/User.php"; 
     require_once "../conexion.php"; 
 
+    date_default_timezone_set('America/Argentina/San_Luis');
+    session_start();
     //Le dice al navegador que la respuesta del servidor no es HTML, sino JSON
     header("Content-Type: application/json");
 
@@ -23,7 +24,7 @@
         exit;
     }
 
-    $user = User::getById($conn,$_SESSION['user_id']);
+    $user = User::getById($conn, $_SESSION['user_id']);
 
     if (!$user) {
         // Si el usuario existe en sesión pero no en la BD (error crítico)
@@ -37,20 +38,13 @@
     if($user->isBlockedForPublishing()){
         echo json_encode([
             "status" => "error",
-            "message" => "EL USUARIO SE ENCUENTRA BLOQUEADO",
+            "message" => "EL USUARIO SE ENCUENTRA BLOQUEADO"
         ]);
         exit;
     }
 
-        /**
-     * Almacena el archivo físico en el directorio del álbum del usuario.
-     * @param array $fileArray El array de $_FILES (ej: $_FILES['uploaded_files']).
-     * @param int $imageIndex El índice del archivo en el array (ej: 0, 1, 2...).
-     * @param int $idUser El ID del usuario propietario.
-     * @param int $idAlbum El ID del álbum de destino.
-     * @param int $idImage El ID de la imagen recién creada (se usa como nombre de archivo).
-     * @return string|null La ruta final relativa de la imagen o RUTANULL si falla.
-     */
+
+    //Almacena el archivo físico en el directorio del álbum del usuario.
     function almacenaImagen($fileArray, $imageIndex, $idUser, $idAlbum, $idImage) {
         $rutaNull = "./Frontend/assets/images/appImages/imagenError.png";
         // 1. Obtener la información del archivo específico
@@ -148,16 +142,16 @@
                 }
                 
             }
-            if($cont!=0){
+            if($cont!==0){
                 echo json_encode([
                     "status" => "error",
-                    "message" => "PROBLEMAS AL SUBIR CIERTAS IMAGENES",
+                    "message" => "PROBLEMAS AL SUBIR CIERTAS IMAGENES"
                 ]);
                 
             }else{
                 echo json_encode([
                     "status" => "success",
-                    "message" => "CARPETA E IMAGENES CREADAS CORRECTAMENTE",
+                    "message" => "CARPETA E IMAGENES CREADAS CORRECTAMENTE"
                 ]);
                 
             }
@@ -165,7 +159,7 @@
         }else{
             echo json_encode([
                 "status" => "error",
-                "message" => "Problemas al crear el Album",
+                "message" => "Problemas al crear el Album"
             ]);
             
         }

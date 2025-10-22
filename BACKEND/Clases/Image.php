@@ -1,5 +1,4 @@
 <?php
-
     class Imagen {
 
         // 🔹 Subir/crear una imagen (COMPLETA para el nuevo esquema)
