@@ -1,4 +1,6 @@
 <?php 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
     
     require_once "../Clases/Album.php";
     require_once "../Clases/Image.php";
@@ -87,7 +89,7 @@
         $titleAlbum = trim($_POST["titleAlbum"] ?? "");
         $coverImageIndex = $_POST["coverImageIndex"];
 
-        $regex = "/^[a-zA-Z0-9._+-()ÁÉÍÓÚáéíóúÑñ\s]{1,30}$/";
+        $regex = '/^[a-zA-Z0-9._+()ÁÉÍÓÚáéíóúÑñ\s-]{1,30}$/';
     
         if (empty($titleAlbum)) {
             echo json_encode([
@@ -181,6 +183,8 @@
             ]);
             
         }
+    }else{
+        // logica para $oprionPost == 'select'
     }
     desconexion($conn);
 ?>

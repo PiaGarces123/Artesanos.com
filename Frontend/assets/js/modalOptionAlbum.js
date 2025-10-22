@@ -35,15 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Función para mostrar el modal de notificación fijo
     const showStaticNotificationModal = (type, message, acceptCallback = null) => {
-        const modalEl = document.getElementById('staticNotificationModal');
-        const modalIcon = document.getElementById('notificationIconStatic');
-        const modalMessage = document.getElementById('notificationMessageStatic');
-        const acceptBtn = document.getElementById('notificationAcceptButton');
+        let modalEl = document.getElementById('staticNotificationModal');
+        let modalIcon = document.getElementById('notificationIconStatic');
+        let modalMessage = document.getElementById('notificationMessageStatic');
+        let acceptBtn = document.getElementById('notificationAcceptButton');
         
         if (!modalEl || !modalIcon || !modalMessage || !acceptBtn) return;
 
         // Configurar estilos y contenido
-        const modalContent = modalEl.querySelector('.modal-content');
+        let modalContent = modalEl.querySelector('.modal-content');
         
         // Limpiamos clases de estado
         modalContent.classList.remove('alert-success', 'alert-danger');
@@ -60,11 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // 💡 1. Limpiamos y recreamos el listener del botón Aceptar
         // Clonar para eliminar listeners antiguos
-        const newAcceptBtn = acceptBtn.cloneNode(true);
+        let newAcceptBtn = acceptBtn.cloneNode(true);
         acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
         
-        const finalAcceptBtn = document.getElementById('notificationAcceptButton');
-        const staticModalInstance = new bootstrap.Modal(modalEl); // Creamos la instancia para mostrar
+        let finalAcceptBtn = document.getElementById('notificationAcceptButton');
+        let staticModalInstance = new bootstrap.Modal(modalEl); // Creamos la instancia para mostrar
 
         finalAcceptBtn.addEventListener('click', () => {
             // 2. Ejecutar la acción de callback (redirección/recarga)
@@ -193,9 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const createRadio = document.getElementById('createAlbumRadio');
         const selectRadio = document.getElementById('selectAlbumRadio');
         
-        // Contenedores
-        const optionAlbumContainer = document.getElementById('optionAlbumContainer');
-
         // Función para limpiar todos los errores visuales
         const limpiarErrores = () => {
             document.querySelectorAll(".error").forEach(div => {
@@ -293,11 +290,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     const res = await fetch("./BACKEND/FuncionesPHP/publicarContenido.php", { method: "POST", body: formData });
                     
                     // Obtenemos la respuesta como texto y la parseamos.
-                    const data = await res.json();
+                    let data = await res.json();
 
-                    const callback = null;
-                    const message = data.message || "Operación completada.";
-                    const type = data.status || 'error';
+                    let callback = null;
+                    let message = data.message || "Operación completada.";
+                    let type = data.status || 'error';
 
                     // 1. Manejo de Éxito
                     if (type === 'success') {

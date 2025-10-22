@@ -6,10 +6,10 @@
 
             // 1. Escapado y Validación de Tipos:
             // **Obligatorio escapar $titulo y $ruta, ya que son cadenas.**
-            $titulo_escaped = mysqli_real_escape_string($conn, $titulo);
-            $ruta_escaped = mysqli_real_escape_string($conn, $ruta);
+            $titulo_escaped = mysqli_real_escape_string($conn, $titulo ?? ''); 
+            $ruta_escaped = mysqli_real_escape_string($conn, $ruta ?? '');
             
-            $idUsuario_sanitized = (int)mysqli_real_escape_string($conn, $idUsuario);
+            $idUsuario_sanitized = (int)$idUsuario;
 
             $visibility = (int)$visibility;
             $esPerfil = (int)$esPerfil;
@@ -22,7 +22,7 @@
             $idAlbum_value = NULL; // Almacenará el valor entero si existe
             
             if ($idAlbum !== NULL) {
-                $idAlbum_value = (int)mysqli_real_escape_string($conn, $idAlbum);
+                $idAlbum_value = (int)$idAlbum;
                 $idAlbum_query = $idAlbum_value; // Usar el número
             } else {
                 $idAlbum_query = "NULL"; // Usar la palabra reservada SQL

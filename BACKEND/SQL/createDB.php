@@ -70,7 +70,7 @@
                 I_currentProfile TINYINT(1) DEFAULT 0, 
                 I_revisionStatus TINYINT(1) DEFAULT 0, 
                 I_publicationDate DATETIME DEFAULT CURRENT_TIMESTAMP, 
-                I_ruta VARCHAR(100) UNIQUE,
+                I_ruta VARCHAR(100),
                 I_idAlbum INT DEFAULT NULL,
                 I_idUser INT NOT NULL,
                 I_isCover TINYINT(1) DEFAULT 0,
