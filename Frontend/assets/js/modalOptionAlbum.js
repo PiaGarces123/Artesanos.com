@@ -3,6 +3,43 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------------------------------------------------------
     // FUNCIONES DE UTILIDAD (Deben ser accesibles si no están en otro JS)
     // --------------------------------------------------------------------------------------
+
+    // Función para limpiar todos los errores visuales
+    const limpiarErrores = () => {
+        document.querySelectorAll(".error").forEach(div => {
+            div.textContent = "";
+            div.classList.remove("visible-error");
+        });
+        document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
+    };
+    // Mostrar errores
+    const mostrarError = (div, input, msg) => {
+        if (!div) return;
+        div.textContent = msg;
+        div.classList.add("visible-error");
+        if (input) input.classList.add("errorInput");
+    };
+
+    const validarCampo = (input, regex, errorDiv, msg) => {
+        let isValid = true;
+        input.classList.remove("errorInput");
+
+        if (!input?.value.trim()) { 
+            mostrarError(errorDiv, input, "Campo obligatorio."); 
+            isValid = false; 
+        } else if (regex && !regex.test(input.value)) { 
+            mostrarError(errorDiv, input, msg); 
+            isValid = false; 
+        }
+
+        if (!isValid) {
+            input.classList.add("errorInput");
+        }
+        return isValid;
+    };
+
+
+
     function returnBasicFormData(){ //Retorna un formData con los datos basicmos de las imagenes
         const fileInputOriginal = document.getElementById('imageInput');
 
@@ -16,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const titleInputs = document.getElementsByName('titleImage[]');
         const visibilitySelects = document.getElementsByName('visibilityImage[]');
 
-        const formData = new FormData();
+        let formData = new FormData();
 
         for (const file of fileInputOriginal.files) {
             formData.append('imageInput[]', file); 
@@ -134,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 💡 FUNCIÓN CLAVE: Inyecta el FORMULARIO DE TÍTULO (Opción "Crear")
     // --------------------------------------------------------------------------------------
     function injectCreateAlbumForm() {
+        limpiarErrores();
         const createAlbumTitleHTML = 
         `<form id="createAlbumTitleForm" class="mt-3">    
             <div class="mb-4">
@@ -167,19 +205,80 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------------------------------------------------------
     // 💡 FUNCIÓN CLAVE: Inyecta la LISTA DE ÁLBUMES (Opción "Seleccionar Existente")
     // --------------------------------------------------------------------------------------
+    // Asegúrate de que mostrarError esté definido en el scope global o accesible
+// function mostrarError(div, input, msg) { ... } 
+// const errorPostAlbum = document.getElementById('errorPostAlbum'); // debe ser accesible
+
+
     function injectSelectAlbumList() {
-        const selectAlbumHTML = `
-            <div id="selectAlbumListContent">
-                <p class="alert alert-info text-center mt-3">Aquí se cargaría la lista de tus álbumes existentes para seleccionar el destino.</p>
-                <select id="existingAlbumSelect" class="form-select form-style">
-                    <option value="">Selecciona un álbum...</option>
-                    <option value="1">Vacaciones 2024</option>
-                    <option value="2">Proyectos de Cerámica</option>
-                </select>
-                <div class="error" id="errorSelectAlbum"></div>
-            </div>`;
-            
-        document.getElementById("optionAlbumContainer").innerHTML = selectAlbumHTML;
+        
+        const container = document.getElementById("optionAlbumContainer");
+        const errorDiv = document.getElementById('errorPostAlbum'); 
+        
+        // Mostramos un spinner de carga mientras se obtienen los datos
+        container.innerHTML = `<p class="text-center mt-3 text-secondary"><div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div> Cargando álbumes...</p>`;
+        
+        // Limpiamos errores previos
+        limpiarErrores();
+
+        // Convertimos a async/await para manejar el flujo de forma más limpia
+        async function fetchAlbums() {
+            try {
+                const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`);
+
+                if (!response.ok) {
+                    throw new Error('Fallo al obtener los álbumes.');
+                }
+
+                const albums = await response.json();
+                
+                // Filtramos solo los álbumes que NO son del sistema (A_isSystemAlbum = 0)
+                const filteredAlbums = albums.filter(album => album.A_isSystemAlbum == 0);
+
+                let albumsHTML = '';
+                
+                if (filteredAlbums.length === 0) {
+                    albumsHTML = `<div class="alert alert-info text-center mt-3">No tienes álbumes existentes donde puedas publicar.</div>`;
+                } else {
+                    albumsHTML = `
+                        <h5 class="text-secondary fw-bold mt-3 mb-3">Selecciona un álbum de destino:</h5>
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    `;
+                    
+                    filteredAlbums.forEach(album => {
+                        // Usamos un radio button oculto + label con estilo de tarjeta
+                        albumsHTML += `
+                            <div class="col">
+                                <input type="radio" class="btn-check album-radio" 
+                                    name="existingAlbumId" 
+                                    id="album-${album.A_id}" 
+                                    value="${album.A_id}" 
+                                    autocomplete="off">
+                                
+                                <label class="btn btn-outline-secondary p-2 w-100 h-100 album-card-select" for="album-${album.A_id}">
+                                    
+                                    <img src="${album.A_cover}" alt="Portada de ${album.A_title}" 
+                                        class="img-fluid rounded mb-2" style="height: 80px; object-fit: cover;">
+                                        
+                                    <p class="mb-0 fw-semibold text-truncate small">${album.A_title}</p>
+                                    <p class="text-muted small mb-0">${album.A_count} imágenes</p>
+                                </label>
+                            </div>
+                        `;
+                    });
+                    albumsHTML += `</div>`;
+                }
+                
+                container.innerHTML = albumsHTML; // Inyectar el contenido de los álbumes
+                
+            } catch (error) {
+                mostrarError(errorDiv, null, "Error al cargar álbumes: " + error.message);
+                container.innerHTML = `<p class="text-danger text-center mt-3">No se pudieron cargar los álbumes.</p>`;
+            }
+        }
+        
+        // Ejecutar la función de fetch
+        fetchAlbums();
     }
 
 
@@ -193,40 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const createRadio = document.getElementById('createAlbumRadio');
         const selectRadio = document.getElementById('selectAlbumRadio');
         
-        // Función para limpiar todos los errores visuales
-        const limpiarErrores = () => {
-            document.querySelectorAll(".error").forEach(div => {
-                div.textContent = "";
-                div.classList.remove("visible-error");
-            });
-            document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
-        };
-        // Mostrar errores
-        const mostrarError = (div, input, msg) => {
-            if (!div) return;
-            div.textContent = msg;
-            div.classList.add("visible-error");
-            if (input) input.classList.add("errorInput");
-        };
-
-        const validarCampo = (input, regex, errorDiv, msg) => {
-            let isValid = true;
-            input.classList.remove("errorInput");
-
-            if (!input?.value.trim()) { 
-                mostrarError(errorDiv, input, "Campo obligatorio."); 
-                isValid = false; 
-            } else if (regex && !regex.test(input.value)) { 
-                mostrarError(errorDiv, input, msg); 
-                isValid = false; 
-            }
-
-            if (!isValid) {
-                input.classList.add("errorInput");
-            }
-            return isValid;
-        };
-
 
         // 1. Lógica de Sincronización (Inyectar contenido al cambiar de radio)
         if (createRadio && selectRadio) {
@@ -260,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnPostOptionALbum.addEventListener('click', async e => {
                 e.preventDefault();
 
-                const formData = returnBasicFormData();
+                let formData = returnBasicFormData();
                 
                 const selectedOption = document.querySelector('input[name="albumOption"]:checked').value;
                 //const optionAlbumModal = bootstrap.Modal.getInstance(optionAlbumModalEl);
@@ -281,7 +346,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                 }else{
                     if(selectedOption=='select'){
-                        // TODAVIA NO LO IMPLEMENTO (DEJAR ASI)
+                        // 💡 1. Obtener el radio button marcado dentro del grupo 'existingAlbumId'
+                        const selectedRadio = document.querySelector('input[name="existingAlbumId"]:checked');
+                        
+                        if (!selectedRadio) {
+                            // 2. Mostrar error si no hay selección
+                            mostrarError(errorPostAlbum, null, "Debes seleccionar un álbum de destino.");
+                            return;
+                        }
+
+                        // 3. Obtener el valor (que es el A_id)
+                        const selectedAlbumId = selectedRadio.value;
+
+                        formData.append('actionPost', selectedOption);
+                        formData.append('albumSelected',selectedAlbumId);
                     }
                 }
 

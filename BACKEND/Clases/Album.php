@@ -106,6 +106,35 @@
             return mysqli_query($conn, $sql);
         }
         
-        
+        // Devuelve la ruta de la imagen de portada de un album o una ruta por defecto
+        public static function getCoverImagePath($conn, $idAlbum) {
+            $idAlbum = (int)$idAlbum;
+            
+            // Ruta de la imagen por defecto que se usa cuando no hay portada asignada
+            $defaultPath = './Fronend/assets/images/appImages/coverDefault.png'; 
+            
+            // 1. Consulta para buscar la ruta de la imagen marcada como portada (I_isCover = 1)
+            $sql = "SELECT I_ruta FROM images 
+                    WHERE I_idAlbum = $idAlbum AND I_isCover = 1 
+                    LIMIT 1";
+            
+            $resultado = mysqli_query($conn, $sql);
+            
+            // 2. Verificar si la consulta fue exitosa y encontró una fila
+            if ($resultado && mysqli_num_rows($resultado) > 0) {
+                // Si encuentra una portada, extrae y devuelve su ruta
+                $fila = mysqli_fetch_assoc($resultado);
+                return $fila['I_ruta'];
+            }
+            
+            // 3. Si no hay resultados (o si la consulta falló), devuelve la ruta por defecto
+            return $defaultPath;
+        }
+
+        // Verifica si un album existe, true si existe
+        public static function exists($conn, $idAlbum) {
+            // Reutilizamos getById. Si el resultado no es NULL, el álbum existe.
+            return (self::getById($conn, $idAlbum) !== null);
+        }
     }
 ?>

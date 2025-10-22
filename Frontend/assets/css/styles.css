@@ -351,6 +351,31 @@
         background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='%23fff'/></svg>") !important;
     }
 
+
+/*------------------------- Estilos para las tarjetas de selección de álbumes ---------------------------*/
+    .album-card-select {
+        border-radius: 8px !important;
+        border-width: 2px !important; /* Borde más grueso para indicar selección */
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Efecto de selección: Cuando el radio está marcado, iluminar la tarjeta */
+    .album-radio:checked + .album-card-select {
+        background-color: var(--primary-color) !important;
+        border-color: var(--secondary-color) !important; /* Borde marrón más fuerte */
+        box-shadow: 0 0 5px rgba(194, 151, 106, 0.7); /* Sombra suave */
+        color: var(--principal-text) !important;
+    }
+
+    /* Estilo de la imagen dentro de la tarjeta */
+    .album-card-select img {
+        width: 100%;
+        max-width: 100px; /* Tamaño máximo para la miniatura */
+        height: 100px;
+    }
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
     @media (min-width: 992px) { 

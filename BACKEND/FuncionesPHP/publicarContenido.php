@@ -184,7 +184,25 @@ error_reporting(E_ALL);
             
         }
     }else{
-        // logica para $oprionPost == 'select'
+        $albumSelected = $_POST["albumSelected"];
+
+        if(!Album::exists($conn,$albumSelected)){
+            echo json_encode([
+                "status" => "error",
+                "message" => "El Album Seleccionado No Existe"
+            ]);
+            exit;
+        }
+        $cantImages = Album::contarImagenes($cont,$albumSelected);
+        if($cantImages + count($imageInput) > 20){
+            echo json_encode([
+                "status" => "error",
+                "message" => "No Hay Espacio Sufiecnte en el Album Seleccionado (Cantidad Maxima de Imagenes por ALbum: 20)"
+            ]);
+            exit;
+        }
+
+        // Falta terminar
     }
     desconexion($conn);
 ?>
