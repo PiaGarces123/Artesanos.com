@@ -87,6 +87,24 @@
         $titleAlbum = trim($_POST["titleAlbum"] ?? "");
         $coverImageIndex = $_POST["coverImageIndex"];
 
+        $regex = "/^[a-zA-Z0-9._+-()ÁÉÍÓÚáéíóúÑñ\s]{1,30}$/";
+    
+        if (empty($titleAlbum)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "El título del álbum no puede estar vacío."
+            ]);
+            exit;
+        }
+        
+        if (!preg_match($regex, $titleAlbum)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "El título del álbum contiene caracteres no permitidos o excede los 30 caracteres. Sólo se permiten letras, números, espacios y los caracteres: . _ + -()"
+            ]);
+            exit;
+        }
+
         $idAlbum = Album::crear($conn,$titleAlbum,$user->id);
 
         if($idAlbum){
