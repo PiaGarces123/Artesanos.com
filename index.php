@@ -121,39 +121,52 @@
             </div>
         </div>
     </div>
-<!----------------------------Modal de notifcacion--------------------->
-    <div class="modal fade" id="staticNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNotificationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content text-center p-3 rounded-4 shadow-lg">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="staticNotificationModalLabel">Notificación</h5>
-                </div>
-                <div class="modal-body pt-2 pb-3">
-                    <div id="notificationIconStatic" class="mb-3 fs-2"></div>
-                    <p id="notificationMessageStatic" class="fw-semibold"></p>
-                </div>
-                <div class="modal-footer d-flex justify-content-center border-0 pt-0">
-                    <button type="button" class="btn btn-primary w-100" id="notificationAcceptButton">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 <!------------------------------------->
+<!------------------------------------------------ MODAL DE MIS ALBUMES ------------------------------------------------------------------------>
     <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content p-4 rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <h2 class="modal-title fs-4" id="myAlbumsModalLabel">Mis álbumes</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeAlbumsModal"></button>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="myAlbumsModalLabel">Mis Álbumes:</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closemyAlbums"></button>
                 </div>
                 
-                <div class="row row-cols-md-4 row-cols-lg-4 g-4 mt-3" id="albumsGrid">
-                    </div>
+                <div id="myAlbumsContainer" class="mt-4">
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" id="closeMyAlbums" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+                <div class="error" id="errorMyAlbums"></div>
             </div>
         </div>
     </div>
+    <!-- Modal para preguntar si desea o no eleminar un album -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content p-3 rounded-4 shadow-lg">
+                    
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title text-danger fw-bold" id="confirmDeleteLabel">⚠️ Confirmar Eliminación</h5>
+                    </div>
+                    
+                    <div class="modal-body text-center pt-2 pb-3">
+                        <p id="deleteMessage">¿Estás seguro de que deseas eliminar este álbum y **todas sus imágenes**?</p>
+                        <p class="small text-muted mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    <!-- ---------------------------------------------- -->
     <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4 rounded-4">
@@ -262,6 +275,23 @@
         </div>
     </div>
 
+    <!----------------------------Modal de notifcacion Estatica (Reutilizada por otros modales)--------------------->
+    <div class="modal fade" id="staticNotificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticNotificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-3 rounded-4 shadow-lg">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="staticNotificationModalLabel">Notificación</h5>
+                </div>
+                <div class="modal-body pt-2 pb-3">
+                    <div id="notificationIconStatic" class="mb-3 fs-2"></div>
+                    <p id="notificationMessageStatic" class="fw-semibold"></p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center border-0 pt-0">
+                    <button type="button" class="btn btn-primary w-100" id="notificationAcceptButton">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -276,4 +306,5 @@
 <script src="./Frontend/assets/js/restrictedActions.js"></script>
 <script src="./Frontend/assets/js/modalSelectImages.js"></script>
 <script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
+<script src="./Frontend/assets/js/myAlbumsModal.js"></script>
 

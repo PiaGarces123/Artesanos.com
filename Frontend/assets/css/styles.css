@@ -523,7 +523,26 @@
 #createFirstAlbum{
     box-shadow: 0 0 5px rgba(194, 151, 106, 0.7); /* Sombra suave */
 }
+/* --------------------------------------------------------------------------------------------- */
+    /* Estilos para el botón de Kebab Menu (Tres Puntos) */
 
+    /* Estilo base: Fondo transparente y color de ícono discreto */
+    .dropdown-menu .btn.border-0 {
+        background-color: transparent !important;
+        color: var(--secondary-text) !important; /* Color gris suave */
+    }
+
+    /* Estado HOVER: Aplicamos un fondo blanco o muy claro para que resalte el icono */
+    .dropdown-menu .btn.border-0:hover,
+    .dropdown-menu .btn.border-0:focus {
+        background-color: #f8f9fa !important; /* Blanco muy sutil, color de Bootstrap light */
+        box-shadow: none !important;
+    }
+
+    /* Asegurar que el icono dentro del botón permanezca visible */
+    .dropdown-menu .btn.border-0:hover i {
+        color: var(--principal-text) !important; /* Color de texto/ícono más oscuro */
+    }
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
     @media (min-width: 992px) { 
