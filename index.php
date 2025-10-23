@@ -1,6 +1,9 @@
 <?php
+    //Incluir los archivos necesarios
     require_once "./BACKEND/Clases/Image.php"; 
     require_once "./BACKEND/conexion.php"; 
+
+    //Comprobar sesion
     $conn = conexion();
     session_start();
     $isLoggedIn = isset($_SESSION['user_id']); // TRUE si hay sesión
@@ -13,28 +16,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artesanos</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="./Frontend/assets/css/styles.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Estilos Personalizados -->
+    <link rel="stylesheet" href="./Frontend/assets/css/styles.css" />
 </head>
 <body>
-    
+    <!-- Incluir el Navbar y Sidebar -->
     <?php
     include("./Frontend/includes/header.php");
     ?>
 
 
-    <!-- MODAL PARA PUBLICAR CONTENIDOO -->
+    <!----------------- MODAL PARA PUBLICAR CONTENIDO ----------------->
     <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
             
+                <!-- Titulo -->
                 <div class="modal-header border-0 pb-0 mb-3">
                     <h2 class="modal-title fs-4 fw-bold text-primary" id="createAlbumModalLabel">Seleccionar Imágenes</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeCreateModal"></button>
                 </div>
                 
+                <!-- Formulario -->
                 <form id="createAlbumForm" enctype="multipart/form-data" method="post" class="mt-3"> 
                     
                     <div class="mb-4 p-3 bg-light rounded-3 border">
@@ -51,8 +58,11 @@
                         <div class="image-preview row g-3 mt-3" id="imagePreview">
                         </div>
                     </div>
+
+                    <!-- Si hubo un error -->
                     <div class="error" id="errorCreateAlbum"></div>
                     
+                    <!-- Botones -->
                     <div class="d-flex justify-content-end gap-3 mt-4">
                         <button type="button" class="btn btn-outline-secondary" id="cancelCreate" data-bs-dismiss="modal">Cancelar</button>
                         <button  type="button" class="btn btn-primary" id="continueCreate">Continuar</button>
@@ -61,7 +71,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal siguiente (Imagenes seleccionadas) -->
+
+    <!----------------- Modal siguiente (Imagenes seleccionadas) ----------------->
     <div class="modal fade" id="selectImages" tabindex="-1" aria-labelledby="selectImagesLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
@@ -123,8 +134,8 @@
     </div>
 
 
-<!------------------------------------->
-<!------------------------------------------------ MODAL DE MIS ALBUMES ------------------------------------------------------------------------>
+
+<!-----------------  MODAL DE MIS ALBUMES ----------------->
     <div class="modal fade" id="myAlbumsModal" tabindex="-1" aria-labelledby="myAlbumsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
@@ -166,7 +177,7 @@
             </div>
         </div>
 
-    <!-- ---------------------------------------------- -->
+    <!-- ---------------------- FAVORITOS ------------------------ -->
     <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4 rounded-4">
@@ -181,13 +192,14 @@
         </div>
     </div>
 
-
+<!-----------------  MODAL DE LOGIN ----------------->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-4 rounded-4 shadow-lg custom-login-card"> 
                 
                 <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3" data-bs-dismiss="modal" aria-label="Close" id="closeLoginModal"></button>
 
+                <!-- Opciones LogIn o SignUp -->
                 <ul class="nav nav-pills nav-justified mb-4 custom-login-tabs" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Log In</button>
@@ -197,14 +209,17 @@
                     </li>
                 </ul>
 
+                <!-- Logo -->
                 <div class="text-center logo mb-3">
                     <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle" style="width: 80px; height: 80px;">
                 </div>
 
                 <div class="tab-content" id="pills-tabContent">
-                    
+                    <!-- -------------------------- LOGIN -------------------------- -->
                     <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
                         <h4 class="text-center text-uppercase mb-4">Log In</h4>
+
+                        <!-- Formulario -->
                         <form id="loginForm">
                             
                             <div class="form-groupLogin mb-2 position-relative">
@@ -225,8 +240,11 @@
                         </form>
                     </div>
 
+                    <!-- -------------------------- SIGNUP -------------------------- -->
                     <div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
                         <h4 class="text-center text-uppercase mb-4">Sign Up</h4>
+
+                        <!-- Formulario -->
                         <form id="signupForm">
                             
                             <div class="form-groupLogin mb-2 position-relative">
@@ -294,17 +312,35 @@
     </div>
     
 </body>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- Para Fecha de Nacimiento -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
     // Variable global JS que indica si el usuario inició sesión
     window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
 </script>
+
+<!--Scripts Personalizados -->
+
+<!--Scripts Básicos o normales(cerrar sesion, buscar) -->
 <script src="./Frontend/assets/js/actionNormal.js"></script>
+
+<!--Scripts Básicos de Modales -->
 <script src="./Frontend/assets/js/modal.js"></script>
+
+<!--Scripts para Restringir Acciones dependiendo de si Inició sesion o no -->
 <script src="./Frontend/assets/js/restrictedActions.js"></script>
+
+
+<!--Scripts Para publicar Contenido, muestra imagenes seleccionadas -->
 <script src="./Frontend/assets/js/modalSelectImages.js"></script>
+
+<!--Opcion de Crear o Seleccionar Album -->
 <script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
+
+<!-- Para trabajar los albumes -->
 <script src="./Frontend/assets/js/myAlbumsModal.js"></script>
 
