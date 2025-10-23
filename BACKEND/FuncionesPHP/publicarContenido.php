@@ -1,208 +1,163 @@
 <?php 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-    
+    date_default_timezone_set('America/Argentina/San_Luis');
+    session_start();
     require_once "../Clases/Album.php";
     require_once "../Clases/Image.php";
     require_once "../Clases/User.php"; 
     require_once "../conexion.php"; 
 
-    date_default_timezone_set('America/Argentina/San_Luis');
-    session_start();
-    //Le dice al navegador que la respuesta del servidor no es HTML, sino JSON
+    // Le dice al navegador que la respuesta del servidor no es HTML, sino JSON
     header("Content-Type: application/json");
 
     // Conexión
-    
     $conn = conexion();
-    $error = "";
-    $cont=0;
+    $cont=0; // Contador de fallos
+    $idAlbumDestino = null; // Variable para almacenar el ID final del álbum
 
-    if(!isset($_SESSION['user_id'])){
-        echo json_encode([
-            "status" => "errorSession",
-            "message" => "Necesitas iniciar sesión para publicar."
-        ]);
+    // =========================================================
+    // 1. VERIFICACIÓN DE SESIÓN, BLOQUEO Y DATOS
+    // =========================================================
+    
+    // Verificación de sesión/bloqueo (Se mantiene tu lógica)
+    if(!isset($_SESSION['user_id']) || !($user = User::getById($conn, $_SESSION['user_id'])) || $user->isBlockedForPublishing()){
+        $status = (!isset($_SESSION['user_id']) || !$user) ? "errorSession" : "error";
+        $message = ($status == "errorSession") ? "Sesión inválida o cuenta bloqueada." : "EL USUARIO SE ENCUENTRA BLOQUEADO";
+        echo json_encode(["status" => $status, "message" => $message]);
         exit;
     }
 
-    $user = User::getById($conn, $_SESSION['user_id']);
+    // Recepción de datos (Asumimos que vienen correctamente por el JS)
+    $uploadedFiles = $_FILES['imageInput']; 
+    $titleImage = $_POST["titleImage"]; 
+    $visibilityImage = $_POST["visibilityImage"];
+    $actionPost = $_POST["actionPost"]; 
+    $coverImageIndex = (int)($_POST["coverImageIndex"] ?? -1); 
+    $numImagesToUpload = count($titleImage);
 
-    if (!$user) {
-        // Si el usuario existe en sesión pero no en la BD (error crítico)
-        echo json_encode([
-            "status" => "errorSession",
-            "message" => "Error interno del usuario En la Base de Datos."
-        ]);
+    
+    // =========================================================
+    // 2. LÓGICA DE MANEJO DE ÁLBUMES
+    // =========================================================
+
+    if($actionPost === 'create'){
+        $titleAlbum = trim($_POST["titleAlbum"] ?? "");
+        $regex = '/^[a-zA-Z0-9._+()ÁÉÍÓÚáéíóúÑñ\s-]{1,30}$/';
+        
+        // Validación de título
+        if (empty($titleAlbum) || !preg_match($regex, $titleAlbum)) {
+            echo json_encode(["status" => "error", "message" => "Título de álbum inválido o vacío."]);
+            exit;
+        }
+
+        // 2a. Crear Álbum en BD
+        $idAlbumDestino = Album::crear($conn, $titleAlbum, $user->id); 
+
+        if(!$idAlbumDestino){
+            echo json_encode(["status" => "error", "message" => "Problemas al crear el Álbum en la base de datos."]);
+            exit;
+        }
+
+        // 2b. Crear Carpeta Física
+        $base_files_dir = __DIR__ . '/../../FILES/';
+        $album_dir = $base_files_dir . $user->id . '/' . $idAlbumDestino;
+        
+        if (!is_dir($album_dir) && !@mkdir($album_dir, 0777, true)) { 
+            echo json_encode(["status" => "error", "message" => "Error de permisos al crear la carpeta del álbum."]);
+            Album::eliminar($conn, $idAlbumDestino); 
+            exit;
+        }
+
+    } elseif($actionPost === 'select'){
+        $albumSelected = $_POST["albumSelected"]; 
+        $idAlbumDestino = (int)$albumSelected;
+
+        // 2a. Validar Álbum Existente
+        if(!Album::exists($conn, $idAlbumDestino)){
+            echo json_encode(["status" => "error", "message" => "El Álbum Seleccionado No Existe."]);
+            exit;
+        }
+        
+        // 2b. Validar Espacio (Máx 20 imágenes)
+        $cantImages = Album::contarImagenes($conn, $idAlbumDestino);
+        if(($cantImages + $numImagesToUpload) > 20){
+            echo json_encode(["status" => "error", "message" => "No Hay Espacio Suficiente en el Álbum (Máximo: 20 imágenes)."]);
+            exit;
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Acción de publicación inválida."]);
         exit;
     }
-    //si esta bloqueado devuelve true y muestra error
-    if($user->isBlockedForPublishing()){
-        echo json_encode([
-            "status" => "error",
-            "message" => "EL USUARIO SE ENCUENTRA BLOQUEADO"
-        ]);
-        exit;
+
+
+    // =========================================================
+    // 3. BUCLE CENTRALIZADO DE SUBIDA E INSERCIÓN
+    // =========================================================
+
+    for($i=0; $i < $numImagesToUpload; $i++){
+        $isCover = ($i == $coverImageIndex) ? 1 : 0;
+        
+        // 1. Crear la entrada en la BD (ruta NULL temporal)
+        $idImage = Imagen::crear(
+            $conn,
+            $titleImage[$i], 
+            $user->id,          
+            $visibilityImage[$i], 
+            $idAlbumDestino,            
+            NULL,               
+            0,                  
+            $isCover            
+        );
+
+        if($idImage){
+            // 2. Almacenar archivo físico y obtener ruta real
+            $rutaImagen = almacenaImagen($uploadedFiles, $i, $user->id, $idAlbumDestino, $idImage);
+            
+            // 3. Actualizar la ruta en la BD (Si falla almacenaImagen, la ruta será la de error)
+            Imagen::actualizarRuta($conn, $idImage, $rutaImagen); 
+        }else{
+            $cont++; // Cuenta fallo al crear la fila en BD
+        }
     }
 
 
-    //Almacena el archivo físico en el directorio del álbum del usuario.
+    // =========================================================
+    // 4. RESPUESTA FINAL
+    // =========================================================
+
+    if($cont !== 0){
+        // Si falló la subida de alguna imagen, el álbum se queda pero notificamos el error.
+        echo json_encode(["status" => "error", "message" => "PROBLEMAS AL SUBIR ". $cont . " IMAGEN(ES)." . " Album Sin Problemas."]);
+    }else{
+        echo json_encode(["status" => "success", "message" => "Imagenes Subidas Correctamente."]);
+    }
+
+    desconexion($conn);
+
+    // --------------------------------------------------------
+    // FUNCIÓN DE ALMACENAMIENTO FÍSICO (Para referencia, debe estar accesible)
+    // --------------------------------------------------------
+
     function almacenaImagen($fileArray, $imageIndex, $idUser, $idAlbum, $idImage) {
-        $rutaNull = "./Frontend/assets/images/appImages/imagenError.png";
-        // 1. Obtener la información del archivo específico
+        $rutaError = "./Frontend/assets/images/appImages/imagenError.png";
+        
+        // ... (Lógica para obtener info del archivo, moverlo y devolver la ruta o $rutaError) ...
         $fileTmpName = $fileArray['tmp_name'][$imageIndex];
         $originalFileName = $fileArray['name'][$imageIndex];
         $fileError = $fileArray['error'][$imageIndex];
 
-        // Verificar si no hay errores de subida
-        if ($fileError !== UPLOAD_ERR_OK) {
-            return $rutaNull; // Retorna NULL si hay error de subida (ej: archivo demasiado grande)
-        }
+        if ($fileError !== UPLOAD_ERR_OK) { return $rutaError; }
         
-        // 2. Determinar la extensión del archivo
         $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
-
-        // 3. Definir las rutas (Asumiendo que estás en BACKEND/FuncionesPHP/)
         $base_dir = __DIR__ . '/../../FILES/';
         
-        // Nombre final del archivo y ruta completa
         $final_filename = $idImage . '.' . $fileExtension;
         $album_dir = $base_dir . $idUser . '/' . $idAlbum . '/';
         $final_path = $album_dir . $final_filename;
 
-        // 4. Mover el archivo temporal a la ubicación final
         if (move_uploaded_file($fileTmpName, $final_path)) {
-            // Retorna la ruta relativa para guardar en la BD
             return './FILES/' . $idUser . '/' . $idAlbum . '/' . $final_filename;
         }
 
-        return $rutaNull; // Error al mover el archivo (ej: problemas de permisos)
+        return $rutaError;
     }
-
-    // Obtener datos de publicacion
-    $imageInput = $_FILES["imageInput"];
-    $titleImage = $_POST["titleImage"];
-    $visibilityImage = $_POST["visibilityImage"];
-    $actionPost = $_POST["actionPost"];
-
-    if($actionPost=='create'){
-        $titleAlbum = trim($_POST["titleAlbum"] ?? "");
-        $coverImageIndex = $_POST["coverImageIndex"];
-
-        $regex = '/^[a-zA-Z0-9._+()ÁÉÍÓÚáéíóúÑñ\s-]{1,30}$/';
-    
-        if (empty($titleAlbum)) {
-            echo json_encode([
-                "status" => "error",
-                "message" => "El título del álbum no puede estar vacío."
-            ]);
-            exit;
-        }
-        
-        if (!preg_match($regex, $titleAlbum)) {
-            echo json_encode([
-                "status" => "error",
-                "message" => "El título del álbum contiene caracteres no permitidos o excede los 30 caracteres. Sólo se permiten letras, números, espacios y los caracteres: . _ + -()"
-            ]);
-            exit;
-        }
-
-        $idAlbum = Album::crear($conn,$titleAlbum,$user->id);
-
-        if($idAlbum){
-            // ===================================================================
-            // 🚀 LÓGICA CLAVE: CREACIÓN DE LA CARPETA DEL ÁLBUM
-            // ===================================================================
-            
-            // 1. Definir la ruta base del directorio de archivos (FILES en la raíz)
-            $base_files_dir = __DIR__ . '/../../FILES/';
-            
-            // 2. Definir la ruta del directorio del USUARIO (ej: /FILES/5/)
-            $user_dir = $base_files_dir . $user->id;
-            
-            // 3. Definir la ruta del directorio del ÁLBUM (ej: /FILES/5/12/)
-            // Usamos el ID del álbum (A_id) para nombrar la carpeta.
-            $album_dir = $user_dir . '/' . $idAlbum;
-            
-            // 4. Crear la carpeta del álbum si no existe.
-            if (!is_dir($album_dir)) {
-                // Usamos @ para suprimir la advertencia si ya existiera, y 'true' para recursivo.
-                if (!@mkdir($album_dir, 0777, true)) { 
-                    
-                    // Manejo de error si la carpeta no pudo ser creada (ej: problema de permisos)
-                    echo json_encode([
-                        "status" => "error",
-                        "message" => "Error de permisos al crear la carpeta del álbum."
-                    ]);
-                    // Es crítico: si falla, borra el registro de la BD para mantener la integridad
-                    Album::eliminar($conn, $idAlbum); 
-                    exit;
-                }
-            }
-            
-            
-
-            for($i=0; $i<count($titleImage); $i++){
-                $isCover = ($i == $coverImageIndex) ? 1 : 0;
-                $idImage = Imagen::crear(
-                    $conn,
-                    $titleImage[$i], 
-                    $user->id,              // 3. $idUsuario (valor sin default)
-                    $visibilityImage[$i],   // 4. $visibility (sobrescribe 0)
-                    $idAlbum,               // 5. $idAlbum (sobrescribe NULL)
-                    NULL,                   // 6. $ruta (sobrescribe NULL) 
-                    0,                      // 7. $esPerfil (sobrescribe 0)
-                    $isCover                // 8. $esPortada (sobrescribe 0)
-                );
-                if($idImage){
-                    $rutaImagen = almacenaImagen($imageInput,$i, $user->id, $idAlbum, $idImage);
-                    Imagen::actualizarRuta($conn,$idImage,$rutaImagen); 
-                }else{
-                    $cont++;
-                }
-                
-            }
-            if($cont!==0){
-                echo json_encode([
-                    "status" => "error",
-                    "message" => "PROBLEMAS AL SUBIR CIERTAS IMAGENES"
-                ]);
-                
-            }else{
-                echo json_encode([
-                    "status" => "success",
-                    "message" => "CARPETA E IMAGENES CREADAS CORRECTAMENTE"
-                ]);
-                
-            }
-
-        }else{
-            echo json_encode([
-                "status" => "error",
-                "message" => "Problemas al crear el Album"
-            ]);
-            
-        }
-    }else{
-        $albumSelected = $_POST["albumSelected"];
-
-        if(!Album::exists($conn,$albumSelected)){
-            echo json_encode([
-                "status" => "error",
-                "message" => "El Album Seleccionado No Existe"
-            ]);
-            exit;
-        }
-        $cantImages = Album::contarImagenes($cont,$albumSelected);
-        if($cantImages + count($imageInput) > 20){
-            echo json_encode([
-                "status" => "error",
-                "message" => "No Hay Espacio Sufiecnte en el Album Seleccionado (Cantidad Maxima de Imagenes por ALbum: 20)"
-            ]);
-            exit;
-        }
-
-        // Falta terminar
-    }
-    desconexion($conn);
 ?>
