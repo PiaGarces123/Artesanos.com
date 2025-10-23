@@ -376,6 +376,154 @@
         max-width: 100px; /* Tamaño máximo para la miniatura */
         height: 100px;
     }
+
+    /* ======================= NUEVA SECCIÓN: ESTILOS DEL PERFIL ======================= */
+
+   /* ======================= PERFIL - ADAPTADO A BOOTSTRAP 5 ======================= */
+
+/* Respeta header fijo y sidebar */
+.main-content-offset {
+  min-height: 100vh;
+  width: 80vw;
+  padding: 2rem;
+  background-color: var(--bs-body-bg, #f8f9fa);
+}
+
+/* En móviles (sin sidebar fijo) */
+@media (max-width: 991.98px) {
+  .main-content-offset {
+    margin-left: 0;
+    margin-top: 70px;
+    padding: 1.5rem;
+  }
+}
+
+/* ---------- Sección del perfil ---------- */
+.profile-header-section {
+  background-color: var(--background-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--bs-box-shadow-sm);
+  margin-bottom: 2rem;
+}
+
+/* Avatar grande */
+.profile-avatar-large {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--bs-secondary);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: var(--bs-box-shadow);
+  margin: 0 auto;
+}
+.profile-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nombre y datos */
+.profile-username {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--principal-text);
+  margin-top: 1rem;
+}
+
+/* ---------- Tarjetas de estadísticas ---------- */
+.stats-card {
+  background-color: var(--bs-light);
+  border: 1px solid var(--bs-secondary);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--bs-box-shadow);
+}
+.stat-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--bs-secondary);
+}
+.stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+  font-weight: 600;
+}
+
+/* ---------- Descripción ---------- */
+.description-card {
+  background-color: var(--background-color);
+  border: 1px solid var(--bs-primary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+.description-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bs-body-color);
+  margin-bottom: 0.75rem;
+}
+
+/* ---------- Álbumes ---------- */
+.album-card-profile {
+  position: relative;
+  border-radius: 1rem;
+  height: 280px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: var(--primary-color);
+  box-shadow: var(--bs-box-shadow-sm);
+}
+.album-card-profile:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--bs-box-shadow-lg);
+}
+.album-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.album-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 1rem 1.25rem;
+}
+.album-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+.album-card-info {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- Estado vacío ---------- */
+.empty-albums {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--bs-secondary-color);
+}
+.empty-albums i {
+  font-size: 3.5rem;
+  color: var(--bs-primary);
+  margin-bottom: 1rem;
+}
+#createFirstAlbum{
+    box-shadow: 0 0 5px rgba(194, 151, 106, 0.7); /* Sombra suave */
+}
+
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
     @media (min-width: 992px) { 
