@@ -1,5 +1,5 @@
 <?php 
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
     session_start();
@@ -8,10 +8,10 @@ error_reporting(E_ALL);
     date_default_timezone_set('America/Argentina/San_Luis');
 
     // Requerir Clases y Conexión
-    require_once "../../Clases/Album.php";
-    require_once "../../Clases/Image.php"; 
-    require_once "../../Clases/User.php";
-    require_once "../../conexion.php"; 
+    require_once "../Clases/Album.php";
+    require_once "../Clases/Image.php"; 
+    require_once "../Clases/User.php";
+    require_once "../conexion.php"; 
 
     // Indicar que la respuesta es JSON
     header("Content-Type: application/json");
