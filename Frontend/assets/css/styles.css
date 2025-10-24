@@ -143,11 +143,11 @@
 /* ------------------------------- HEADER & MAIN CONTENT WRAPPER ------------------------------- */
 
     /* El contenedor que envuelve el Header y Main Content */
-    .main-content-offset {
+    /* .main-content-offset {
         transition: margin-left 0.3s ease; 
         margin-left: 0; 
         width: 100%;
-    }
+    } */
 
     .header {
         position: sticky; 
@@ -426,21 +426,20 @@
 
    /* ======================= PERFIL - ADAPTADO A BOOTSTRAP 5 ======================= */
 
-/* Respeta header fijo y sidebar */
 .main-content-offset {
-  min-height: 100vh;
-  width: 80vw;
-  padding: 2rem;
-  background-color: var(--bs-body-bg, #f8f9fa);
+    /* min-height: 100vh; <-- (Opcional: Puedes quitarlo si causa problemas de scroll) */
+    width: 100%; /* 💡 CORRECCIÓN CLAVE: Asegura que ocupe el 100% del espacio disponible */
+    padding: 2rem;
+    background-color: var(--bs-body-bg, #f8f9fa);
 }
 
 /* En móviles (sin sidebar fijo) */
-@media (max-width: 991.98px) {
-  .main-content-offset {
-    margin-left: 0;
-    margin-top: 70px;
-    padding: 1.5rem;
-  }
+@media (max-width: 991px) {
+    .main-content-offset {
+        margin-left: 0 !important; /* Asegurar que no haya margen de escritorio */
+        margin-top: 70px;
+        padding: 1.5rem;
+    }
 }
 
 /* ---------- Sección del perfil ---------- */
@@ -571,6 +570,7 @@
         
         .main-content-offset {
             margin-left: 250px;
+            width: auto;
         }
         
         .navbar-toggler {
