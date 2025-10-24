@@ -83,19 +83,55 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const validarFecha = (input, errorDiv) => {
             let isValid = true;
-            input.classList.remove("errorInput"); 
-            
-            if (!input?.value) { 
+            input.classList.remove("errorInput");
+
+            if (!input?.value.trim()) { 
                 mostrarError(errorDiv, input, "Campo obligatorio."); 
                 isValid = false; 
             } else {
-                const fecha = new Date(input.value);
-                let edad = new Date().getFullYear() - fecha.getFullYear();
-                const mes = new Date().getMonth() - fecha.getMonth();
-                if (mes < 0 || (mes === 0 && new Date().getDate() < fecha.getDate())) edad--;
-                if (edad < 18) { 
-                    mostrarError(errorDiv, input, "Debes tener al menos 18 años."); 
-                    isValid = false; 
+                // --- 1. PARSEO MANUAL (Para formato DD-MM-YYYY) ---
+                // El valor de input.value estará en formato DD-MM-YYYY (ej. "31-12-2000")
+                const parts = input.value.split('-'); 
+                
+                // Verifica el formato básico de 3 partes
+                if (parts.length !== 3) {
+                    mostrarError(errorDiv, input, "Formato de fecha inválido.");
+                    isValid = false;
+                    // Si el formato es incorrecto, no tiene sentido continuar
+                    if (!isValid) input.classList.add("errorInput");
+                    return isValid; 
+                }
+
+                // Crear la fecha en formato MM/DD/YYYY para que new Date la interprete correctamente
+                // parts[0] = DD, parts[1] = MM, parts[2] = YYYY
+                const dateString = `${parts[1]}/${parts[0]}/${parts[2]}`; 
+                const fecha = new Date(dateString);
+                
+                // Verifica si la fecha resultante es un objeto de Fecha válido
+                if (isNaN(fecha.getTime())) {
+                    mostrarError(errorDiv, input, "Fecha inválida. Revisa el día/mes.");
+                    isValid = false;
+                } 
+                
+                // Si la fecha es válida, procede con la validación de edad
+                else {
+                    // --- 2. VALIDACIÓN DE EDAD (Mantenemos tu lógica) ---
+                    const hoy = new Date();
+                    let edad = hoy.getFullYear() - fecha.getFullYear();
+                    const mesHoy = hoy.getMonth();
+                    const mesFecha = fecha.getMonth();
+                    const diaHoy = hoy.getDate();
+                    const diaFecha = fecha.getDate();
+                    
+                    // Ajuste de edad si aún no ha cumplido años este mes
+                    if (mesHoy < mesFecha || (mesHoy === mesFecha && diaHoy < diaFecha)) {
+                        edad--;
+                    }
+
+                    if (edad < 18) { 
+                        mostrarError(errorDiv, input, "Debes tener al menos 18 años."); 
+                        isValid = false; 
+                    }
                 }
             }
 

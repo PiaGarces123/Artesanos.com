@@ -172,6 +172,12 @@ class User {
         $biography = mysqli_real_escape_string($conexion, $this->biography);
         $dateBirth = mysqli_real_escape_string($conexion, $this->dateBirth);
 
+        // 💡 CORRECCIÓN DE FECHA: Convertir de 'd-m-Y' (Frontend) a 'Y-m-d' (MySQL)
+        $dateBirth_frontend = $dateBirth;
+        $dateObject = DateTime::createFromFormat('d-m-Y', $dateBirth_frontend);
+        $dateBirth = $dateObject ? $dateObject->format('Y-m-d') : null;
+        $dateBirth = mysqli_real_escape_string($conexion, $dateBirth); 
+
         $sql = "UPDATE users 
                 SET U_nameUser='$username', U_name='$name', U_lastName='$lastName', 
                     U_email='$email', U_biography='$biography', U_dateBirth = '$dateBirth'
