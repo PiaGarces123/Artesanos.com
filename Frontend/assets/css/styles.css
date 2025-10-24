@@ -433,14 +433,7 @@
     background-color: var(--bs-body-bg, #f8f9fa);
 }
 
-/* En móviles (sin sidebar fijo) */
-@media (max-width: 991px) {
-    .main-content-offset {
-        margin-left: 0 !important; /* Asegurar que no haya margen de escritorio */
-        margin-top: 70px;
-        padding: 1.5rem;
-    }
-}
+
 
 /* ---------- Sección del perfil ---------- */
 .profile-header-section {
@@ -581,6 +574,11 @@
     @media (max-width: 991px) { 
         .sidebar-fixed {
             display: none !important; 
+        }
+        .main-content-offset {
+            margin-left: 0 !important; /* Asegurar que no haya margen de escritorio */
+            margin-top: 70px;
+            padding: 1.5rem;
         }
     }
     
