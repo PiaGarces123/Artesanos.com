@@ -95,7 +95,7 @@
 
                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdownMenu">
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#" id="navProfileDropdown">
+                                <a class="dropdown-item d-flex align-items-center" href="./profile.php" id="navProfileDropdown">
                                     <i class="uil uil-user me-2"></i> Mi Perfil
                                 </a>
                             </li>

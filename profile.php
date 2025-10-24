@@ -1,66 +1,36 @@
 <?php
-require_once "../../BACKEND/Clases/Image.php"; 
-require_once "../../BACKEND/conexion.php"; 
+require_once "./BACKEND/Clases/Image.php";
+require_once "./BACKEND/Clases/User.php"; 
+require_once "./BACKEND/Clases/Album.php";
+require_once "./BACKEND/conexion.php"; 
 $conn = conexion();
 session_start();
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 123;
+    header("Location: index.php");
+    exit();
 }
+$isLoggedIn = true;
 
-$userId = $_SESSION['user_id'];
-$username = htmlspecialchars($_SESSION['username'] ?? 'Usuario');
-
-
-// Obtener datos del usuario desde la BD
-$sql = "SELECT U_nameUser, U_name, U_lastName, U_biography, U_dateBirth, U_registrationDate 
-        FROM users WHERE U_id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $userId);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$userData = mysqli_fetch_assoc($result);
+$user = User::getById($conn, $_SESSION['user_id']);
+if(!$user){
+    header("Location: index.php");
+    exit();
+}
 
 // Obtener imagen de perfil
-$profileImagePath = Imagen::getProfileImagePath($conn, $userId);
+$profileImagePath = Imagen::getProfileImagePath($conn,$user->id);
 
-// Obtener estadísticas
-// Followers (personas que me siguen)
-$sqlFollowers = "SELECT COUNT(*) as total FROM follow WHERE F_idFollowed = ? AND F_status = 1";
-$stmtFollowers = mysqli_prepare($conn, $sqlFollowers);
-mysqli_stmt_bind_param($stmtFollowers, "i", $userId);
-mysqli_stmt_execute($stmtFollowers);
-$resultFollowers = mysqli_stmt_get_result($stmtFollowers);
-$followers = mysqli_fetch_assoc($resultFollowers)['total'];
+//Followers (personas que me siguen)
+$followers = User::countFollowers($conn, $user->id);
 
 // Following (personas que sigo)
-$sqlFollowing = "SELECT COUNT(*) as total FROM follow WHERE F_idFollower = ? AND F_status = 1";
-$stmtFollowing = mysqli_prepare($conn, $sqlFollowing);
-mysqli_stmt_bind_param($stmtFollowing, "i", $userId);
-mysqli_stmt_execute($stmtFollowing);
-$resultFollowing = mysqli_stmt_get_result($stmtFollowing);
-$following = mysqli_fetch_assoc($resultFollowing)['total'];
+$following = User::countFollowing($conn, $user->id);
 
-// Obtener álbumes del usuario (excluyendo álbumes del sistema)
-$sqlAlbums = "SELECT a.A_id, a.A_title, a.A_creationDate,
-              (SELECT i.I_ruta FROM images i 
-               WHERE i.I_idAlbum = a.A_id AND i.I_isCover = 1 
-               LIMIT 1) as cover_image,
-              (SELECT COUNT(*) FROM images i WHERE i.I_idAlbum = a.A_id) as image_count
-              FROM albums a 
-              WHERE a.A_idUser = ? AND a.A_isSystemAlbum = 0
-              ORDER BY a.A_creationDate DESC";
-$stmtAlbums = mysqli_prepare($conn, $sqlAlbums);
-mysqli_stmt_bind_param($stmtAlbums, "i", $userId);
-mysqli_stmt_execute($stmtAlbums);
-$resultAlbums = mysqli_stmt_get_result($stmtAlbums);
-$albums = [];
-while ($row = mysqli_fetch_assoc($resultAlbums)) {
-    $albums[] = $row;
-}
+$cantAlbums = count(Album::getByUser($conn, $user->id));
 
-$isLoggedIn = true;
+
 ?>
 
 <!DOCTYPE html>
@@ -68,17 +38,20 @@ $isLoggedIn = true;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil - <?= $username ?></title>
+    <title>Mi Perfil - <?= $user->username ?></title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="./Frontend/assets/css/styles.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     
     
 </head>
 <body>
     
-    <?php include("../includes/header.php"); ?>
+    <?php 
+        include("./Frontend/includes/header.php"); 
+        include("./Frontend/includes/modals.php");
+    ?>
 
 
     <!-- CONTENIDO PRINCIPAL -->
@@ -94,9 +67,9 @@ $isLoggedIn = true;
                         <div class="profile-avatar-large mx-auto">
                             <img src="<?= htmlspecialchars($profileImagePath) ?>" alt="Avatar">
                         </div>
-                        <h1 class="profile-username"><?= $username ?></h1>
+                        <h1 class="profile-username"><?= $user->username ?></h1>
                         <p class="text-muted mb-0">
-                            <?= htmlspecialchars($userData['U_name'] . ' ' . $userData['U_lastName']) ?>
+                            <?= htmlspecialchars($user->name . ' ' . $user->lastName) ?>
                         </p>
                     </div>
 
@@ -107,7 +80,7 @@ $isLoggedIn = true;
                         <div class="row g-3 mb-4">
                             <div class="col-6 col-md-4">
                                 <div class="stats-card">
-                                    <div class="stat-value"><?= count($albums) ?></div>
+                                    <div class="stat-value"><?= $cantAlbums; ?></div>
                                     <div class="stat-label">Álbumes</div>
                                 </div>
                             </div>
@@ -141,8 +114,8 @@ $isLoggedIn = true;
                                 <i class="uil uil-info-circle me-1"></i> Biografía:
                             </h3>
                             <p class="mb-0 text-secondary">
-                                <?= !empty($userData['U_biography']) 
-                                    ? nl2br(htmlspecialchars($userData['U_biography'])) 
+                                <?= !empty($user->biography) 
+                                    ? nl2br(htmlspecialchars($user->biography)) 
                                     : 'Sin biografía aún. ¡Añade una descripción sobre ti!' ?>
                             </p>
                         </div>
@@ -152,48 +125,10 @@ $isLoggedIn = true;
         </div>
 
         <!-- SECCIÓN DE ÁLBUMES -->
-        <section class="albums-section">
-            <h4 class="mb-4">
-                <i class="uil uil-folder-open me-2"></i>Mis Álbumes
-            </h4>
-
-            <?php if (empty($albums)): ?>
-                <div class="empty-albums">
-                    <i class="uil uil-folder-slash"></i>
-                    <h5>No tienes álbumes todavía</h5>
-                    <p class="mb-3">¡Crea tu primer álbum y comparte tus artesanías!</p>
-                    <button class="btn btn-secondary" id="createFirstAlbum">
-                        <i class="uil uil-plus-circle me-1"></i>
-                        <br> Crear Álbum
-                    </button>
-                </div>
-            <?php else: ?>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    <?php foreach ($albums as $album): ?>
-                        <div class="col">
-                            <div class="album-card-profile" onclick="openAlbum(<?= $album['A_id'] ?>)">
-                                <?php if (!empty($album['cover_image'])): ?>
-                                    <img src="../../<?= htmlspecialchars($album['cover_image']) ?>" 
-                                            alt="<?= htmlspecialchars($album['A_title']) ?>" 
-                                            class="album-card-image">
-                                <?php else: ?>
-                                    <div class="d-flex align-items-center justify-content-center h-100">
-                                        <i class="uil uil-image-slash" style="font-size: 4rem; color: white;"></i>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <div class="album-card-overlay">
-                                    <h3 class="album-card-title"><?= htmlspecialchars($album['A_title']) ?></h3>
-                                    <div class="album-card-info">
-                                        <?= $album['image_count'] ?> imagen<?= $album['image_count'] != 1 ? 'es' : '' ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+        <section class="albums-section" id="myAlbumsProfileSection">
+            
         </section>
+        <div class="error" id="errorMyAlbumsProfile"></div>
 
     </main>
 
@@ -210,7 +145,7 @@ $isLoggedIn = true;
                         <div class="mb-3">
                             <label for="editBiography" class="form-label">Biografía:</label>
                             <textarea class="form-control" id="editBiography" rows="4" 
-                                      placeholder="Escribe algo sobre ti..."><?= htmlspecialchars($userData['U_biography'] ?? '') ?></textarea>
+                                      placeholder="Escribe algo sobre ti..."><?= htmlspecialchars($user->biography ?? '') ?></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
                     </form>
@@ -236,8 +171,7 @@ $isLoggedIn = true;
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    <!-- <script>
         // Abrir álbum
         function openAlbum(albumId) {
             window.location.href = `album.php?id=${albumId}`;
@@ -306,6 +240,40 @@ $isLoggedIn = true;
                 console.error('Error:', error);
             }
         });
-    </script>
+    </script> -->
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- Para Fecha de Nacimiento -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
+<!-- EL flactpickr lo ocmento porque me esta mostrando algo en la pantalla (REVISAR MOTIVO) -->
+
+<script>
+    // Variable global JS que indica si el usuario inició sesión
+    window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
+</script>
+
+<!--Scripts Personalizados -->
+
+<!--Scripts Básicos o normales(cerrar sesion, buscar) -->
+<script src="./Frontend/assets/js/actionNormal.js"></script>
+
+<!--Scripts Básicos de Modales -->
+<script src="./Frontend/assets/js/modal.js"></script>
+
+<!--Scripts para Restringir Acciones dependiendo de si Inició sesion o no -->
+<script src="./Frontend/assets/js/restrictedActions.js"></script>
+
+
+<!--Scripts Para publicar Contenido, muestra imagenes seleccionadas -->
+<script src="./Frontend/assets/js/modalSelectImages.js"></script>
+
+<!--Opcion de Crear o Seleccionar Album -->
+<script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
+
+<!-- Para trabajar los albumes -->
+<script src="./Frontend/assets/js/myAlbumsModal.js"></script>
+
+<!-- Para trabajar los albumes en la pagina profile.php -->
+<script src="./Frontend/assets/js/myAlbumsProfile.js"></script>
 </html>

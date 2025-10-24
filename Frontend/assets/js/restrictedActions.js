@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Botones de navegación - Desktop
         { id: "navFavoritesDesktop", action: () => openFavoritesModal() },
-        { id: "navProfileDesktop", action: () => {window.location.href = './Frontend/pages/profile.php'}  },
+        { id: "navProfileDesktop", action: () => {window.location.href = './profile.php'}  },
         
         // Botones de navegación - Mobile
         { id: "navFavoritesMobile", action: () => openFavoritesModal() },
-        { id: "navProfileMobile", action: () => {window.location.href = './Frontend/pages/profile.php'}  },
+        { id: "navProfileMobile", action: () => {window.location.href = './profile.php'}  },
         
         // Botones de busqueda
         { id: "searchButtonMobile", action: () => {} /* realizar busqueda */},

@@ -225,5 +225,50 @@ class User {
         // Devuelve TRUE si el estado es 0 (Bloqueado/Inactivo)
         return $this->status === 0;
     }
+
+
+    // ====================================================
+    // 🔹 Contar la cantidad de seguidores
+    // ====================================================
+    /**
+     * Cuenta el número de seguidores activos (F_status = 1) para un usuario.
+     */
+    public static function countFollowers($conexion, $idUsuario) {
+        $idUsuario = (int)$idUsuario;
+        
+        // Contar dónde este usuario es el SEGUIDO (F_idFollowed)
+        $sql = "SELECT COUNT(*) AS total 
+                FROM follow 
+                WHERE F_idFollowed = $idUsuario AND F_status = 1";
+        
+        $resultado = mysqli_query($conexion, $sql);
+        
+        if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
+            return (int)$fila['total'];
+        }
+        return 0;
+    }
+
+    // ====================================================
+    // 🔹 Contar la cantidad de seguidos
+    // ====================================================
+    /**
+     * Cuenta el número de usuarios que sigue activamente (F_status = 1) un usuario.
+     */
+    public static function countFollowing($conexion, $idUsuario) {
+        $idUsuario = (int)$idUsuario;
+        
+        // Contar dónde este usuario es el SEGUIDOR (F_idFollower)
+        $sql = "SELECT COUNT(*) AS total 
+                FROM follow 
+                WHERE F_idFollower = $idUsuario AND F_status = 1";
+        
+        $resultado = mysqli_query($conexion, $sql);
+        
+        if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
+            return (int)$fila['total'];
+        }
+        return 0;
+    }
 }
 ?>
