@@ -38,12 +38,12 @@
         exit;
     }
 
-    function almacenaImagen($fileArray, $idUser, $idImage) {
+    function almacenaImagen($file, $idUser, $idImage) {
         
         // ... (Lógica para obtener info del archivo, moverlo y devolver la ruta o $rutaError) ...
-        $fileTmpName = $fileArray['tmp_name'];
-        $originalFileName = $fileArray['name'];
-        $fileError = $fileArray['error'];
+        $fileTmpName = $file['tmp_name'];
+        $originalFileName = $file['name'];
+        $fileError = $file['error'];
 
         if ($fileError !== UPLOAD_ERR_OK) { return null; }
         
@@ -70,6 +70,7 @@
 
     
     $conn = conexion();
+    $profilePic = $_FILES['profilePic'] ?? null;
     $dateBirth = mysqli_real_escape_string($conn, $_POST['dateBirth']);
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $lastName = mysqli_real_escape_string($conn, $_POST['lastName']);
@@ -84,7 +85,7 @@
         "fNac" => "",
         "nbre" => "",
         "ape" => "",
-        "userName" => "",
+        "userName" => ""
     ];
 
     // Fecha de nacimiento

@@ -165,7 +165,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <div class="col-12 col-md-8">
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <label for="editUsername" class="form-label visually-hidden">Nombre de Usuario</label>
                                 <input type="text" class="form-style form-control" placeholder="Nombre de Usuario" name="editUsername" id="editUsername" 
                                        value="<?= htmlspecialchars($user->username ?? '') ?>" required>
@@ -173,7 +173,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                             </div>
                             <div class="error" id="errorEditUsername"></div>
                             
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <label for="editEmail" class="form-label visually-hidden">Email</label>
                                 <input type="email" class="form-style form-control text-muted" placeholder="Email" name="editEmail" id="editEmail" 
                                        value="<?= htmlspecialchars($user->email ?? '') ?>" readonly>
@@ -186,7 +186,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <label for="editName" class="form-label visually-hidden">Nombre</label>
                                 <input type="text" class="form-style form-control" placeholder="Nombre" name="editName" id="editName" 
                                        value="<?= htmlspecialchars($user->name ?? '') ?>" required>
@@ -196,7 +196,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-groupLogin mb-3 position-relative">
+                            <div class="form-groupLogin mt-3 mb-2 position-relative">
                                 <label for="editLastName" class="form-label visually-hidden">Apellido</label>
                                 <input type="text" class="form-style form-control" placeholder="Apellido" name="editLastName" id="editLastName" 
                                        value="<?= htmlspecialchars($user->lastName ?? '') ?>" required>
@@ -206,7 +206,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <div class="col-12">
-                            <div class="form-groupLogin position-relative">
+                            <div class="form-groupLogin position-relative mt-3 mb-2">
                                 <label for="editDateBirth" class="form-label visually-hidden">Fecha de Nacimiento</label>
                                 <input type="date" class="form-style form-control" placeholder="Fecha de Nacimiento" name="editDateBirth" id="editDateBirth" 
                                        value="<?= htmlspecialchars($formattedDate ?? '') ?>" required>

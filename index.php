@@ -27,11 +27,14 @@
     <!-- Incluir el Navbar y Sidebar -->
     <?php
     include("./Frontend/includes/header.php");
-    include("./Frontend/includes/modals.php");
     ?>
 
+    <!-- IMAGENES -->
 
-   
+   <?php
+        include("./Frontend/includes/modals.php");
+    ?>
+
     
 </body>
 
