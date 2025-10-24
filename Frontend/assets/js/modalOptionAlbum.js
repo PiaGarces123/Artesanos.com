@@ -218,13 +218,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Mostramos un spinner de carga mientras se obtienen los datos
         container.innerHTML = `<p class="text-center mt-3 text-secondary"><div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div> Cargando álbumes...</p>`;
         
-        // Limpiamos errores previos
+        // Limpiamos errores previos (Asumo que limpiarErrores() está accesible)
         limpiarErrores();
 
-        // Convertimos a async/await para manejar el flujo de forma más limpia
         async function fetchAlbums() {
             try {
-                const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`);
+                // Asumo que el fetch ahora incluye el idUser si es necesario:
+                const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`); 
 
                 if (!response.ok) {
                     throw new Error('Fallo al obtener los álbumes.');
@@ -242,45 +242,63 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     albumsHTML = `
                         <h5 class="text-secondary fw-bold mt-3 mb-3">Selecciona un álbum de destino:</h5>
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        
+                        <div class="albums-scroll-container"> 
+                            
+                            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-4">
                     `;
                     
                     filteredAlbums.forEach(album => {
-                        // Usamos un radio button oculto + label con estilo de tarjeta
+                        // Prepara el HTML de la imagen/placeholder de tu compañera
+                        const imageHtml = album.A_cover 
+                            ? `<img src="${album.A_cover}" alt="${album.A_title}" class="album-card-image">`
+                            : `<div class="d-flex align-items-center justify-content-center h-100">
+                                <i class="uil uil-image-slash" style="font-size: 4rem; color: var(--secondary-text);"></i>
+                            </div>`;
+
                         albumsHTML += `
                             <div class="col">
+                                
                                 <input type="radio" class="btn-check album-radio" 
                                     name="existingAlbumId" 
                                     id="album-${album.A_id}" 
                                     value="${album.A_id}" 
                                     autocomplete="off">
                                 
-                                <label class="btn btn-outline-secondary p-2 w-100 h-100 album-card-select" for="album-${album.A_id}">
+                                <label class="btn btn-outline-secondary p-0 w-100 h-100 album-card-select" for="album-${album.A_id}" style="border: none;">
                                     
-                                    <img src="${album.A_cover}" alt="Portada de ${album.A_title}" 
-                                        class="img-fluid rounded mb-2" style="height: 80px; object-fit: cover;">
+                                    <div class="album-card position-relative overflow-hidden w-100 h-100">
                                         
-                                    <p class="mb-0 fw-semibold text-truncate small">${album.A_title}</p>
-                                    <p class="text-muted small mb-0">${album.A_count} imágenes</p>
+                                        ${imageHtml}
+                                        
+                                        <div class="album-card-overlay">
+                                            <h3 class="album-card-title">${album.A_title}</h3>
+                                            <div class="album-card-info">
+                                                ${album.A_count} imagen${album.A_count != 1 ? 'es' : ''}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="selection-indicator"></div>
+                                    </div>
+                                    
                                 </label>
                             </div>
                         `;
                     });
-                    albumsHTML += `</div>`;
+                    albumsHTML += `</div></div>`; // Cierre del row y del albums-scroll-container
                 }
                 
-                container.innerHTML = albumsHTML; // Inyectar el contenido de los álbumes
+                container.innerHTML = albumsHTML;
                 
             } catch (error) {
+                // Asumo que mostrarError está accesible
                 mostrarError(errorDiv, null, "Error al cargar álbumes: " + error.message);
                 container.innerHTML = `<p class="text-danger text-center mt-3">No se pudieron cargar los álbumes.</p>`;
             }
         }
         
-        // Ejecutar la función de fetch
         fetchAlbums();
     }
-
 
     function initModalOptionAlbum(){
         const titleAlbumRegex = /^[a-zA-Z0-9._+-ÁÉÍÓÚáéíóúÑñ\s]{1,30}$/;

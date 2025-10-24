@@ -353,28 +353,73 @@
 
 
 /*------------------------- Estilos para las tarjetas de selección de álbumes ---------------------------*/
-    .album-card-select {
-        border-radius: 8px !important;
-        border-width: 2px !important; /* Borde más grueso para indicar selección */
+    /* Custom CSS para la Tarjeta de Álbum (Estética de tu compañera) */
+
+    /* Contenedor principal de la tarjeta */
+    .album-card {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #f7f3ed;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+        border: 3px solid transparent; 
         transition: all 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        /* 💡 CLAVE 1: Forzar una relación de aspecto cuadrada (1 / 1) */
+        aspect-ratio: 1 / 1;
     }
 
-    /* Efecto de selección: Cuando el radio está marcado, iluminar la tarjeta */
-    .album-radio:checked + .album-card-select {
-        background-color: var(--primary-color) !important;
-        border-color: var(--secondary-color) !important; /* Borde marrón más fuerte */
-        box-shadow: 0 0 5px rgba(194, 151, 106, 0.7); /* Sombra suave */
-        color: var(--principal-text) !important;
+    .album-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
     }
 
-    /* Estilo de la imagen dentro de la tarjeta */
-    .album-card-select img {
+    .album-card-image {
         width: 100%;
-        max-width: 100px; /* Tamaño máximo para la miniatura */
-        height: 100px;
+        height: 100%; /* La altura ahora es igual al ancho gracias al contenedor padre */
+        object-fit: cover; 
+        display: block;
+    }
+
+    /* Capa de Información (Overlay) */
+    .album-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente oscuro */
+        color: white;
+        transition: background 0.3s ease;
+    }
+
+    .album-card-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    /* Nuevo CSS para la SELECCIÓN */
+
+    /* El label actúa como la envoltura */
+    .album-card-select {
+        /* height: 100%; */
+        border-color: var(--secondary-text) !important; 
+        padding: 0 !important;
+    }
+
+    /* Efecto visual de selección (AÑADIDO PARA FUNCIONALIDAD) */
+    .album-radio:checked + .album-card-select .album-card {
+        /* Resalta la card entera con un borde y sombra de tu color */
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 0 10px rgba(194, 151, 106, 0.9) !important;
+        transform: none;
+    }
+
+    .albums-scroll-container {
+        max-height: 400px; /* Altura máxima razonable para el scroll dentro del modal */
+        overflow-y: auto;  /* Permite el scroll vertical si el contenido excede el max-height */
+        padding-right: 15px; /* Añade padding para que el scrollbar no se pegue al borde */
     }
 
     /* ======================= NUEVA SECCIÓN: ESTILOS DEL PERFIL ======================= */
@@ -471,43 +516,7 @@
 }
 
 /* ---------- Álbumes ---------- */
-.album-card-profile {
-  position: relative;
-  border-radius: 1rem;
-  height: 280px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  background-color: var(--primary-color);
-  box-shadow: var(--bs-box-shadow-sm);
-}
-.album-card-profile:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--bs-box-shadow-lg);
-}
-.album-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.album-card-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 1rem 1.25rem;
-}
-.album-card-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.25rem;
-}
-.album-card-info {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.85);
-}
+
 
 /* ---------- Estado vacío ---------- */
 .empty-albums {
@@ -526,22 +535,31 @@
 /* --------------------------------------------------------------------------------------------- */
     /* Estilos para el botón de Kebab Menu (Tres Puntos) */
 
-    /* Estilo base: Fondo transparente y color de ícono discreto */
-    .dropdown-menu .btn.border-0 {
+   /* --- ESTILOS PARA EL BOTÓN DE TRES PUNTOS (KEBAB MENU) --- */
+
+    /* 1. Estado Base (Para que el botón sea visible y el icono esté en el color secundario) */
+    .album-card-select .dropdown .btn {
+        /* El ícono ya es text-secondary, por lo que lo dejamos así */
+        color: var(--secondary-color) !important;
         background-color: transparent !important;
-        color: var(--secondary-text) !important; /* Color gris suave */
     }
 
-    /* Estado HOVER: Aplicamos un fondo blanco o muy claro para que resalte el icono */
-    .dropdown-menu .btn.border-0:hover,
-    .dropdown-menu .btn.border-0:focus {
-        background-color: #f8f9fa !important; /* Blanco muy sutil, color de Bootstrap light */
-        box-shadow: none !important;
+
+    /* 2. Estado HOVER / FOCUS: Fondo Marrón y Texto Blanco */
+    .album-card-select .dropdown .btn:hover,
+    .album-card-select .dropdown .btn:focus {
+        /* Fondo del color principal de tu sitio (el marrón fuerte) */
+        background-color: var(--secondary-color) !important;
+        
+        /* El borde y la sombra de foco (para eliminar el gris/azul) */
+        /* border-color: var(--secondary-color) !important; */
+        /* box-shadow: 0 0 0 0.25rem var(--primary-color) !important;  */
     }
 
-    /* Asegurar que el icono dentro del botón permanezca visible */
-    .dropdown-menu .btn.border-0:hover i {
-        color: var(--principal-text) !important; /* Color de texto/ícono más oscuro */
+    /* 3. Color del Icono en el estado HOVER/FOCUS (Para que resalte en el fondo marrón) */
+    .album-card-select .dropdown .btn:hover i,
+    .album-card-select .dropdown .btn:focus i {
+        color: var(--background-color) !important; /* El ícono se vuelve blanco */
     }
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
