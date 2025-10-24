@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!valido) return;
 
                 const formData = new FormData();
-                formData.append("profilePic", profilePicInput.files || "");
+                formData.append("profilePic", profilePicInput.files[0]);
                 formData.append("dateBirth", editDateBirth.value.trim());
                 formData.append("name", editName.value.trim());
                 formData.append("lastName", editLastName.value.trim());

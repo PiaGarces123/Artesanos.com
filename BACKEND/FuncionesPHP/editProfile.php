@@ -70,7 +70,7 @@
 
     
     $conn = conexion();
-    $profilePic = $_FILES['profilePic'] ?? null;
+    $profilePic = isset($_FILES['profilePic']) ? $_FILES['profilePic'] : null;
     $dateBirth = mysqli_real_escape_string($conn, $_POST['dateBirth']);
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $lastName = mysqli_real_escape_string($conn, $_POST['lastName']);

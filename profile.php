@@ -136,108 +136,108 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     </main>
 
     <!-- MODAL EDITAR PERFIL -->
- <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
-            
-            <div class="modal-header border-0 pb-0 mb-3">
-                <h2 class="modal-title fs-4 fw-bold text-primary" id="editProfileModalLabel">Editar Mi Perfil</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeEditProfile"></button>
-            </div>
-            
-            <div class="modal-body">
-                <form id="editProfileForm">
-                    
-                    <div class="row g-3 mb-4 align-items-center">
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="editProfileModalLabel">Editar Mi Perfil</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeEditProfile"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <form id="editProfileForm">
                         
-                        <div class="col-12 col-md-4 text-center">
-                            <div class="profile-avatar-edit mx-auto mb-3 position-relative">
-                                <img src="<?= htmlspecialchars($profileImagePath ?? './Frontend/assets/images/appImages/default.jpg') ?>" 
-                                     alt="Foto de Perfil" 
-                                     class="rounded-circle border border-3 border-primary"
-                                     style="width: 120px; height: 120px; object-fit: cover;">
-                                
-                                <button type="button" class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 me-2 mb-2" id="changeProfilePic">
-                                    <i class="uil uil-camera" style="font-size: 1.2rem;"></i>
-                                </button>
-                                <input type="file" id="profilePicInput" name="profilePic" accept="image/*" class="d-none">
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-8">
-                            <div class="form-groupLogin mt-3 mb-2 position-relative">
-                                <label for="editUsername" class="form-label visually-hidden">Nombre de Usuario</label>
-                                <input type="text" class="form-style form-control" placeholder="Nombre de Usuario" name="editUsername" id="editUsername" 
-                                       value="<?= htmlspecialchars($user->username ?? '') ?>" required>
-                                <i class="input-icon uil uil-user-circle"></i>
-                            </div>
-                            <div class="error" id="errorEditUsername"></div>
+                        <div class="row g-3 mb-4 align-items-center">
                             
-                            <div class="form-groupLogin mt-3 mb-2 position-relative">
-                                <label for="editEmail" class="form-label visually-hidden">Email</label>
-                                <input type="email" class="form-style form-control text-muted" placeholder="Email" name="editEmail" id="editEmail" 
-                                       value="<?= htmlspecialchars($user->email ?? '') ?>" readonly>
-                                <i class="input-icon uil uil-at"></i>
+                            <div class="col-12 col-md-4 text-center">
+                                <div class="profile-avatar-edit mx-auto mb-3 position-relative">
+                                    <img src="<?= htmlspecialchars($profileImagePath ?? './Frontend/assets/images/appImages/default.jpg') ?>" 
+                                        alt="Foto de Perfil" 
+                                        class="rounded-circle border border-3 border-primary"
+                                        style="width: 120px; height: 120px; object-fit: cover;">
+                                    
+                                    <button type="button" class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 me-2 mb-2" id="changeProfilePic">
+                                        <i class="uil uil-camera" style="font-size: 1.2rem;"></i>
+                                    </button>
+                                    <input type="file" id="profilePicInput" name="profilePic" accept="image/*" class="d-none">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-8">
+                                <div class="form-groupLogin mt-3 mb-2 position-relative">
+                                    <label for="editUsername" class="form-label visually-hidden">Nombre de Usuario</label>
+                                    <input type="text" class="form-style form-control" placeholder="Nombre de Usuario" name="editUsername" id="editUsername" 
+                                        value="<?= htmlspecialchars($user->username ?? '') ?>" required>
+                                    <i class="input-icon uil uil-user-circle"></i>
+                                </div>
+                                <div class="error" id="errorEditUsername"></div>
+                                
+                                <div class="form-groupLogin mt-3 mb-2 position-relative">
+                                    <label for="editEmail" class="form-label visually-hidden">Email</label>
+                                    <input type="email" class="form-style form-control text-muted" placeholder="Email" name="editEmail" id="editEmail" 
+                                        value="<?= htmlspecialchars($user->email ?? '') ?>" readonly>
+                                    <i class="input-icon uil uil-at"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <hr>
+                        
+                        <hr>
 
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-groupLogin mt-3 mb-2 position-relative">
-                                <label for="editName" class="form-label visually-hidden">Nombre</label>
-                                <input type="text" class="form-style form-control" placeholder="Nombre" name="editName" id="editName" 
-                                       value="<?= htmlspecialchars($user->name ?? '') ?>" required>
-                                <i class="input-icon uil uil-user"></i>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-groupLogin mt-3 mb-2 position-relative">
+                                    <label for="editName" class="form-label visually-hidden">Nombre</label>
+                                    <input type="text" class="form-style form-control" placeholder="Nombre" name="editName" id="editName" 
+                                        value="<?= htmlspecialchars($user->name ?? '') ?>" required>
+                                    <i class="input-icon uil uil-user"></i>
+                                </div>
+                                <div class="error" id="errorEditName"></div>
                             </div>
-                            <div class="error" id="errorEditName"></div>
+
+                            <div class="col-md-6">
+                                <div class="form-groupLogin mt-3 mb-2 position-relative">
+                                    <label for="editLastName" class="form-label visually-hidden">Apellido</label>
+                                    <input type="text" class="form-style form-control" placeholder="Apellido" name="editLastName" id="editLastName" 
+                                        value="<?= htmlspecialchars($user->lastName ?? '') ?>" required>
+                                    <i class="input-icon uil uil-user"></i>
+                                </div>
+                                <div class="error" id="errorEditLastName"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-groupLogin position-relative mt-3 mb-2">
+                                    <label for="editDateBirth" class="form-label visually-hidden">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-style form-control" placeholder="Fecha de Nacimiento" name="editDateBirth" id="editDateBirth" 
+                                        value="<?= htmlspecialchars($formattedDate ?? '') ?>" required>
+                                    <i class="input-icon uil uil-calendar-alt"></i>
+                                </div>
+                                <div class="error" id="errorEditDateBirth"></div>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-groupLogin mt-3 mb-2 position-relative">
-                                <label for="editLastName" class="form-label visually-hidden">Apellido</label>
-                                <input type="text" class="form-style form-control" placeholder="Apellido" name="editLastName" id="editLastName" 
-                                       value="<?= htmlspecialchars($user->lastName ?? '') ?>" required>
-                                <i class="input-icon uil uil-user"></i>
-                            </div>
-                            <div class="error" id="errorEditLastName"></div>
+                        <div class="mb-4">
+                            <label for="editBiography" class="form-label fw-semibold text-secondary">Biografía:</label>
+                            <textarea class="form-control" id="editBiography" name="editBiography" rows="4" 
+                                    placeholder="Escribe algo sobre ti..."><?= htmlspecialchars($user->biography ?? '') ?></textarea>
                         </div>
 
-                        <div class="col-12">
-                            <div class="form-groupLogin position-relative mt-3 mb-2">
-                                <label for="editDateBirth" class="form-label visually-hidden">Fecha de Nacimiento</label>
-                                <input type="date" class="form-style form-control" placeholder="Fecha de Nacimiento" name="editDateBirth" id="editDateBirth" 
-                                       value="<?= htmlspecialchars($formattedDate ?? '') ?>" required>
-                                <i class="input-icon uil uil-calendar-alt"></i>
-                            </div>
-                            <div class="error" id="errorEditDateBirth"></div>
+                        <div class="text-start mb-4">
+                            <button type="button" class="btn btn-sm btn-outline-danger" id="changePasswordButton">
+                                <i class="uil uil-key-skeleton-alt me-1"></i> Cambiar Contraseña
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="editBiography" class="form-label fw-semibold text-secondary">Biografía:</label>
-                        <textarea class="form-control" id="editBiography" name="editBiography" rows="4" 
-                                  placeholder="Escribe algo sobre ti..."><?= htmlspecialchars($user->biography ?? '') ?></textarea>
-                    </div>
-
-                    <div class="text-start mb-4">
-                        <button type="button" class="btn btn-sm btn-outline-danger" id="changePasswordButton">
-                            <i class="uil uil-key-skeleton-alt me-1"></i> Cambiar Contraseña
-                        </button>
-                    </div>
-                    <div class="error" id="errorEditProfile"></div>
-                </form>
-            </div>
-            
-            <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" form="editProfileForm" class="btn btn-primary" id="saveChangeEditProfileButton">Guardar Cambios</button>
+                        <div class="error" id="errorEditProfile"></div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="editProfileForm" class="btn btn-primary" id="saveChangeEditProfileButton">Guardar Cambios</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- MODAL HISTORIAL DE FOTOS -->
     <div class="modal fade" id="profileHistoryModal" tabindex="-1" aria-labelledby="profileHistoryModalLabel" aria-hidden="true">

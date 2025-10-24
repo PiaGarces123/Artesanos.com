@@ -66,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Objeto Modal
     const confirmDeleteModalEl = document.getElementById('confirmDeleteModal');
-    const confirmDeleteModal = confirmDeleteModalEl ? new bootstrap.Modal(confirmDeleteModalEl) : null;
+    const confirmDeleteModal = confirmDeleteModalEl ? (bootstrap.Modal.getInstance(confirmDeleteModalEl) || new bootstrap.Modal(confirmDeleteModalEl)) : null;
+
+    
 
     const deleteAlbum = async (albumId) => {
         
