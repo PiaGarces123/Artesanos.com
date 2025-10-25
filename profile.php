@@ -67,7 +67,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                     
                     <!-- Avatar y nombre -->
                     <div class="col-lg-3 text-center mb-4 mb-lg-0">
-                        <div class="profile-avatar-large mx-auto">
+                        <div class="profile-avatar-large mx-auto" data-bs-toggle="modal" data-bs-target="#viewProfilePicModal">
                             <img src="<?= htmlspecialchars($profileImagePath) ?>" alt="Avatar">
                         </div>
                         <h1 class="profile-username"><?= $user->username ?></h1>
@@ -134,6 +134,43 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
         <div class="error" id="errorMyAlbumsProfile"></div>
 
     </main>
+        <!-- MODAL VER Y GESTIONAR FOTO DE PERFIL -->
+     
+    <div class="modal fade" id="viewProfilePicModal" tabindex="-1" aria-labelledby="viewProfilePicModalLabel" aria-hidden="true">
+        <!-- Usamos modal-sm para que sea pequeño, pero el contenido interno lo forzará a la imagen -->
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content p-0 rounded-4 border-0 shadow-lg"> 
+                
+                <!-- Contenedor del Cuerpo y Pie (Unificado) -->
+                <div class="modal-body p-0 position-relative">
+                    
+                    <!-- 1. Imagen Principal (Ocupa el 100% del cuerpo del modal) -->
+                    <div class="profile-pic-display-wrap">
+                        <img src="<?= htmlspecialchars($profileImagePath ?? './Frontend/assets/images/appImages/default.jpg') ?>" 
+                            alt="Tu Foto de Perfil" 
+                            class="img-fluid w-100 rounded-4"
+                            style="aspect-ratio: 1/1; object-fit: cover;"
+                            id="modalCurrentProfilePic">
+                    </div>
+                    
+                    <!-- 2. Botón de Cerrar (Invisible sobre la imagen) -->
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2 z-20" 
+                            data-bs-dismiss="modal" aria-label="Cerrar" style="filter: drop-shadow(0 0 2px black);"></button>
+                    
+                    <!-- 3. Botón de Eliminar (Discreto, esquina inferior/superior, usando ícono) -->
+                    <div class="position-absolute bottom-0 start-0 m-2 z-20">
+                        <button type="button" class="btn btn-sm btn-danger rounded-circle p-2" id="removeProfilePicButton">
+                            <i class="uil uil-trash-alt" style="font-size: 1rem;"></i> 
+                        </button>
+                    </div>
+                    
+                    <div class="error mt-2" id="errorRemoveProfilePic"></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
 
     <!-- MODAL EDITAR PERFIL -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">

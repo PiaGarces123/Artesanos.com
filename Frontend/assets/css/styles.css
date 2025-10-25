@@ -553,6 +553,35 @@
     .album-card-select .dropdown .btn:focus i {
         color: var(--background-color) !important; /* El ícono se vuelve blanco */
     }
+
+    
+/* -------------------------------------------------------------------------- */
+
+    /* Hacemos el contenedor modal-content un poco más ancho sin usar modal-lg */
+   
+
+    /* Forzamos el botón de cerrar a ser blanco para que se vea sobre la imagen */
+    .btn-close-white {
+        background: none !important; /* Asegura que el fondo no sea visible */
+        opacity: 0.8;
+    }
+
+    /* Estilo para el botón de eliminar (fondo rojo para el ícono) */
+    #removeProfilePicButton {
+        /* Usamos !important para anular el estilo base de btn-danger */
+        background-color: var(--bs-danger) !important; 
+        border: none !important;
+        opacity: 0.8;
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+
+    #removeProfilePicButton:hover, #removeProfilePicButton:focus  {
+        /* Usamos !important para anular el estilo base de btn-danger */
+        background-color: var(--background-color) !important; 
+        color: var(--bs-danger) !important;
+        box-shadow: 0 0 0 0.25rem var(--bs-danger);
+    }
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     
     @media (min-width: 992px) { 
@@ -576,7 +605,6 @@
             display: none !important; 
         }
         .main-content-offset {
-            margin-left: 0 !important; /* Asegurar que no haya margen de escritorio */
             margin-top: 70px;
             padding: 1.5rem;
         }
