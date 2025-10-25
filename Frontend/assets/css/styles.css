@@ -605,6 +605,7 @@
             display: none !important; 
         }
         .main-content-offset {
+            margin-left: 0 !important; /* Asegurar que no haya margen de escritorio */
             margin-top: 70px;
             padding: 1.5rem;
         }
