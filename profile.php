@@ -257,7 +257,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     </div>
 
     <?php 
-        include("./Frontend/includes/modals.php");
+        require_once("./Frontend/includes/modals.php");
     ?>
 </body>
 
