@@ -281,4 +281,24 @@
 
 
 
+    <!--Scripts Personalizados -->
+
+<!--Scripts de Acciones normales (cerrar sesion, buscar) -->
+<script src="./Frontend/assets/js/actionNormal.js"></script>
+
+<!--Scripts del Modal de Iniciar Session -->
+<script src="./Frontend/assets/js/modal.js"></script>
+
+<!--Scripts para Restringir Acciones dependiendo de si Inició sesion o no -->
+<script src="./Frontend/assets/js/restrictedActions.js"></script>
+
+
+<!--Scripts Para publicar Contenido, muestra imagenes seleccionadas -->
+<script src="./Frontend/assets/js/modalSelectImages.js"></script>
+
+<!--Opcion de Crear o Seleccionar Album -->
+<script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
+
+<!-- Para trabajar los albumes -->
+<script src="./Frontend/assets/js/myAlbumsModal.js"></script>
     

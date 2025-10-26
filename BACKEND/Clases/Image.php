@@ -146,7 +146,7 @@
             $idUsuario = (int)$idUsuario;
 
             // Primero desmarcamos cualquier imagen de perfil actual
-            $sql1 = "UPDATE images SET I_currentProfile = 0 WHERE I_idUser = $idUsuario";
+            $sql1 = "UPDATE images SET I_currentProfile = 0 WHERE I_idUser = $idUsuario AND I_currentProfile = 1";
             mysqli_query($conn, $sql1);
 
             // Luego marcamos la nueva como perfil
@@ -155,11 +155,10 @@
         }
 
         // 🔹 Quitar imagen de perfil
-        public static function removeProfile($conn, $idImagen, $idUsuario) {
-            $idImagen = (int)$idImagen;
+        public static function removeProfile($conn, $idUsuario) {
             $idUsuario = (int)$idUsuario;
 
-            $sql = "UPDATE images SET I_currentProfile = 0 WHERE I_id = $idImagen AND I_idUser = $idUsuario";
+            $sql = "UPDATE images SET I_currentProfile = 0 WHERE I_currentProfile = 1 AND I_idUser = $idUsuario";
             return mysqli_query($conn, $sql);
         }
         

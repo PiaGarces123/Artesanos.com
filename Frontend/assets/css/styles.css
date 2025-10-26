@@ -556,31 +556,29 @@
 
     
 /* -------------------------------------------------------------------------- */
-
-    /* Hacemos el contenedor modal-content un poco más ancho sin usar modal-lg */
    
+    /* 1. La "señal" más importante: cambiar el cursor */
+    .profile-avatar-large {
+        cursor: pointer;
+        /* Asegúrate de que tenga esto si es un círculo, para que el zoom no se salga */
+        overflow: hidden; 
+    }
+
+    /* 2. Añadimos una transición suave para la imagen de adentro */
+    .profile-avatar-large img {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* 3. El efecto al pasar el mouse (hover) */
+    .profile-avatar-large:hover img {
+        transform: scale(1.1);  /* Agranda la imagen un 10% */
+        opacity: 0.9;         /* La atenúa ligeramente */
+    }
 
     /* Forzamos el botón de cerrar a ser blanco para que se vea sobre la imagen */
     .btn-close-white {
         background: none !important; /* Asegura que el fondo no sea visible */
         opacity: 0.8;
-    }
-
-    /* Estilo para el botón de eliminar (fondo rojo para el ícono) */
-    #removeProfilePicButton {
-        /* Usamos !important para anular el estilo base de btn-danger */
-        background-color: var(--bs-danger) !important; 
-        border: none !important;
-        opacity: 0.8;
-        color: white !important;
-        transition: all 0.3s ease;
-    }
-
-    #removeProfilePicButton:hover, #removeProfilePicButton:focus  {
-        /* Usamos !important para anular el estilo base de btn-danger */
-        background-color: var(--background-color) !important; 
-        color: var(--bs-danger) !important;
-        box-shadow: 0 0 0 0.25rem var(--bs-danger);
     }
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
     

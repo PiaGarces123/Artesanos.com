@@ -43,7 +43,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - <?= $user->username ?></title>
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
     <link rel="stylesheet" href="./Frontend/assets/css/styles.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -155,14 +155,9 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                     
                     <!-- 2. Botón de Cerrar (Invisible sobre la imagen) -->
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2 z-20" 
-                            data-bs-dismiss="modal" aria-label="Cerrar" style="filter: drop-shadow(0 0 2px black);"></button>
+                            data-bs-dismiss="modal" aria-label="Cerrar" style="filter: drop-shadow(0 0 2px black);">
+                    </button>
                     
-                    <!-- 3. Botón de Eliminar (Discreto, esquina inferior/superior, usando ícono) -->
-                    <div class="position-absolute bottom-0 start-0 m-2 z-20">
-                        <button type="button" class="btn btn-sm btn-danger rounded-circle p-2" id="removeProfilePicButton">
-                            <i class="uil uil-trash-alt" style="font-size: 1rem;"></i> 
-                        </button>
-                    </div>
                     
                     <div class="error mt-2" id="errorRemoveProfilePic"></div>
                 </div>
@@ -263,6 +258,9 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                             <button type="button" class="btn btn-sm btn-outline-danger" id="changePasswordButton">
                                 <i class="uil uil-key-skeleton-alt me-1"></i> Cambiar Contraseña
                             </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeProfilePicButton">
+                                <i class="uil uil-user-times me-1"></i> Remover Foto de Perfil
+                            </button>
                         </div>
                         <div class="error" id="errorEditProfile"></div>
                     </form>
@@ -271,6 +269,26 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                 <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" form="editProfileForm" class="btn btn-primary" id="saveChangeEditProfileButton">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para preguntar si desea o no quitar foto de perfil -->
+    <div class="modal fade" id="confirmRemoveProfilePicModal" tabindex="-1" aria-labelledby="confirmRemoveProfilePicLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content p-3 rounded-4 shadow-lg">
+                
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-danger fw-bold" id="confirmRemoveProfilePicLabel">Confirmar </h5>
+                </div>
+                
+                <div class="modal-body text-center pt-2 pb-3">
+                    <p id="deleteMessage">¿Estás Seguro de que Deseas Remover la Foto de Perfil Actual</p>
+                </div>
+                
+                <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmRemoveProfilePicButton">Remover</button>
                 </div>
             </div>
         </div>
@@ -308,30 +326,12 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
 </script>
 
-<!--Scripts Personalizados -->
-
-<!--Scripts Básicos o normales(cerrar sesion, buscar) -->
-<script src="./Frontend/assets/js/actionNormal.js"></script>
-
-<!--Scripts Básicos de Modales -->
-<script src="./Frontend/assets/js/modal.js"></script>
-
-<!--Scripts para Restringir Acciones dependiendo de si Inició sesion o no -->
-<script src="./Frontend/assets/js/restrictedActions.js"></script>
-
-
-<!--Scripts Para publicar Contenido, muestra imagenes seleccionadas -->
-<script src="./Frontend/assets/js/modalSelectImages.js"></script>
-
-<!--Opcion de Crear o Seleccionar Album -->
-<script src="./Frontend/assets/js/modalOptionAlbum.js"></script>
-
-<!-- Para trabajar los albumes -->
-<script src="./Frontend/assets/js/myAlbumsModal.js"></script>
-
 <!-- Para trabajar los albumes en la pagina profile.php -->
 <script src="./Frontend/assets/js/myAlbumsProfile.js"></script>
 
 <!-- Para el modal de editar perfil -->
 <script src="./Frontend/assets/js/editProfileModal.js"></script>
+
+<!-- Para remover imagen de perfil actual -->
+<script src="./Frontend/assets/js/removeProfilePic.js"></script>
 </html>

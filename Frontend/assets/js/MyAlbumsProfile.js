@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
             } else if (data.status === 'errorSession') {
                 // 🚀 ACCIÓN REQUERIDA: Redireccionar al index (tras logout)
-                callback = () => window.location.href = '../../index.php'; // Ajusta la ruta si es necesario
+                callback = () => window.location.href = './index.php'; // Ajusta la ruta si es necesario
             } 
             // Si data.status es 'error', callback se mantiene como null (no hace nada al aceptar)
             
