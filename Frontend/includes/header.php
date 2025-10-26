@@ -1,8 +1,8 @@
 <aside class="sidebar-fixed d-none d-lg-block" id="sidebarDesktop">
     <div class="sidebar-header d-flex align-items-center justify-content-center p-3 mb-3 border-bottom">
-        <div class="app-logo me-2">
+        <a href="./index.php" class="app-logo me-2 d-flex align-items-center" aria-label="Inicio">
             <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
-        </div>
+        </a>
         <span class="fs-5 fw-bold text-secondary">Artesanos</span>
     </div>
     
@@ -45,11 +45,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <a class="navbar-brand me-3 d-flex d-lg-none align-items-center" href="#">
+        <a class="navbar-brand me-3 d-flex d-lg-none align-items-center" href="./index.php">
             <div class="app-logo me-2">
                 <img src="./Frontend/assets/images/appImages/logo.png" alt="logo" class="rounded-circle">
             </div>
-            <span class="d-sm-block">Artesanos</span>
+            <span class="fs-5 fw-bold text-secondary">Artesanos</span>
         </a>
 
         <div id="searchAndFiltersDesktop" class="d-none d-lg-flex flex-grow-1 align-items-center gap-3">

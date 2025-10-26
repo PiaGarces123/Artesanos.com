@@ -255,10 +255,10 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <div class="text-start mb-4">
-                            <button type="button" class="btn btn-sm btn-outline-danger" id="changePasswordButton">
+                            <button type="button" class="btn btn-sm btn-outline-danger mb-1" id="changePasswordButton">
                                 <i class="uil uil-key-skeleton-alt me-1"></i> Cambiar Contraseña
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" id="removeProfilePicButton">
+                            <button type="button" class="btn btn-sm btn-outline-danger mb-1" id="removeProfilePicButton">
                                 <i class="uil uil-user-times me-1"></i> Remover Foto de Perfil
                             </button>
                         </div>
