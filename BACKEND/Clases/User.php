@@ -80,8 +80,8 @@ class User {
     public static function login($conexion, $email, $password) {
         $email = mysqli_real_escape_string($conexion, $email);
         
-        // 1. Buscamos el usuario y verificamos el estado (U_status = 1 para activo)
-        $sql = "SELECT * FROM users WHERE U_email = '$email' AND U_status = 1 LIMIT 1";
+        // 1. Buscamos el usuario y verificamos el estado 
+        $sql = "SELECT * FROM users WHERE U_email = '$email' LIMIT 1";
         $resultado = mysqli_query($conexion, $sql);
 
         if ($fila = mysqli_fetch_assoc($resultado)) {

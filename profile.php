@@ -255,7 +255,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <div class="text-start mb-4">
-                            <button type="button" class="btn btn-sm btn-outline-danger mb-1" id="changePasswordButton">
+                            <button type="button" class="btn btn-sm btn-outline-danger mb-1" id="changePasswordButton" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                 <i class="uil uil-key-skeleton-alt me-1"></i> Cambiar Contraseña
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-danger mb-1" id="removeProfilePicButton">
@@ -273,6 +273,63 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
             </div>
         </div>
     </div>
+
+    <!----------------- MODAL PARA CAMBIAR CONTRASEÑA ----------------->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <!-- Titulo -->
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="changePasswordLabel">Cambiar Contraseña</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeChangePasswordModal"></button>
+                </div>
+                    
+                    <!-- Formulario -->
+                <form id="changePasswordForm">
+                    
+                    <!-- Actual -->
+                    <div class="form-groupLogin mt-3 mb-2 position-relative">
+                        <input type="password" class="form-style form-control" placeholder="Ingrese Contraseña Actual" name="pass" id="changePassCurrent" required>
+                        <i class="toggle-pass uil uil-eye"></i>
+                        <i class="input-icon uil uil-lock-alt"></i>
+                    </div>
+                    <div class="error" id="errorChangePassCurrent"></div>
+
+                    <!-- Nueva -->
+                    <div class="form-groupLogin mt-3 mb-2 position-relative">
+                        <input type="password" class="form-style form-control" placeholder="Ingrese Nueva Contraseña" name="pass" id="changePassNew" required>
+                        <i class="toggle-pass uil uil-eye"></i>
+                        <i class="input-icon uil uil-lock-alt"></i>
+                    </div>
+                    <div class="error" id="errorChangePassNew"></div>
+
+                    <!-- Confirmar Nueva -->
+                    <div class="form-groupLogin mt-3 mb-2 position-relative">
+                        <input type="password" class="form-style form-control" placeholder="Confirmar Contraseña" name="pass" id="changePassNewConfirm" required>
+                        <i class="toggle-pass uil uil-eye"></i>
+                        <i class="input-icon uil uil-lock-alt"></i>
+                    </div>
+                    <div class="error" id="errorChangePassNewConfirm"></div>
+
+                </form>
+                
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" id="cancelChangePassword" data-bs-dismiss="modal">Cancelar</button>
+                    <button  type="button" class="btn btn-primary" id="changePasswordBtn">Cambiar</button>
+                </div>
+
+                <div class="error" id="errorChangePass"></div>
+                    
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
     <!-- Modal para preguntar si desea o no quitar foto de perfil -->
     <div class="modal fade" id="confirmRemoveProfilePicModal" tabindex="-1" aria-labelledby="confirmRemoveProfilePicLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -334,4 +391,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
 <!-- Para remover imagen de perfil actual -->
 <script src="./Frontend/assets/js/removeProfilePic.js"></script>
+
+<!-- Para cambiar contraseña -->
+<script src="./Frontend/assets/js/changePassword.js"></script>
 </html>
