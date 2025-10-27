@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                         <i class="uil uil-folder-slash"></i>
                                         <h5>No tienes álbumes todavía</h5>
                                         <p class="mb-3">¡Crea tu primer álbum y comparte tus artesanías!</p>
-                                        <button class="btn btn-secondary" id="createFirstAlbum">
+                                        <button class="btn btn-secondary" id="createFirstAlbum" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
                                             <i class="uil uil-plus-circle me-1"></i>
                                             <br> Crear Álbum
                                         </button>
