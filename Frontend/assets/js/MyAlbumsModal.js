@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 formData.append('albumId', albumId);
                 
                 formData.append('isMyProfile', true); 
-                formData.append('profileUserId', logged_in_user_id);
+                formData.append('profileUserId', logged_in_user_id);//variable definida en modal.php
                 const response = await fetch(`./BACKEND/FuncionesPHP/obtenerImagenesAlbum.php`, {
                     method: "POST",
                     body: formData
