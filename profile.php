@@ -537,4 +537,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
 <!-- Para manejar el historial de fotos de perfil -->
 <script src="./Frontend/assets/js/profileHistory.js"></script>
+
+<!-- Para manejar el seguimiento en los botones del perfil-->
+<script src="./Frontend/assets/js/followActions.js"></script>
 </html>
