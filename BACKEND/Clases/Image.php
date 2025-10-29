@@ -63,13 +63,40 @@
         }
 
 
-        // 🔹 Obtener todas las imágenes de un álbum
+        /**
+         * 🔹 Obtener todas las imágenes de un álbum (NORMAL o DE SISTEMA)
+         * (Versión simple, sin filtros de visibilidad)
+         */
         public static function getByAlbum($conn, $idAlbum) {
             $idAlbum = (int)$idAlbum;
 
-            $sql = "SELECT * FROM images WHERE I_idAlbum = $idAlbum ORDER BY I_publicationDate DESC";
-            $resultado = mysqli_query($conn, $sql);
+            // 1. Verificar el tipo de álbum
+            $sqlAlbumCheck = "SELECT A_isSystemAlbum FROM albums WHERE A_id = $idAlbum LIMIT 1";
+            $albumResult = mysqli_query($conn, $sqlAlbumCheck);
+            
+            if (!$albumResult || mysqli_num_rows($albumResult) == 0) {
+                return []; // El álbum no existe
+            }
+            $albumData = mysqli_fetch_assoc($albumResult);
+            $isSystemAlbum = (int)$albumData['A_isSystemAlbum'];
 
+            // 2. Construir la consulta SQL
+            $sql = "";
+            if ($isSystemAlbum === 1) {
+                // --- ÁLBUM DE SISTEMA (usa tabla 'album_images_link') ---
+                $sql = "SELECT i.* FROM images i
+                        INNER JOIN album_images_link l ON i.I_id = l.L_idImage
+                        WHERE l.L_idAlbum = $idAlbum 
+                        ORDER BY i.I_publicationDate DESC";
+            } else {
+                // --- ÁLBUM NORMAL (usa 'I_idAlbum') ---
+                $sql = "SELECT * FROM images 
+                        WHERE I_idAlbum = $idAlbum 
+                        ORDER BY I_publicationDate DESC";
+            }
+            
+            // 3. Ejecutar y devolver
+            $resultado = mysqli_query($conn, $sql);
             $images = [];
             if ($resultado && mysqli_num_rows($resultado) > 0) {
                 while ($fila = mysqli_fetch_assoc($resultado)) {
@@ -245,44 +272,67 @@
         // ====================================================
         // 🔹 (NUEVA) Obtener imágenes de álbum con filtros de visibilidad
         // ====================================================
+        /**
+         * 🔹 (ACTUALIZADA) Obtener imágenes de álbum con filtros de visibilidad
+         * (Maneja álbumes normales y de sistema)
+         */
         public static function obtenerImagenesPorAlbum($conn, $albumId, $isMyProfile, $idUsuarioLogueado, $profileUserId) {
-        
-            $albumId = (int)$albumId;
 
-            // Campos que necesita el frontend
-            $sql = "SELECT I_id, I_ruta, I_title, I_visibility, I_revisionStatus 
-                    FROM images 
-                    WHERE I_idAlbum = $albumId";
+            $idAlbum = (int)$albumId;
 
-            // Si NO es mi perfil, aplicamos filtros de revisión y visibilidad
+            // 1. Verificar el tipo de álbum
+            $sqlAlbumCheck = "SELECT A_isSystemAlbum FROM albums WHERE A_id = $idAlbum LIMIT 1";
+            $albumResult = mysqli_query($conn, $sqlAlbumCheck);
+            
+            if (!$albumResult || mysqli_num_rows($albumResult) == 0) {
+                return []; // El álbum no existe
+            }
+            $albumData = mysqli_fetch_assoc($albumResult);
+            $isSystemAlbum = (int)$albumData['A_isSystemAlbum'];
+
+            // 2. Construir la consulta SQL base
+            $sql = "";
+            $alias = ""; // Prefijo para las columnas (ej. 'i.')
+
+            if ($isSystemAlbum === 1) {
+                // --- ÁLBUM DE SISTEMA ---
+                $alias = "i."; // Necesitamos alias por el JOIN
+                $sql = "SELECT i.I_id, i.I_ruta, i.I_title, i.I_visibility, i.I_revisionStatus 
+                        FROM images i
+                        INNER JOIN album_images_link l ON i.I_id = l.L_idImage
+                        WHERE l.L_idAlbum = $albumId";
+            } else {
+                // --- ÁLBUM NORMAL ---
+                $sql = "SELECT I_id, I_ruta, I_title, I_visibility, I_revisionStatus 
+                        FROM images 
+                        WHERE I_idAlbum = $albumId";
+            }
+
+            // 3. Aplicar filtros de visibilidad (tu lógica existente)
             if (!$isMyProfile) {
                 
-                // 1. Filtro de Revisión: (Asumo 0 = Aprobado, 1 = En Revisión)
-                $sql .= " AND I_revisionStatus = 0";
+                // 3.1. Filtro de Revisión (Asumo 0 = Aprobado)
+                $sql .= " AND {$alias}I_revisionStatus = 0";
 
-                // 2. Filtro de Visibilidad:
-                // Verificamos si el usuario logueado sigue al dueño del perfil
+                // 3.2. Filtro de Visibilidad (Follow)
                 $sigueAlUsuario = false;
                 if ($idUsuarioLogueado !== null && $idUsuarioLogueado > 0) {
-                    // Usamos la clase Follow que ya tienes
+                    // Asumo que la clase Follow está disponible
                     $estadoSeguimiento = Follow::estado($conn, $idUsuarioLogueado, $profileUserId);
-                    if ($estadoSeguimiento === 1) { // 1 = Aceptado
+                    if ($estadoSeguimiento === 1) { 
                         $sigueAlUsuario = true;
                     }
                 }
 
                 if (!$sigueAlUsuario) {
-                    // Si NO lo sigue (o no está logueado), solo ve Públicas (0)
-                    // (Asumo 0 = Público, 1 = Privado/Seguidores)
-                    $sql .= " AND I_visibility = 0";
+                    // Solo ve Públicas (0)
+                    $sql .= " AND {$alias}I_visibility = 0";
                 }
-                // Si $sigueAlUsuario es true, no añadimos filtro de visibilidad,
-                // por lo que verá I_visibility = 0 (Público) y I_visibility = 1 (Privado)
             }
             
-            $sql .= " ORDER BY I_publicationDate DESC";
+            // 4. Ordenar y Ejecutar
+            $sql .= " ORDER BY {$alias}I_publicationDate DESC";
 
-            // Ejecutar y devolver resultados (tu patrón)
             $resultado = mysqli_query($conn, $sql);
             $imagenes = [];
 
