@@ -123,6 +123,35 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL PARA VER FOTOS DE UN ALBUM -->
+    <div class="modal fade" id="imagesAlbumModal" tabindex="-1" aria-labelledby="imagesAlbumLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <!-- Titulo -->
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="imagesAlbumLabel">  </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeImagesAlbumModal"></button>
+                </div>
+
+                <!-- Formulario -->
+                <div id="imagesAlbumContainer" class="modal-body images-album-body">
+                    <!-- Aquí se inyectarán las imágenes -->
+                </div>
+                
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" id="closeImagesAlbumModal" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+                <div class="error" id="errorImagesAlbum"></div>
+
+
+            </div>
+        </div>
+    </div>
+    
     <!-- Modal para preguntar si desea o no eleminar un album -->
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -133,7 +162,7 @@
                     </div>
                     
                     <div class="modal-body text-center pt-2 pb-3">
-                        <p id="deleteMessage">¿Estás seguro de que deseas eliminar este álbum y **todas sus imágenes**?</p>
+                        <p id="deleteMessage">¿Estás seguro de que deseas ELIMINAR?</p>
                         <p class="small text-muted mb-0">Esta acción no se puede deshacer.</p>
                     </div>
                     
@@ -279,6 +308,8 @@
         </div>
     </div>
 
+
+    
 
 
     <!--Scripts Personalizados -->

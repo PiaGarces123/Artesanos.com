@@ -240,5 +240,59 @@
             // 6. Devolvemos el array (estará vacío si no se encontraron imágenes)
             return $imagenes;
         }
+
+
+        // ====================================================
+        // 🔹 (NUEVA) Obtener imágenes de álbum con filtros de visibilidad
+        // ====================================================
+        public static function obtenerImagenesPorAlbum($conn, $albumId, $isMyProfile, $idUsuarioLogueado, $profileUserId) {
+        
+            $albumId = (int)$albumId;
+
+            // Campos que necesita el frontend
+            $sql = "SELECT I_id, I_ruta, I_title, I_visibility, I_revisionStatus 
+                    FROM images 
+                    WHERE I_idAlbum = $albumId";
+
+            // Si NO es mi perfil, aplicamos filtros de revisión y visibilidad
+            if (!$isMyProfile) {
+                
+                // 1. Filtro de Revisión: (Asumo 0 = Aprobado, 1 = En Revisión)
+                $sql .= " AND I_revisionStatus = 0";
+
+                // 2. Filtro de Visibilidad:
+                // Verificamos si el usuario logueado sigue al dueño del perfil
+                $sigueAlUsuario = false;
+                if ($idUsuarioLogueado !== null && $idUsuarioLogueado > 0) {
+                    // Usamos la clase Follow que ya tienes
+                    $estadoSeguimiento = Follow::estado($conn, $idUsuarioLogueado, $profileUserId);
+                    if ($estadoSeguimiento === 1) { // 1 = Aceptado
+                        $sigueAlUsuario = true;
+                    }
+                }
+
+                if (!$sigueAlUsuario) {
+                    // Si NO lo sigue (o no está logueado), solo ve Públicas (0)
+                    // (Asumo 0 = Público, 1 = Privado/Seguidores)
+                    $sql .= " AND I_visibility = 0";
+                }
+                // Si $sigueAlUsuario es true, no añadimos filtro de visibilidad,
+                // por lo que verá I_visibility = 0 (Público) y I_visibility = 1 (Privado)
+            }
+            
+            $sql .= " ORDER BY I_publicationDate DESC";
+
+            // Ejecutar y devolver resultados (tu patrón)
+            $resultado = mysqli_query($conn, $sql);
+            $imagenes = [];
+
+            if ($resultado && mysqli_num_rows($resultado) > 0) {
+                while ($fila = mysqli_fetch_assoc($resultado)) {
+                    $imagenes[] = $fila;
+                }
+            }
+            
+            return $imagenes;
+        }
     }
 ?>

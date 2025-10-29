@@ -75,14 +75,14 @@
                 if (isset($_SESSION['user_id'])){
                     
                     // 1. Obtener la ruta de la imagen de perfil dinámicamente
-                    $profileImagePath = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
+                    $profileImagePathHeader = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
                     $username = htmlspecialchars($_SESSION['username']);
 
                     // 2. Mostrar el Dropdown de usuario
                     echo '
                     <div class="dropdown d-flex align-items-center">
                         <img 
-                            src="' . htmlspecialchars($profileImagePath) . '" 
+                            src="' . htmlspecialchars($profileImagePathHeader) . '" 
                             alt="Avatar de usuario" 
                             class="rounded-circle border border-2 border-primary dropdown-toggle" 
                             style="width: 32px; height: 32px; object-fit: cover; cursor: pointer;"

@@ -13,7 +13,17 @@ if (!isset($_SESSION['user_id'])) {
 }
 $isLoggedIn = true;
 
-$user = User::getById($conn, $_SESSION['user_id']);
+$user_id;
+$isMyProfile = false;
+if(isset($_REQUEST['user_id'])){
+    $user_id = $_REQUEST['user_id'];
+    $isMyProfile = ($user_id == $_SESSION['user_id']);
+}else{
+    $user_id = $_SESSION['user_id'];
+    $isMyProfile = true;
+}
+
+$user = User::getById($conn, $user_id);
 if(!$user){
     header("Location: index.php");
     exit();
@@ -23,7 +33,7 @@ $dateObj = new DateTime($user->dateBirth);
 $formattedDate = $dateObj->format('d-m-Y');
 
 // Obtener imagen de perfil
-$profileImagePath = Imagen::getProfileImagePath($conn,$user->id);
+$profileImagePath = Imagen::getProfileImagePath($conn, $user->id);
 
 //Followers (personas que me siguen)
 $followers = User::countFollowers($conn, $user->id);
@@ -102,15 +112,20 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                         </div>
 
                         <!-- Botones de acción -->
-                        <div class="d-flex gap-2 mb-4 flex-wrap">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                                <i class="uil uil-edit me-1"></i> Editar Perfil
-                            </button>
-                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#profileHistoryModal">
-                                <i class="uil uil-history me-1"></i> Historial de Fotos
-                            </button>
-                        </div>
-
+                        <?php 
+                        if($isMyProfile){ 
+                        ?>
+                            <div class="d-flex gap-2 mb-4 flex-wrap">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                    <i class="uil uil-edit me-1"></i> Editar Perfil
+                                </button>
+                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#profileHistoryModal">
+                                    <i class="uil uil-history me-1"></i> Historial de Fotos
+                                </button>
+                            </div>
+                        <?php 
+                        }
+                        ?>
                         <!-- Descripción -->
                         <div class="description-card">
                             <h3 class="description-title">
@@ -134,7 +149,11 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
         <div class="error" id="errorMyAlbumsProfile"></div>
 
     </main>
+
+
     
+    
+
     
     <!-- MODAL VER FOTO DE PERFIL -->
      
@@ -452,6 +471,11 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 <script>
     // Variable global JS que indica si el usuario inició sesión
     window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
+</script>
+
+<script>
+    var user_id = <?= $user->id ?>;
+    var isMyProfile = <?= $isMyProfile ? 'true' : 'false' ?>;
 </script>
 
 <!-- Para trabajar los albumes en la pagina profile.php -->

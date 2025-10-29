@@ -16,7 +16,7 @@
     // LÓGICA CLAVE: DETERMINAR EL ID DEL PERFIL A CONSULTAR
     // ----------------------------------------------------
     
-    $idUser = $_POST['idUser'] ?? null;
+    $idUser = $_POST['user_id'] ?? null;
 
     if (empty($idUser) && isset($_SESSION['user_id'])) {
         // Si no se pasó un ID por POST (ej: no se está visitando un perfil),
