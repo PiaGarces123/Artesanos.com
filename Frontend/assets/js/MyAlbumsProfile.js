@@ -416,9 +416,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 if(isMyProfile) { 
                                     albumsHTML += `
                                     <div class="dropdown position-absolute top-0 end-0 m-1" style='z-index:100;'>
-                                        <button class="btn btn-sm p-0 border-0" type="button" 
+                                        <button class="btn btn-sm btn-light py-0 px-1 rounded-circle" type="button" 
                                                 id="${dropdownId}" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="uil uil-ellipsis-h fs-5"></i>
+                                            <i class="uil uil-ellipsis-v fs-6"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="${dropdownId}">
                                             

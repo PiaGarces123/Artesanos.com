@@ -1,3 +1,8 @@
+<?php
+    // Obtenemos el ID del usuario logueado. Será 'null' si no hay sesión.
+    $loggedInUserId_php = $_SESSION['user_id'] ?? null;
+?>
+
 <!----------------- MODAL PARA PUBLICAR CONTENIDO ----------------->
     <div class="modal fade" id="createAlbumModal" tabindex="-1" aria-labelledby="createAlbumModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -313,6 +318,10 @@
 
 
     <!--Scripts Personalizados -->
+<script>
+    // 💡 Definimos una variable global *solo* para el ID del usuario logueado
+    var logged_in_user_id = <?= json_encode($loggedInUserId_php) ?>;
+</script>
 
 <!--Scripts de Acciones normales (cerrar sesion, buscar) -->
 <script src="./Frontend/assets/js/actionNormal.js"></script>

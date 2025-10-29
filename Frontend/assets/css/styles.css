@@ -519,16 +519,16 @@
    /* --- ESTILOS PARA EL BOTÓN DE TRES PUNTOS (KEBAB MENU) --- */
 
     /* 1. Estado Base (Para que el botón sea visible y el icono esté en el color secundario) */
-    .album-card-select .dropdown .btn {
+    .dropdown .btn {
         /* El ícono ya es text-secondary, por lo que lo dejamos así */
         color: var(--secondary-color) !important;
-        background-color: transparent !important;
+        
     }
 
 
     /* 2. Estado HOVER / FOCUS: Fondo Marrón y Texto Blanco */
-    .album-card-select .dropdown .btn:hover,
-    .album-card-select .dropdown .btn:focus {
+    .dropdown .btn:hover,
+    .dropdown .btn:focus {
         /* Fondo del color principal de tu sitio (el marrón fuerte) */
         background-color: var(--secondary-color) !important;
         
@@ -538,8 +538,8 @@
     }
 
     /* 3. Color del Icono en el estado HOVER/FOCUS (Para que resalte en el fondo marrón) */
-    .album-card-select .dropdown .btn:hover i,
-    .album-card-select .dropdown .btn:focus i {
+    .dropdown .btn:hover i,
+    .dropdown .btn:focus i {
         color: var(--background-color) !important; /* El ícono se vuelve blanco */
     }
 
