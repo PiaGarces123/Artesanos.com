@@ -199,12 +199,46 @@
             return $defaultPath;
         }
 
+        // 🔹 Actualizar ruta de de la imagen
         public static function actualizarRuta($conn, $idImagen, $rutaImagen) {
             $idImagen = (int)$idImagen;
             $rutaImagen = mysqli_real_escape_string($conn, $rutaImagen);
             
             $sql = "UPDATE images SET I_ruta = '$rutaImagen' WHERE I_id = $idImagen";
             return mysqli_query($conn, $sql);
+        }
+
+        /**
+        * 🔹 Obtener todas las imágenes de perfil de un usuario
+        * Devuelve un array con las imágenes (o un array vacío si no hay).
+        */
+        public static function obtenerImagenesDePerfilPorUsuario($conn, $idUser) {
+            // 1. Aseguramos que el ID sea un entero (para prevenir inyección SQL)
+            $idUser = (int)$idUser;
+
+            // 2. Definimos el SQL
+            // Seleccionamos solo los campos que necesita el frontend
+            $sql = "SELECT I_id, I_ruta, I_currentProfile 
+                    FROM images 
+                    WHERE I_idUser = $idUser AND I_isProfile = 1 
+                    ORDER BY I_publicationDate DESC";
+
+            // 3. Ejecutamos la consulta
+            $resultado = mysqli_query($conn, $sql);
+            
+            $imagenes = []; // Array para almacenar los resultados
+
+            // 4. Verificamos si la consulta fue exitosa y trajo resultados
+            if ($resultado && mysqli_num_rows($resultado) > 0) {
+                
+                // 5. Recorremos los resultados y los añadimos al array
+                while ($fila = mysqli_fetch_assoc($resultado)) {
+                    $imagenes[] = $fila;
+                }
+            }
+            
+            // 6. Devolvemos el array (estará vacío si no se encontraron imágenes)
+            return $imagenes;
         }
     }
 ?>
