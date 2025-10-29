@@ -36,9 +36,7 @@
         exit;
     }
 
-   
-    
-    $conn = conexion();
+    // =====================================================
     
     $changePassCurrent = mysqli_real_escape_string($conn, $_POST['changePassCurrent']);
     $changePassNew = mysqli_real_escape_string($conn, $_POST['changePassNew']);

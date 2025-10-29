@@ -134,7 +134,9 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
         <div class="error" id="errorMyAlbumsProfile"></div>
 
     </main>
-        <!-- MODAL VER Y GESTIONAR FOTO DE PERFIL -->
+    
+    
+    <!-- MODAL VER FOTO DE PERFIL -->
      
     <div class="modal fade" id="viewProfilePicModal" tabindex="-1" aria-labelledby="viewProfilePicModalLabel" aria-hidden="true">
         <!-- Usamos modal-sm para que sea pequeño, pero el contenido interno lo forzará a la imagen -->
@@ -166,6 +168,9 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
         </div>
     </div>
 
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
 
     <!-- MODAL EDITAR PERFIL -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
@@ -351,23 +356,89 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
         </div>
     </div>
 
+
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
     <!-- MODAL HISTORIAL DE FOTOS -->
-    <div class="modal fade" id="profileHistoryModal" tabindex="-1" aria-labelledby="profileHistoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content p-4 rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <h2 class="modal-title fs-4" id="profileHistoryModalLabel">Historial de Fotos de Perfil</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="profileHistoryModal" tabindex="-1" aria-labelledby="profileHistoryLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+            
+                <!-- Titulo -->
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="profileHistoryLabel">Historial de Fotos de Perfil</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeProfileHistoryModal"></button>
                 </div>
-                <div class="modal-body">
-                    <div id="profileHistoryGrid" class="row row-cols-2 row-cols-md-3 g-3">
-                        <!-- Se cargará dinámicamente con JavaScript -->
+                    
+                    <!-- Formulario -->
+                <div id="profileHistoryContainer" class="modal-body profile-history-body">
+                    <!-- Aquí se inyectarán las imágenes de perfil mediante JavaScript -->
+                </div>
+                
+                <!-- Botones -->
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" id="closeProfileHistoryModal" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+                <div class="error" id="errorProfileHistory"></div>
+                    
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL VER FOTO DE PERFIL EN EL HISTORIAL--> 
+    <div class="modal fade" id="viewProfilePicHistoryModal" tabindex="-1" aria-labelledby="viewProfilePicHistoryLabel" aria-hidden="true">
+        <!-- Usamos modal-sm para que sea pequeño, pero el contenido interno lo forzará a la imagen -->
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content p-0 rounded-4 border-0 shadow-lg"> 
+                
+                <!-- Contenedor del Cuerpo y Pie (Unificado) -->
+                <div class="modal-body p-0 position-relative">
+                    
+                    <!-- 1. Imagen Principal (Ocupa el 100% del cuerpo del modal) -->
+                    <div class="profile-pic-display-wrap">
+                        <img src="" 
+                            alt="Tu Foto de Perfil" 
+                            class="img-fluid w-100 rounded-4"
+                            style="aspect-ratio: 1/1; object-fit: cover;"
+                            id="imgProfilePicHistory">
                     </div>
+                    
+                    <!-- 2. Botón de Cerrar (Invisible sobre la imagen) -->
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2 z-20" 
+                            data-bs-dismiss="modal" aria-label="Cerrar" style="filter: drop-shadow(0 0 2px black);">
+                    </button>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- Modal para preguntar si desea o no Establecer la imagen de perfil -->
+    <div class="modal fade" id="confirmSetProfileImageModal" tabindex="-1" aria-labelledby="confirmSetProfileImageLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content p-3 rounded-4 shadow-lg">
+                
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-primary fw-bold" id="confirmSetProfileImageLabel">Confirmar </h5>
+                </div>
+                
+                <div class="modal-body text-center pt-2 pb-3">
+                    <p id="deleteMessage">¿Estás Seguro de que Deseas Establecer esta Foto como Imagen de Perfil?</p>
+                </div>
+                
+                <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmSetProfileImageButton">Confirmar</button>
                 </div>
             </div>
         </div>
     </div>
-
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------- -->
     <?php 
         require_once("./Frontend/includes/modals.php");
     ?>
@@ -394,4 +465,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
 <!-- Para cambiar contraseña -->
 <script src="./Frontend/assets/js/changePassword.js"></script>
+
+<!-- Para manejar el historial de fotos de perfil -->
+<script src="./Frontend/assets/js/profileHistory.js"></script>
 </html>
