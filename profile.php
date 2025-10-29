@@ -2,6 +2,7 @@
 require_once "./BACKEND/Clases/Image.php";
 require_once "./BACKEND/Clases/User.php"; 
 require_once "./BACKEND/Clases/Album.php";
+require_once "./BACKEND/Clases/Follow.php";
 require_once "./BACKEND/conexion.php"; 
 $conn = conexion();
 session_start();
@@ -124,7 +125,51 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                                 </button>
                             </div>
                         <?php 
-                        }
+                        }else {
+                            // --- NUEVA LÓGICA DE BOTONES "SEGUIR" ---
+                            
+                            // 1. Obtenemos el estado UNA SOLA VEZ
+                            $estadoSeguimiento = Follow::estado($conn, $_SESSION['user_id'], $user->id);
+                            $targetUserId = $user->id; // El ID del perfil que estamos viendo
+                            ?>
+                            <div class="d-flex gap-2 mb-4 flex-wrap" id="followButtonContainer">
+                            <?php
+                            // 2. Mostramos el botón correspondiente
+                            
+                            if ($estadoSeguimiento === 1) {
+                                // --- ESTADO 1: YA LO SIGUES ---
+                                // Botón para "Dejar de Seguir"
+                                ?>
+                                <button class="btn btn-outline-danger" id="followBtn" 
+                                        data-action="unfollow" 
+                                        data-target-user-id="<?= $targetUserId ?>">
+                                    <i class="uil uil-user-minus me-1"></i> Dejar de Seguir
+                                </button>
+                                <?php
+                            } elseif ($estadoSeguimiento === 0) {
+                                // --- ESTADO 0: SOLICITUD PENDIENTE ---
+                                // Botón para "Cancelar Solicitud" (usa la misma acción de "unfollow")
+                                ?>
+                                <button class="btn btn-outline-secondary" id="followBtn" 
+                                        data-action="unfollow" 
+                                        data-target-user-id="<?= $targetUserId ?>">
+                                    <i class="uil uil-clock-three me-1"></i> Pendiente
+                                </button>
+                                <?php
+                            } else {
+                                // --- ESTADO NULL: NO LO SIGUES ---
+                                // Botón para "Seguir"
+                                ?>
+                                <button class="btn btn-primary" id="followBtn" 
+                                        data-action="follow" 
+                                        data-target-user-id="<?= $targetUserId ?>">
+                                    <i class="uil uil-user-plus me-1"></i> Seguir
+                                </button>
+                                <?php
+                            }
+                            ?>
+                            </div> <?php
+                        } // Fin del else ($isMyProfile)
                         ?>
                         <!-- Descripción -->
                         <div class="description-card">

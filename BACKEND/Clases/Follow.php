@@ -71,7 +71,7 @@ class Follow {
     }
 
     // 🔹 Verificar estado de seguimiento
-    // 0 = pendiente, 1 = aceptado, -1 = rechazado
+    // 0 = pendiente, 1 = aceptado, null = no existe
     public static function estado($conn, $idSeguidor, $idSeguido) {
         $idSeguidor = (int)$idSeguidor;
         $idSeguido = (int)$idSeguido;
