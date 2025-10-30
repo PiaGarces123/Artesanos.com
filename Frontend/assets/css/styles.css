@@ -297,6 +297,7 @@
         /* Mantener el color de fondo personalizado, pero el texto rojo */
         background-color: var(--primary-color) !important;
         color: var(--bs-danger) !important;
+        cursor: pointer;
     }
 /* -------------------------------------------------------- */
     /* CHECKBOX DE MODAL DE SELECCIONAR OPCION DE PUBLICACION */
