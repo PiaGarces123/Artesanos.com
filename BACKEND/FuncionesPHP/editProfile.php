@@ -1,10 +1,12 @@
 <?php 
+    // Mostrar errores en pantalla (lo usamos durante el desarrollo)
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
 
+    // Iniciar o reanudar la sesión del usuario
     session_start();
     
-    // Configuración de zona horaria (opcional, pero buena práctica)
+    // Configuración de zona horaria 
     date_default_timezone_set('America/Argentina/San_Luis');
 
     // Requerir Clases y Conexión
@@ -22,6 +24,8 @@
     // =====================================================
     // 1. CHEQUEO DE SESIÓN y CONEXIÓN
     // =====================================================
+
+    // Si no hay usuario logueado, devolver error
     if(!isset($_SESSION['user_id'])){
         echo json_encode([
             "status" => "errorSession",
@@ -30,6 +34,7 @@
         exit;
     }
 
+    // Obtener el usuario actual desde la base de datos
     if(!($user = User::getById($conn, $_SESSION['user_id']))){
         echo json_encode([
             "status" => "errorSession",
@@ -38,39 +43,54 @@
         exit;
     }
 
+    // =====================================================
+    // 2. FUNCIÓN PARA ALMACENAR IMAGEN DE PERFIL
+    // =====================================================
     function almacenaImagen($file, $idUser, $idImage) {
-        
+        // Obtiene información del archivo subido
         // ... (Lógica para obtener info del archivo, moverlo y devolver la ruta o $rutaError) ...
-        $fileTmpName = $file['tmp_name'];
-        $originalFileName = $file['name'];
-        $fileError = $file['error'];
+        $fileTmpName = $file['tmp_name']; // Ruta temporal del archivo   
+        $originalFileName = $file['name']; // Nombre original
+        $fileError = $file['error']; // Código de error
 
+        // Si hubo error al subir el archivo, no se procesa
         if ($fileError !== UPLOAD_ERR_OK) { return null; }
         
+        // Extrae la extensión del archivo (jpg, png, etc.)
         $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+
+        // Define la ruta base donde se almacenan los archivos
         $base_dir = __DIR__ . '/../../FILES/';
         
+        // Crea el nombre final del archivo: ID de imagen + extensión
         $final_filename = $idImage . '.' . $fileExtension;
+
+        // Carpeta destino del usuario → FILES/{idUser}/imagesProfile/
         $album_dir = $base_dir . $idUser . '/' . 'imagesProfile' . '/';
         $final_path = $album_dir . $final_filename;
 
-        // 3. Crear la carpeta imagesProfile si no existe
+        // 3. Crear la carpeta imagesProfile si no existe (la con permisos 0777)
         if (!is_dir($album_dir)) {
             if (!@mkdir($album_dir, 0777, true)) {
                 return null;
             }
         }
 
+        // Mueve el archivo desde su ubicación temporal a la carpeta final
         if (move_uploaded_file($fileTmpName, $final_path)) {
+            // Devuelve la ruta relativa que se guardará en la DB
             return './FILES/' . $idUser . '/' . 'imagesProfile' . '/' . $final_filename;
         }
 
+        // Si falla el movimiento del archivo
         return null;
     }
 
-    
+    // =====================================================
+    // 3. CAPTURA DE DATOS ENVIADOS DESDE EL FORMULARIO
+    // =====================================================
     $conn = conexion();
-    $profilePic = isset($_FILES['profilePic']) ? $_FILES['profilePic'] : null;
+    $profilePic = isset($_FILES['profilePic']) ? $_FILES['profilePic'] : null; // Imagen subida
     $dateBirth = mysqli_real_escape_string($conn, $_POST['dateBirth']);
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $lastName = mysqli_real_escape_string($conn, $_POST['lastName']);
@@ -79,7 +99,7 @@
 
     
     // ===================================================
-    // VALIDACIONES
+    // 4. VALIDACIONES DE DATOS DEL PERFIL
     // ===================================================
     $errores = [
         "fNac" => "",
@@ -88,7 +108,7 @@
         "userName" => ""
     ];
 
-    // Fecha de nacimiento
+    // Validar fecha de nacimiento (obligatoria y +18 años)
     if (empty($dateBirth)) {
         $errores["fNac"] = "Campo obligatorio.";
     } else {
@@ -100,7 +120,7 @@
         }
     }
 
-    // Nombre
+    // Validar nombre (solo letras y espacios, 2–30 caracteres)
     if (empty($name)) {
         $errores["nbre"] = "Campo obligatorio.";
     } elseif (!preg_match("/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,30}$/", $name)) {
@@ -124,7 +144,7 @@
 
 
     // =====================================================
-    //  Si hay errores → responder y salir
+    // 5. SI HAY ERRORES, DETENER Y MOSTRAR MENSAJE
     // =====================================================
     if (array_filter($errores)) {
         echo json_encode([
@@ -133,6 +153,7 @@
         ]);
         exit;
     }
+
     // Verificar que no exista ya el username
     $sqlUser = "SELECT U_id FROM users WHERE U_nameUser = '$username' AND U_id <> " . $user->id;
     $resUser = mysqli_query($conn, $sqlUser);
@@ -144,11 +165,17 @@
         exit;
     }
 
+    // =====================================================
+    // 6. ACTUALIZAR DATOS DEL PERFIL EN LA BASE DE DATOS
+    // =====================================================
+
     $user->name = $name;
     $user->lastName = $lastName;
     $user->dateBirth = $dateBirth;
     $user->username = $username;
     $user->biography = $biography;
+
+    // Si falla la actualización del perfil, se devuelve error
     if(!$user->updateProfile($conn)){
         echo json_encode([
             "status" => "error",
@@ -157,9 +184,9 @@
         exit;
     }
 
-    // =========================================================
-    // Lógica de Subida de Imagen
-    // =========================================================
+    // =====================================================
+    // 7. SUBIDA DE NUEVA IMAGEN DE PERFIL (si existe)
+    // =====================================================
 
     // 1. Verificar si el usuario INTENTÓ subir una imagen
     if (isset($profilePic) && $profilePic['error'] !== UPLOAD_ERR_NO_FILE) {
@@ -208,13 +235,20 @@
             exit;
         }
     }
-    // 4. Respuesta de Éxito Final (Se ejecuta si el perfil de texto se actualizó
+
+     // =====================================================
+    // 8. RESPUESTA FINAL DE ÉXITO
+    // =====================================================
+
+    // Respuesta de Éxito Final (Se ejecuta si el perfil de texto se actualizó
     // y/o la imagen se subió o no se intentó subir)
 
     echo json_encode([
         "status" => "success",
         "message" => "Perfil Actualizado Correctamente "
     ]);
+
+    // Cierra la conexión a la base de datos
     desconexion($conn);
     exit;
 
