@@ -136,5 +136,43 @@
             // Reutilizamos getById. Si el resultado no es NULL, el álbum existe.
             return (self::getById($conn, $idAlbum) !== null);
         }
+
+
+        // ... (tus otras funciones) ...
+
+        /**
+         * 🔹 Elimina un álbum de sistema basado en una relación de seguimiento.
+         * Busca y elimina el álbum de colección que $idSeguidor (A) tenía de $idSeguido (B).
+         * @return int|null Retorna el ID del álbum eliminado si tuvo éxito, o null si no se encontró.
+         */
+        public static function eliminarAlbumDeSistemaPorSeguimiento($conn, $idSeguidor, $idSeguido) {
+            $idSeguidor = (int)$idSeguidor;
+            $idSeguido = (int)$idSeguido;
+
+            // 1. Buscar el álbum de sistema
+            $sqlFind = "SELECT A_id FROM albums 
+                        WHERE A_idUser = $idSeguidor 
+                        AND A_idFollowedUser = $idSeguido 
+                        AND A_isSystemAlbum = 1 
+                        LIMIT 1";
+            
+            $resultado = mysqli_query($conn, $sqlFind);
+
+            if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
+                $albumIdParaEliminar = (int)$fila['A_id'];
+                
+                // 2. Intentar eliminar el álbum de la BD
+                if (self::eliminar($conn, $albumIdParaEliminar)) {
+                    // Si la eliminación en BD fue exitosa, devolvemos el ID
+                    return $albumIdParaEliminar; 
+                } else {
+                    // Si falló la eliminación en BD, retornamos null
+                    return null;
+                }
+            }
+            
+            // No se encontró álbum
+            return null;
+        }
     }
 ?>

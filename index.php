@@ -39,6 +39,10 @@
             </div>
         </main>
 
+        <script>
+            // Variable global JS que indica si el usuario inició sesión
+            window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
+        </script>
         <!-- MODALES -->
         <?php
             include("./Frontend/includes/modals.php");
@@ -56,10 +60,7 @@
         <!-- Script principal -->
         <script src="./Frontend/assets/js/actionNormal.js"></script>
 
-        <script>
-            // Variable global JS que indica si el usuario inició sesión
-            window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
-        </script>
+        
     </body>
 </html>
 

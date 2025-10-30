@@ -71,7 +71,7 @@ class Follow {
     }
 
     // 🔹 Verificar estado de seguimiento
-    // 0 = pendiente, 1 = aceptado, -1 = rechazado
+    // 0 = pendiente, 1 = aceptado, null = no existe
     public static function estado($conn, $idSeguidor, $idSeguido) {
         $idSeguidor = (int)$idSeguidor;
         $idSeguido = (int)$idSeguido;
@@ -84,6 +84,71 @@ class Follow {
             return (int)$fila['F_status'];
         }
         return null; // No existe solicitud
+    }
+
+    // ====================================================
+    // 🔹 Contar solicitudes pendientes
+    // ====================================================
+    /**
+     * Cuenta las solicitudes de seguimiento pendientes (F_status = 0)
+     * que ha recibido un usuario.
+     */
+    public static function contarPendientes($conn, $idUsuario) {
+        $idUsuario = (int)$idUsuario;
+
+        // Contar dónde este usuario es el SEGUIDO (F_idFollowed)
+        // y el estado es PENDIENTE (0)
+        $sql = "SELECT COUNT(*) AS total 
+                FROM follow 
+                WHERE F_idFollowed = $idUsuario AND F_status = 0";
+        
+        $resultado = mysqli_query($conn, $sql);
+        
+        if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
+            return (int)$fila['total'];
+        }
+        
+        return 0; // Retorna 0 si hay error o no hay resultados
+    }
+
+    // ====================================================
+    // 🔹  Obtener la lista de solicitudes pendientes
+    // ====================================================
+    /**
+     * Obtiene una lista de usuarios (con foto) que han enviado una solicitud
+     * pendiente (F_status = 0) a $idUsuario.
+     */
+    public static function obtenerSolicitudesPendientes($conn, $idUsuario) {
+        $idUsuario = (int)$idUsuario;
+        $defaultPath = './Frontend/assets/images/appImages/default.jpg';
+
+        // Hacemos JOIN con 'users' (para el nombre)
+        // Hacemos LEFT JOIN con 'images' (para la foto de perfil)
+        $sql = "SELECT 
+                    u.U_id, 
+                    u.U_nameUser, 
+                    i.I_ruta AS U_profilePic 
+                FROM follow f
+                INNER JOIN users u ON f.F_idFollower = u.U_id
+                LEFT JOIN images i ON u.U_id = i.I_idUser AND i.I_currentProfile = 1
+                WHERE f.F_idFollowed = $idUsuario AND f.F_status = 0
+                ORDER BY f.F_followDate DESC";
+
+        $resultado = mysqli_query($conn, $sql);
+        $solicitudes = [];
+
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+            while ($fila = mysqli_fetch_assoc($resultado)) {
+                
+                // Si no hay foto de perfil (I_ruta es NULL), asignamos la default
+                if (empty($fila['U_profilePic'])) {
+                    $fila['U_profilePic'] = $defaultPath;
+                }
+                
+                $solicitudes[] = $fila;
+            }
+        }
+        return $solicitudes;
     }
 }
 ?>
