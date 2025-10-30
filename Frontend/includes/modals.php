@@ -194,6 +194,70 @@
         </div>
     </div>
 
+     <!-- Modal para visualización de imágenes -->
+    <div class="modal fade image-modal" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor de la imagen -->
+                    <div class="image-container">
+                        <img src="" alt="Imagen de ejemplo" class="img-fluid" id="imagePublic">
+                    </div>
+                    
+                    <!-- Contenedor de información -->
+                    <div class="info-container">
+                        <!-- Sección de usuario y título -->
+                        <div class="user-section">
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    <img src="" alt="Avatar del usuario" id="avatarUser">
+                                </div>
+                                <div class="user-details">
+                                    <h5 id="nameUser"></h5>
+                                    <div class="image-title" id="TitleImage"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botón de Me Gusta (Corazón) -->
+                            <div class="like-section mt-3">
+                                <button class="btn btn-outline-primary btn-sm like-btn" id="likeButton">
+                                    <i class="bi bi-heart"></i> <span id="likeCount"></span> Me gusta
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Sección de comentarios -->
+                        <div class="comments-section">
+                            <h6 class="mb-3">Comentarios</h6>
+                            
+                            <!-- Comentarios -->
+                            <div class="comment">
+                                <div class="comment-user">
+                                    <div class="comment-avatar">
+                                        <img src="" alt="Avatar del comentarista" id="commentAvatar">
+                                    </div>
+                                    <div class="comment-username" id="commentName"></div>
+                                </div>
+                                <div class="comment-text" id="comment"></div>
+                            </div>
+                        
+                        <!-- Sección para agregar comentario -->
+                        <div class="add-comment">
+                            <div class="input-group">
+                                <input type="text" class="form-control comment-input" placeholder="Añade un comentario...">
+                                <button class="btn btn-comment" type="button">Publicar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <!-----------------  MODAL DE LOGIN ----------------->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
