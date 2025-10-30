@@ -503,6 +503,28 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 <!-- -------------------------------------------------------------------------------------------------- -->
 <!-- -------------------------------------------------------------------------------------------------- -->
 <!-- -------------------------------------------------------------------------------------------------- -->
+
+<!-- Modal para preguntar si desea o no dejar de seguir-->
+        <div class="modal fade" id="confirmUnfollowModal" tabindex="-1" aria-labelledby="confirmUnfollowLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content p-3 rounded-4 shadow-lg">
+                    
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title text-danger fw-bold" id="confirmUnfollowLabel">Confirmar</h5>
+                    </div>
+                    
+                    <div class="modal-body text-center pt-2 pb-3">
+                        <p id="deleteMessage">¿Estás seguro de que deseas dejar de seguir a este usuario?</p>
+                        <p class="small text-muted mb-0">Se eliminará el álbum de 'Likes' asociado.</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-1">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmUnfollowButton">Dejar de Seguir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     <?php 
         require_once("./Frontend/includes/modals.php");
     ?>

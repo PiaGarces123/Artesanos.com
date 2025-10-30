@@ -344,5 +344,26 @@
             
             return $imagenes;
         }
+
+        // 🔹 Obtener IDs de imágenes que un usuario ha 'likeado' de otro usuario
+        public static function getLikedImageIdsByOwner($conn, $likerId, $ownerId) {
+            $likerId = (int)$likerId;
+            $ownerId = (int)$ownerId;
+
+            // 1. Busca en 'likes' (L_idUser = $likerId)
+            // 2. Hace JOIN con 'images' (I_idUser = $ownerId)
+            $sql = "SELECT i.I_id FROM images i
+                    INNER JOIN likes l ON i.I_id = l.L_idImage
+                    WHERE l.L_idUser = $likerId AND i.I_idUser = $ownerId";
+            
+            $resultado = mysqli_query($conn, $sql);
+            $imageIds = [];
+            if ($resultado && mysqli_num_rows($resultado) > 0) {
+                while ($fila = mysqli_fetch_assoc($resultado)) {
+                    $imageIds[] = (int)$fila['I_id'];
+                }
+            }
+            return $imageIds;
+        }
     }
 ?>
