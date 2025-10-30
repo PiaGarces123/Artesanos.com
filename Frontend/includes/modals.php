@@ -373,4 +373,7 @@
 
 <!-- Para trabajar los albumes -->
 <script src="./Frontend/assets/js/myAlbumsModal.js"></script>
+
+<!-- Para manejar los seguimientos -->
+<script src="./Frontend/assets/js/seguimientos.js"></script>
     

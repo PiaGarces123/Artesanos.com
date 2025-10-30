@@ -106,29 +106,77 @@
             return mysqli_query($conn, $sql);
         }
         
-        // Devuelve la ruta de la imagen de portada de un album o una ruta por defecto
+        
+        //   Devuelve la ruta de la imagen de portada de un álbum.
+        //   - Si es un álbum normal, busca la imagen marcada como I_isCover.
+        //   - Si es un álbum de sistema, busca la foto de perfil actual (I_currentProfile)
+        //   del usuario seguido (A_idFollowedUser).
+        //   - Si no encuentra nada, devuelve una ruta por defecto.
         public static function getCoverImagePath($conn, $idAlbum) {
             $idAlbum = (int)$idAlbum;
             
-            // Ruta de la imagen por defecto que se usa cuando no hay portada asignada
-            $defaultPath = './Fronend/assets/images/appImages/coverDefault.png'; 
+            // Ruta por defecto para portadas de álbumes normales
+            $defaultAlbumCover = './Frontend/assets/images/appImages/coverDefault.png'; 
+            // Ruta por defecto para fotos de perfil (si el usuario del álbum de sistema no tiene)
+            $defaultProfilePic = './Frontend/assets/images/appImages/default.jpg'; 
+
             
-            // 1. Consulta para buscar la ruta de la imagen marcada como portada (I_isCover = 1)
-            $sql = "SELECT I_ruta FROM images 
-                    WHERE I_idAlbum = $idAlbum AND I_isCover = 1 
-                    LIMIT 1";
+            // 1. Primero, verificamos qué tipo de álbum es
+            $sqlAlbumCheck = "SELECT A_isSystemAlbum, A_idFollowedUser 
+                            FROM albums 
+                            WHERE A_id = $idAlbum 
+                            LIMIT 1";
             
-            $resultado = mysqli_query($conn, $sql);
-            
-            // 2. Verificar si la consulta fue exitosa y encontró una fila
-            if ($resultado && mysqli_num_rows($resultado) > 0) {
-                // Si encuentra una portada, extrae y devuelve su ruta
-                $fila = mysqli_fetch_assoc($resultado);
-                return $fila['I_ruta'];
+            $albumResult = mysqli_query($conn, $sqlAlbumCheck);
+
+            if (!$albumResult || mysqli_num_rows($albumResult) == 0) {
+                return $defaultAlbumCover; // El álbum no existe, devolvemos portada por defecto
             }
             
-            // 3. Si no hay resultados (o si la consulta falló), devuelve la ruta por defecto
-            return $defaultPath;
+            $albumData = mysqli_fetch_assoc($albumResult);
+            $isSystemAlbum = (int)$albumData['A_isSystemAlbum'];
+            $idFollowedUser = (int)$albumData['A_idFollowedUser'];
+
+            
+            // 2. Aplicamos la lógica según el tipo de álbum
+            if ($isSystemAlbum === 1 && $idFollowedUser > 0) {
+                
+                // --- ES UN ÁLBUM DE SISTEMA ---
+                // Buscamos la foto de perfil actual del usuario seguido (Usuario B)
+                
+                $sqlProfilePic = "SELECT I_ruta 
+                                FROM images 
+                                WHERE I_idUser = $idFollowedUser AND I_currentProfile = 1 
+                                LIMIT 1";
+                
+                $profileResult = mysqli_query($conn, $sqlProfilePic);
+                
+                if ($profileResult && $fila = mysqli_fetch_assoc($profileResult)) {
+                    return $fila['I_ruta']; // Devuelve la foto de perfil actual
+                }
+                
+                // Si el usuario seguido no tiene foto de perfil, devolvemos la foto por defecto
+                return $defaultProfilePic; 
+
+            } else {
+                
+                // --- ES UN ÁLBUM NORMAL (Tu lógica original) ---
+                // Buscamos la imagen marcada como portada (I_isCover = 1)
+                
+                $sqlCover = "SELECT I_ruta 
+                            FROM images 
+                            WHERE I_idAlbum = $idAlbum AND I_isCover = 1 
+                            LIMIT 1";
+                
+                $coverResult = mysqli_query($conn, $sqlCover);
+                
+                if ($coverResult && $fila = mysqli_fetch_assoc($coverResult)) {
+                    return $fila['I_ruta']; // Devuelve la portada del álbum
+                }
+                
+                // Si no hay portada asignada, devolvemos la portada por defecto
+                return $defaultAlbumCover;
+            }
         }
 
         // Verifica si un album existe, true si existe
@@ -173,6 +221,17 @@
             
             // No se encontró álbum
             return null;
+        }
+
+        // 🔹 Vincular una imagen a un álbum (para poblar álbumes de sistema)
+        public static function linkImageToAlbum($conn, $idAlbum, $idImage) {
+            $idAlbum = (int)$idAlbum;
+            $idImage = (int)$idImage;
+            
+            // Usamos IGNORE para evitar errores si el link ya existe (doble like, etc.)
+            $sql = "INSERT IGNORE INTO album_images_link (L_idAlbum, L_idImage) 
+                    VALUES ($idAlbum, $idImage)";
+            return mysqli_query($conn, $sql);
         }
     }
 ?>

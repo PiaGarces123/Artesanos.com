@@ -4,14 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // 1. FUNCIONES AUXILIARES (Tus funciones existentes)
     // =========================================================================
 
-    const limpiarErrores = () => {
-        document.querySelectorAll(".error").forEach(div => {
-            div.textContent = "";
-            div.classList.remove("visible-error");
-        });
-        document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
-    };
-
     const mostrarError = (div, input, msg) => {
         if (!div) return;
         div.textContent = msg;
@@ -112,6 +104,65 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    //Funcion para aceptar solicitud de seguimiento
+    async function acceptFollowRequest(userId) {
+        // Div de error dentro del modal de solicitudes
+        const errorDiv = document.getElementById('errorRequestsModal'); 
+        
+        try {
+            let formData = new FormData();
+            formData.append('targetUserId', userId); // El ID del usuario a aceptar
+
+            // 1. Llamar al nuevo endpoint
+            const response = await fetch('./BACKEND/FuncionesPHP/aceptarSeguimiento.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Error de red al aceptar la solicitud.');
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // 2. ¡Éxito! Recargar la lista de solicitudes pendientes
+                loadPendingRequests(); 
+                
+                // 3. Actualizar la insignia de la campana
+                updateNotificationBadge(); 
+                
+                // 4. (Opcional) Mostrar una notificación de éxito
+                // showStaticNotificationModal('success', data.message);
+
+            } else if (data.status === 'errorSession') {
+                // Manejo de sesión (igual que en reject)
+                const requestsModalEl = document.getElementById('requestsModal');
+                const modalInstance = bootstrap.Modal.getInstance(requestsModalEl);
+                if (modalInstance) modalInstance.hide();
+                
+                showStaticNotificationModal('error', data.message, () => {
+                    window.location.reload();
+                });
+                
+            } else {
+                // Otro error (ej. "fallo al crear álbum")
+                if (typeof mostrarError === 'function') {
+                    mostrarError(errorDiv, null, data.message);
+                } else {
+                    alert(data.message); // Fallback
+                }
+            }
+
+        } catch (error) {
+            console.error('Error en acceptFollowRequest:', error);
+            if (typeof mostrarError === 'function') {
+                mostrarError(errorDiv, null, error.message);
+            }
+        }
+    }
+
+    //para mostrar la cantidad de notificaciones pendientes
     async function updateNotificationBadge() {
         
         // Usamos la variable global 'logged_in_user_id' definida en modals.php
@@ -158,9 +209,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-    /**
-     * Carga las solicitudes de seguimiento pendientes en el modal.
-     */
+    
+    //Carga las solicitudes de seguimiento pendientes en el modal.
     async function loadPendingRequests() {
         const container = document.getElementById('requestsModalContainer');
         const errorDiv = document.getElementById('errorRequestsModal');
@@ -237,6 +287,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+
+    //agregar listeners a los botones aceptar y rechazar
     function attachFollowListeners() {
         const container = document.getElementById('requestsModalContainer');
         
