@@ -74,9 +74,17 @@
         <div class="navbar-right d-flex align-items-center gap-2">
             
             <?php 
-                // Asumimos que $conn, $_SESSION['user_id'] y la clase Imagen están disponibles.
                 if (isset($_SESSION['user_id'])){
-                    
+                    echo '
+                    <button type="button" class="btn btn-secondary btn-sm position-relative fs-6" id="notificationButton" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#requestsModal">
+                      <i class="uil uil-bell"></i>
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationBadge">
+                        0
+                        <span class="visually-hidden">Solicitudes pendientes</span>
+                      </span>
+                    </button>';
                     // 1. Obtener la ruta de la imagen de perfil dinámicamente
                     $profileImagePathHeader = Imagen::getProfileImagePath($conn, $_SESSION['user_id']);
                     $username = htmlspecialchars($_SESSION['username']);

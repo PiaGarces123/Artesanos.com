@@ -314,6 +314,38 @@
     </div>
 
 
+    <!-- MODAL DE NOTIFICACIONES DE SEGUIMIENTO -->
+    <div class="modal fade" id="requestsModal" tabindex="-1" aria-labelledby="requestsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="requestsModalLabel">
+                        Solicitudes Pendientes
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" id="requestsModalContainer">
+                    
+                    <p class="text-center mt-3 text-secondary">
+                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                        Cargando solicitudes...
+                    </p>
+
+                </div>
+                
+                <div class="modal-footer d-flex justify-content-end gap-3 border-0 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+                <div class="error" id="errorRequestsModal"></div>
+
+            </div>
+        </div>
+    </div>
+
+
     
 
 
