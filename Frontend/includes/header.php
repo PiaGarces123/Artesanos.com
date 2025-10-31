@@ -112,10 +112,10 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center text-danger" 
+                                <button type="button" class="dropdown-item d-flex align-items-center text-danger" 
                                    id="logoutLink"> 
                                     <i class="uil uil-sign-out-alt me-2"></i> Cerrar Sesión
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </div>';

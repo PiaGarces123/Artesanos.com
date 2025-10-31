@@ -1,146 +1,374 @@
-// Variable global para la instancia del modal de imagen
-let imageModalInstance = null;
+// =========================================================================
+// 1. CONFIGURACIÓN INICIAL Y ELEMENTOS DEL MODAL
+// =========================================================================
 
-// Elementos del Modal
+let imageModalInstance = null;
+let currentModalData = { // Almacena los datos de la imagen abierta
+    imageId: null,
+    ownerId: null,
+    followStatus: null
+};
+
+// --- Elementos del DOM (Solo el modal principal) ---
 const imageModalEl = document.getElementById('imageModal');
-const modalImage = document.getElementById('imagePublic');
-const modalAvatarUser = document.getElementById('avatarUser');
-const modalNameUser = document.getElementById('nameUser');
-const modalTitleImage = document.getElementById('TitleImage');
-const modalLikeButton = document.getElementById('likeButton');
-const modalLikeCount = document.getElementById('likeCount');
-const modalCommentList = document.getElementById('commentListContainer');
 
 // Asegurarnos de crear la instancia del modal una sola vez
 if (imageModalEl) {
     imageModalInstance = new bootstrap.Modal(imageModalEl);
 }
 
+// =========================================================================
+// 2. LÓGICA DE APERTURA Y CARGA DE DATOS
+// =========================================================================
+
 /**
  * Función principal para abrir el modal y cargar los datos
- * Esta función es llamada por los listeners en myAlbumsProfile.js y MyAlbumsModal.js
  */
 async function openImageModal(imageId) {
     if (!imageModalInstance) return;
 
-    // 1. Mostrar el modal
     imageModalInstance.show();
-    
-    // 2. Poner todo en estado de "carga"
-    setModalToLoading();
+    setModalToLoading(); // Poner spinners/texto de carga
 
     try {
         let formData = new FormData();
         formData.append('imageId', imageId);
 
-        // 3. Llamar al backend
         const response = await fetch('./BACKEND/FuncionesPHP/getModalImageData.php', {
             method: 'POST',
             body: formData
         });
 
         if (!response.ok) throw new Error('Error de red al obtener datos de la imagen.');
-
         const data = await response.json();
-
         if (data.status !== 'success') throw new Error(data.message);
 
-        // 4. Rellenar el modal con los datos
+        // Guardamos los datos globalmente para que los listeners puedan usarlos
+        currentModalData = {
+            imageId: imageId,
+            ownerId: data.ownerId,
+            followStatus: data.followStatus
+        };
+        
+        // Rellenamos el modal con los datos
         populateImageModal(data);
         
-        // 5. Adjuntar listeners para "Like" y "Comentar"
-        attachImageModalListeners(imageId);
+        // Adjuntamos los listeners para "Like" y "Comentar"
+        attachImageModalListeners();
 
     } catch (error) {
         console.error('Error en openImageModal:', error);
-        setModalToError(error.message);
+        setModalToError(error.message); // Mostrar error en el modal
     }
-}
-
-/**
- * Pone el modal en estado de "carga" (Spinners)
- */
-function setModalToLoading() {
-    // (Puedes añadir spinners si quieres, por ahora solo limpiamos)
-    modalImage.src = '';
-    modalAvatarUser.src = '';
-    modalNameUser.textContent = 'Cargando...';
-    modalTitleImage.textContent = '...';
-    modalLikeCount.textContent = '-';
-    modalLikeButton.classList.remove('active'); // 'active' será nuestra clase para "likeado"
-    modalCommentList.innerHTML = '<p class="text-center text-secondary">Cargando comentarios...</p>';
-}
-
-/**
- * Muestra un error dentro del modal
- */
-function setModalToError(message) {
-    // (Limpiamos todo para que no se vea raro)
-    modalImage.src = ''; 
-    modalAvatarUser.src = '';
-    modalNameUser.textContent = 'Error';
-    modalTitleImage.textContent = message;
-    modalCommentList.innerHTML = `<div class="alert alert-danger">${message}</div>`;
 }
 
 /**
  * Rellena el modal con los datos del JSON
  */
 function populateImageModal(data) {
-    modalImage.src = data.imageRuta;
-    modalAvatarUser.src = data.ownerAvatar;
-    modalNameUser.textContent = data.ownerName;
-    modalTitleImage.textContent = data.imageTitle;
+    // Re-buscamos los elementos del DOM cada vez
+    document.getElementById('imagePublic').src = data.imageRuta;
+    document.getElementById('avatarUser').src = data.ownerAvatar;
+    document.getElementById('nameUser').textContent = data.ownerName;
+    document.getElementById('TitleImage').textContent = data.imageTitle;
 
     // --- Lógica de Likes ---
-    modalLikeCount.textContent = data.likeCount;
+    const likeBtn = document.getElementById('likeButton');
+    document.getElementById('likeCount').textContent = data.likeCount;
     if (data.hasLiked) {
-        modalLikeButton.classList.add('active'); // (Necesitarás CSS para esto)
+        likeBtn.classList.add('active'); 
     } else {
-        modalLikeButton.classList.remove('active');
+        likeBtn.classList.remove('active');
     }
 
-    // --- Lógica de Comentarios ---
+    // --- Lógica de Comentarios (Usa la función de abajo) ---
+    populateCommentList(data.comments, data.isMyImage);
+}
+
+/**
+ * Rellena la lista de comentarios
+ */
+function populateCommentList(comments, isMyImage) {
     let commentsHTML = '';
-    if (data.comments.length === 0) {
+    const commentListContainer = document.getElementById('commentListContainer');
+    
+    if (!comments || comments.length === 0) {
         commentsHTML = '<p class="text-center text-secondary small">No hay comentarios aún. ¡Sé el primero!</p>';
     } else {
-        // Usamos el estilo que te gustó
-        data.comments.forEach(comment => {
+        comments.forEach(comment => {
+            const isMyComment = (logged_in_user_id == comment.C_idUser);
+            const canDelete = (isMyImage || isMyComment);
+
+            let deleteButtonHTML = '';
+            if (canDelete) {
+                deleteButtonHTML = `
+                    <button class="btn btn-sm btn-outline-danger p-0 comment-delete-btn" 
+                            data-action="delete-comment" 
+                            data-comment-id="${comment.C_id}">
+                        <i class="uil uil-trash-alt p-1"></i>
+                    </button>
+                `;
+            }
+
             commentsHTML += `
                 <div class="comment">
-                    <div class="comment-user">
-                        <div class="comment-avatar">
-                            <img src="${comment.U_profilePic}" alt="Avatar de ${comment.U_nameUser}">
+                    <div class="comment-user d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center"> 
+                            <div class="comment-avatar">
+                                <img src="${comment.U_profilePic}" alt="Avatar de ${comment.U_nameUser}">
+                            </div>
+                            <div class="comment-username">${comment.U_nameUser}</div>
                         </div>
-                        <div class="comment-username">${comment.U_nameUser}</div>
+                        ${deleteButtonHTML}
                     </div>
                     <div class="comment-text">${comment.C_content}</div>
                 </div>
             `;
         });
     }
-    modalCommentList.innerHTML = commentsHTML;
+    commentListContainer.innerHTML = commentsHTML;
+    
+    // Adjuntamos listeners a los botones de borrado que acabamos de crear
+    attachDeleteCommentListeners();
 }
 
+// =========================================================================
+// 3. LÓGICA DE LISTENERS (LIKE, COMENTAR, BORRAR)
+// =========================================================================
 
 /**
- * Adjunta los listeners para "Like" y "Publicar Comentario"
- * (Esta es la próxima función que haremos)
+ * Adjunta los listeners (Like y Publicar) usando el patrón cloneNode.
+ * ESTA ES LA FUNCIÓN CORREGIDA.
  */
-function attachImageModalListeners(imageId) {
-    // Limpiamos listeners viejos (muy importante)
-    // (Usaremos tu patrón de cloneNode)
-
-    // TODO: Lógica para el botón de Like
+function attachImageModalListeners() {
     
-    // TODO: Lógica para el botón de Publicar Comentario
+    // --- 1. LÓGICA DE LIKE ---
+    // Re-buscamos el botón "Like" actual
+    const likeBtn = document.getElementById('likeButton');
+    if (likeBtn) {
+        let newLikeBtn = likeBtn.cloneNode(true);
+        likeBtn.parentNode.replaceChild(newLikeBtn, likeBtn);
+        newLikeBtn.addEventListener('click', handleLikeClick);
+    }
+
+    // --- 2. LÓGICA DE PUBLICAR COMENTARIO (CORREGIDA) ---
+    
+    // Re-buscamos los elementos actuales
+    const postBtn = document.getElementById('postCommentButton');
+    const input = document.getElementById('newCommentInput');
+    
+    if (postBtn && input) {
+        // Clonamos AMBOS para limpiar todos los listeners ('click' y 'input')
+        let newPostBtn = postBtn.cloneNode(true);
+        let newInput = input.cloneNode(true);
+        
+        // Reemplazamos en el DOM
+        postBtn.parentNode.replaceChild(newPostBtn, postBtn);
+        input.parentNode.replaceChild(newInput, input);
+        
+        // --- Ahora, adjuntamos los listeners a los NUEVOS elementos ---
+        
+        // 1. Deshabilitar el nuevo botón de publicar al inicio
+        newPostBtn.disabled = true;
+        
+        // 2. Adjuntar el listener de VALIDACIÓN al NUEVO input
+        newInput.addEventListener('input', () => {
+            const commentText = newInput.value.trim();
+            
+            // Lógica de validación (vacío o demasiado largo)
+            if (commentText.length === 0 || commentText.length > 255) {
+                newPostBtn.disabled = true;
+            } else {
+                newPostBtn.disabled = false;
+            }
+        });
+        
+        // 3. Adjuntar el listener de "CLICK" al NUEVO botón
+        newPostBtn.addEventListener('click', handlePostComment);
+    }
 }
 
-// (Opcional) Limpiar el modal al cerrar para que no muestre datos viejos
+/**
+ * Maneja el clic en el botón "Me Gusta"
+ */
+async function handleLikeClick() {
+    const likeBtn = document.getElementById('likeButton'); // Obtener el botón (clonado)
+    likeBtn.disabled = true;
+
+    try {
+        let formData = new FormData();
+        formData.append('imageId', currentModalData.imageId);
+        
+        const response = await fetch('./BACKEND/FuncionesPHP/toggleLike.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            document.getElementById('likeCount').textContent = data.newLikeCount;
+            if (data.newLikeStatus) {
+                likeBtn.classList.add('active');
+            } else {
+                likeBtn.classList.remove('active');
+            }
+        }
+    } catch (error) {
+        console.error("Error en handleLikeClick:", error);
+    } finally {
+        likeBtn.disabled = false;
+    }
+}
+
+/**
+ * Maneja el clic en "Publicar" comentario
+ */
+async function handlePostComment() {
+    const postBtn = document.getElementById('postCommentButton');
+    const input = document.getElementById('newCommentInput');
+    const errorDiv = document.getElementById('errorPostComment');
+    
+    const commentText = input.value.trim();
+    if (commentText === '') return; 
+    
+    postBtn.disabled = true;
+    input.disabled = true;
+    if(errorDiv) errorDiv.style.display = 'none';
+
+    try {
+        let formData = new FormData();
+        formData.append('imageId', currentModalData.imageId);
+        formData.append('commentText', commentText);
+
+        const response = await fetch('./BACKEND/FuncionesPHP/postComment.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            input.value = '';
+            populateCommentList(data.comments, currentModalData.ownerId == logged_in_user_id);
+            postBtn.disabled = true; // Deshabilitar de nuevo tras publicar
+        } else {
+            if(errorDiv) {
+                errorDiv.textContent = data.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+    } catch (error) {
+        console.error("Error en handlePostComment:", error);
+    } finally {
+        postBtn.disabled = false;
+        input.disabled = false;
+    }
+}
+
+/**
+ * Adjunta listeners a los botones de BORRAR comentario
+ */
+function attachDeleteCommentListeners() {
+    const confirmModalEl = document.getElementById('confirmDeleteModal');
+    const confirmBtn = document.getElementById('confirmDeleteButton');
+    const confirmMessage = document.getElementById('deleteMessage');
+    
+    if (!confirmModalEl || !confirmBtn || !confirmMessage) {
+        console.error("No se encuentra el modal de confirmación de borrado.");
+        return;
+    }
+    
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+
+    document.querySelectorAll('button[data-action="delete-comment"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const commentId = e.currentTarget.dataset.commentId;
+            
+            confirmMessage.innerHTML = "¿Estás seguro de que deseas eliminar este comentario?";
+            
+            let newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.addEventListener('click', () => {
+                executeDeleteComment(commentId);
+                confirmModal.hide();
+            }, { once: true });
+            
+            confirmModal.show();
+        });
+    });
+}
+
+/**
+ * Ejecuta el fetch para borrar el comentario
+ */
+async function executeDeleteComment(commentId) {
+    try {
+        let formData = new FormData();
+        formData.append('commentId', commentId);
+        formData.append('imageId', currentModalData.imageId); // Necesario para recargar
+
+        const response = await fetch('./BACKEND/FuncionesPHP/deleteComment.php', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            populateCommentList(data.comments, currentModalData.ownerId == logged_in_user_id);
+        } else {
+            alert(data.message); 
+        }
+    } catch (error) {
+        console.error("Error en executeDeleteComment:", error);
+    }
+}
+
+// =========================================================================
+// 4. LÓGICA DE ESTADO (CARGA Y LIMPIEZA)
+// =========================================================================
+
+/**
+ * Pone el modal en estado de "carga"
+ */
+function setModalToLoading() {
+    // Re-buscamos elementos para asegurarnos de que existan
+    const img = document.getElementById('imagePublic');
+    const avatar = document.getElementById('avatarUser');
+    const name = document.getElementById('nameUser');
+    const title = document.getElementById('TitleImage');
+    const count = document.getElementById('likeCount');
+    const likeBtn = document.getElementById('likeButton');
+    const comments = document.getElementById('commentListContainer');
+    const error = document.getElementById('errorPostComment');
+
+    if (img) img.src = '';
+    if (avatar) avatar.src = '';
+    if (name) name.textContent = 'Cargando...';
+    if (title) title.textContent = '...';
+    if (count) count.textContent = '-';
+    if (likeBtn) likeBtn.classList.remove('active'); 
+    if (comments) comments.innerHTML = '<p class="text-center text-secondary small">Cargando comentarios...</p>';
+    if (error) error.style.display = 'none';
+}
+
+/**
+ * Muestra un error dentro del modal
+ */
+function setModalToError(message) {
+    document.getElementById('nameUser').textContent = 'Error';
+    document.getElementById('TitleImage').textContent = message;
+    document.getElementById('commentListContainer').innerHTML = `<div class="alert alert-danger">${message}</div>`;
+}
+
+// Limpiar el modal al cerrar para que no muestre datos viejos
 if (imageModalEl) {
     imageModalEl.addEventListener('hidden.bs.modal', () => {
-        setModalToLoading(); 
-        // Aquí también deberíamos "matar" los listeners
+        setModalToLoading(); // Resetea el modal a su estado de "carga"
+        
+        currentModalData = {
+            imageId: null,
+            ownerId: null,
+            followStatus: null
+        };
     });
 }

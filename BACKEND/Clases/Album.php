@@ -27,16 +27,39 @@
         public static function contarImagenes($conn, $idAlbum) {
             $idAlbum = (int)$idAlbum;
 
-            // Esta consulta es ahora más compleja si es un álbum del sistema,
-            // pero para un álbum normal (I_idAlbum), se mantiene:
-            $sql = "SELECT COUNT(*) AS total 
-                    FROM images 
-                    WHERE I_idAlbum = $idAlbum";
+            // 1. Primero, verificamos qué tipo de álbum es
+            $sqlCheck = "SELECT A_isSystemAlbum FROM albums WHERE A_id = $idAlbum LIMIT 1";
+            $albumResult = mysqli_query($conn, $sqlCheck);
+            
+            if (!$albumResult || mysqli_num_rows($albumResult) == 0) {
+                return 0; // El álbum no existe
+            }
+            $albumData = mysqli_fetch_assoc($albumResult);
+            $isSystemAlbum = (int)$albumData['A_isSystemAlbum'];
 
+            
+            // 2. Preparamos la consulta de COUNT según el tipo
+            $sql = "";
+            if ($isSystemAlbum === 1) {
+                // --- Es un ÁLBUM DE SISTEMA ---
+                // Contamos las entradas en la tabla 'album_images_link'
+                $sql = "SELECT COUNT(*) AS total 
+                        FROM album_images_link 
+                        WHERE L_idAlbum = $idAlbum";
+            } else {
+                // --- Es un ÁLBUM NORMAL ---
+                // Contamos las entradas en la tabla 'images'
+                $sql = "SELECT COUNT(*) AS total 
+                        FROM images 
+                        WHERE I_idAlbum = $idAlbum";
+            }
+
+            // 3. Ejecutamos la consulta de COUNT
             $resultado = mysqli_query($conn, $sql);
             if ($fila = mysqli_fetch_assoc($resultado)) {
                 return (int)$fila['total'];
             }
+            
             return 0;
         }
         
@@ -231,6 +254,19 @@
             // Usamos IGNORE para evitar errores si el link ya existe (doble like, etc.)
             $sql = "INSERT IGNORE INTO album_images_link (L_idAlbum, L_idImage) 
                     VALUES ($idAlbum, $idImage)";
+            return mysqli_query($conn, $sql);
+        }
+
+        /**
+        * 🔹 Desvincula una imagen de un álbum (para álbumes de sistema).
+        * Usa la tabla 'album_images_link'.
+        */
+        public static function unlinkImageFromAlbum($conn, $idAlbum, $idImage) {
+            $idAlbum = (int)$idAlbum;
+            $idImage = (int)$idImage;
+            
+            $sql = "DELETE FROM album_images_link 
+                    WHERE L_idAlbum = $idAlbum AND L_idImage = $idImage";
             return mysqli_query($conn, $sql);
         }
     }

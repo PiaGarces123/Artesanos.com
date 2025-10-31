@@ -297,7 +297,6 @@
         /* Mantener el color de fondo personalizado, pero el texto rojo */
         background-color: var(--primary-color) !important;
         color: var(--bs-danger) !important;
-        cursor: pointer;
     }
 /* -------------------------------------------------------- */
     /* CHECKBOX DE MODAL DE SELECCIONAR OPCION DE PUBLICACION */
@@ -884,6 +883,13 @@
         padding-left: 40px;
         word-break: break-word; 
     }
+
+    .comment-delete-btn {
+        /* Ajusta el tamaño del botón de borrar comentario */
+        font-size: 0.8rem;
+        line-height: 1;
+        padding: 0.25rem 0.5rem !important;
+    }
 /* ==================== ESTILO PERSONALIZADO PARA MENSAJES ==================== */
 .custom-message-card {
     background: #fdfaf6; /* Un tono crema/blanco roto similar a tu fondo */
@@ -959,4 +965,22 @@
         width: 250px; 
     }
 
+
+    /* -------------------------------------- */
+    /* --- FIX: ESTILO BOTÓN PUBLICAR (DESHABILITADO) --- */
+    /* -------------------------------------- */
+
+    /* Esto anula el estilo "marrón transparente" y lo 
+    reemplaza por un gris limpio cuando el botón 
+    de publicar comentario está deshabilitado.
+    */
+    .btn-primary:disabled {
+        background-color: #adb5bd !important;  /* Un gris medio de Bootstrap */
+        border-color: #adb5bd !important;      /* Mismo gris para el borde */
+        color: #f8f9fa !important;             /* Texto blanco/claro */
+        opacity: 1 !important;                 /* Anula la opacidad por defecto */
+        
+        /* (Opcional) Evita que cambie el cursor */
+        cursor: not-allowed;
+    }
     
