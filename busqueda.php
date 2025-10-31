@@ -99,8 +99,7 @@ if (!in_array($searchType, ['perfil', 'imagen'])) {
         window.initialSearchType = <?= json_encode($searchType) ?>;
     </script>
 
-
-    <!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
+    <!-- Sistema de búsqueda -->
     <script src="./Frontend/assets/js/busquedaPage.js"></script>
     
     <!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
