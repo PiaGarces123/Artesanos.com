@@ -570,78 +570,183 @@
         background: none !important; /* Asegura que el fondo no sea visible */
         opacity: 0.8;
     }
-/* ================= FEED MASONRY PINTEREST ================== */
 
-/* Contenedor principal del grid Masonry */
+/* ========================================= */
+/* ESTILOS PARA busqueda.php */
+/* ========================================= */
+
+/* Botones de filtro de búsqueda */
+.volver-btn {
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    border: 2px solid var(--secondary-color);
+    background: white;
+    color: var(--secondary-color);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.volver-btn:hover {
+    background: white;
+    color: var(--secondary-color);
+}
+
+/* Encabezado de la página de búsqueda */
+.search-page-header {
+    padding: 1rem 0;
+    background: var(--background-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-page-header h5 {
+    margin-top: 1rem;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Barra de búsqueda grande */
+.search-page-searchbar {
+    margin-top: 1.5rem;
+}
+
+.search-page-searchbar .form-control {
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color, #dee2e6);
+    transition: all 0.3s ease;
+}
+
+.search-page-searchbar .form-control:focus {
+    border-color: var(--primary-color, #007bff);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.search-page-searchbar .btn-primary {
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Botones de filtro de búsqueda */
+.buscarPor-btn {
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    border: 2px solid var(--border-color, #dee2e6);
+    background: white;
+    color: var(--text-secondary, #6c757d);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.buscarPor-btn:hover {
+    border-color: var(--primary-color, #007bff);
+    color: var(--primary-color, #007bff);
+    transform: translateY(-2px);
+}
+
+.buscarPor-btn.active {
+    background: var(--primary-color, #007bff);
+    color: white;
+    border-color: var(--primary-color, #007bff);
+}
+
+/* Área de resultados */
+.search-results-area {
+    min-height: 400px;
+    padding: 1rem 0;
+}
+
+/* Cards con hover */
+.hover-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid var(--border-color, #dee2e6);
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    border-color: var(--primary-color, #007bff);
+}
+
+/* Animaciones de aparición */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-results-area > div {
+    animation: fadeInUp 0.5s ease;
+}
+
+/* Grid de imágenes para Masonry */
 .feed-grid {
-    margin: 0 auto;
-    max-width: 1400px;
-    padding: 0 !important;
+    display: block;
     width: 100%;
-    min-height: 100vh; /* Para asegurar que ocupe altura */
 }
 
-/* Item individual del grid - DESKTOP (4 columnas) */
+/* Items del grid Masonry */
 .feed-grid-item {
-    width: calc(25% - 10px); /* 4 columnas con espacio para gutter */
+    width: calc(25% - 10px);
     margin-bottom: 10px;
-    box-sizing: border-box;
-    float: left; /* Asegurar que floten correctamente */
 }
 
-/* Tarjeta de imagen estilo Pinterest */
+/* Card de imagen del feed */
 .feed-img-card {
     position: relative;
-    border-radius: 16px;
     overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: var(--card-background, #fff);
 }
 
 .feed-img-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
 }
 
-/* Imagen responsiva */
 .feed-img-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     display: block;
-    transition: filter 0.3s ease;
+    width: 100%;
 }
 
-.feed-img-card:hover img {
-    filter: brightness(0.85);
-}
-
-/* Overlay con información */
+/* Overlay de la imagen */
 .feed-img-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.7) 100%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        rgba(0,0,0,0.4) 0%, 
+        transparent 30%, 
+        transparent 70%, 
+        rgba(0,0,0,0.6) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.75rem;
-    pointer-events: none;
+    padding: 1rem;
 }
 
 .feed-img-card:hover .feed-img-overlay {
     opacity: 1;
-    pointer-events: auto;
 }
 
-/* Header del overlay con usuario */
+/* Header del overlay */
 .feed-img-header {
     display: flex;
     align-items: center;
@@ -649,50 +754,19 @@
 }
 
 .feed-img-header img {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 2px solid white;
     object-fit: cover;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .feed-img-header p {
     color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
     margin: 0;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
-
-/* Botones de acción en el overlay */
-.feed-img-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.feed-img-actions .btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.95);
-    border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
-}
-
-.feed-img-actions .btn:hover {
-    transform: scale(1.1);
-    background: white;
-}
-
-.feed-img-actions .btn.liked i {
-    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* Título de la imagen */
@@ -700,124 +774,96 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
     color: white;
-    padding: 1rem 0.75rem 0.75rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    line-height: 1.3;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-/* Badge de privacidad (candado) */
+/* Badge de privacidad */
 .feed-img-privacy {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: rgba(0,0,0,0.75);
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0,0,0,0.7);
     color: white;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    backdrop-filter: blur(6px);
+}
+
+/* Acciones del overlay */
+.feed-img-actions {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    gap: 0.5rem;
+    justify-content: flex-end;
 }
 
-.feed-img-privacy i {
-    font-size: 1rem;
+.feed-img-actions .btn {
+    opacity: 0.95;
+    backdrop-filter: blur(4px);
 }
 
-/* Hover card para perfiles */
-.hover-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.feed-img-actions .btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-.hover-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
 
-/* ==================== RESPONSIVE ==================== */
-
-/* Tablet y desktop pequeño (3 columnas) */
-@media (min-width: 768px) and (max-width: 1200px) {
+@media (max-width: 1200px) {
     .feed-grid-item {
-        width: calc(33.333% - 10px) !important;
+        width: calc(33.333% - 10px);
     }
 }
 
-/* MÓVIL (2 COLUMNAS) - EL MÁS IMPORTANTE */
-@media (max-width: 767px) {
-    .feed-grid {
-        padding: 0 !important;
-        max-width: 100%;
+@media (max-width: 768px) {
+    .search-page-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .search-page-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .search-page-searchbar .form-control,
+    .search-page-searchbar .btn-primary {
+        border-radius: 12px;
+    }
+
+    .feed-grid-item {
+        width: calc(50% - 8px);
+        margin-bottom: 8px;
+    }
+
+    .buscarPor-btn {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .feed-grid-item {
         width: 100%;
     }
 
-    .feed-grid-item {
-        width: calc(50% - 8px) !important; /* 2 COLUMNAS con espacio para gutter */
-        margin-bottom: 8px;
+    .search-page-searchbar .d-flex {
+        flex-direction: column;
     }
-    
-    .feed-img-card {
-        border-radius: 10px;
-    }
-    
-    .feed-img-title {
-        font-size: 0.75rem;
-        padding: 0.5rem 0.4rem;
-        line-height: 1.2;
-    }
-    
-    .feed-img-actions {
-        gap: 0.3rem;
-    }
-    
-    .feed-img-actions .btn {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .feed-img-actions .btn i {
-        font-size: 0.9rem;
-    }
-    
-    .feed-img-header img {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .feed-img-header p {
-        font-size: 0.75rem;
-    }
-    
-    .feed-img-privacy {
-        width: 30px;
-        height: 30px;
-        top: 0.4rem;
-        right: 0.4rem;
-    }
-    
-    .feed-img-privacy i {
-        font-size: 0.85rem;
-    }
-    
-    .feed-img-overlay {
-        padding: 0.5rem;
-    }
-    
-    .main-content-offset {
-        padding: 0.5rem !important;
-    }
-    
-    .container-fluid {
-        padding: 0.5rem !important;
+
+    .search-page-searchbar .btn-primary {
+        width: 100%;
     }
 }
+
 
 
 /* ==================== ESTILO PERSONALIZADO PARA MENSAJES ==================== */
