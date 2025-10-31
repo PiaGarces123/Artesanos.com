@@ -63,13 +63,23 @@
             return 0;
         }
         
-        // 🔹 Obtener todos los álbumes de un usuario (para visualización general)
-        public static function getByUser($conn, $idUsuario) {
+        // 🔹 Obtener todos los álbumes de un usuario (con filtro)
+        public static function getByUser($conn, $idUsuario, $filterType = 'all') {
             $idUsuario = (int)$idUsuario;
 
+            // Consulta base
             $sql = "SELECT * FROM albums 
-                    WHERE A_idUser = $idUsuario
-                    ORDER BY A_creationDate DESC";
+                    WHERE A_idUser = $idUsuario";
+            
+            // --- ¡CAMBIO AQUÍ! Aplicar el filtro ---
+            if ($filterType === 'own') {
+                $sql .= " AND A_isSystemAlbum = 0"; // Solo Propios
+            } elseif ($filterType === 'system') {
+                $sql .= " AND A_isSystemAlbum = 1"; // Solo Sistema (Likes)
+            }
+            // Si $filterType es 'all', no se añade ningún AND.
+
+            $sql .= " ORDER BY A_creationDate DESC";
 
             $resultado = mysqli_query($conn, $sql);
             $albums = [];

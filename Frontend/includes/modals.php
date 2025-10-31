@@ -118,6 +118,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closemyAlbums"></button>
                 </div>
                 
+                <div class="album-filter-container mb-3" id="modalAlbumFilters">
+                    <div class="btn-group w-100" role="group" aria-label="Filtro de álbumes">
+                        
+                        <input type="radio" class="btn-check" name="albumFilterModal" id="filterModalAll" value="all" checked>
+                        <label class="btn btn-outline-secondary" for="filterModalAll">
+                            <i class="uil uil-files-landscapes me-1"></i> Todos
+                        </label>
+
+                        <input type="radio" class="btn-check" name="albumFilterModal" id="filterModalOwn" value="own">
+                        <label class="btn btn-outline-secondary" for="filterModalOwn">
+                            <i class="uil uil-user-square me-1"></i> Propios
+                        </label>
+
+                        <input type="radio" class="btn-check" name="albumFilterModal" id="filterModalSystem" value="system">
+                        <label class="btn btn-outline-secondary" for="filterModalSystem">
+                            <i class="uil uil-heart-sign me-1"></i> Sistema (Likes)
+                        </label>
+
+                    </div>
+                </div>
+
                 <div id="myAlbumsContainer" class="mt-4">
                 </div>
 

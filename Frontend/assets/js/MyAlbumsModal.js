@@ -60,14 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. INSTANCIAS DE MODALES
     // =========================================================================
 
-    // Modal de confirmación de borrado
     const confirmDeleteModalEl = document.getElementById('confirmDeleteModal');
     const confirmDeleteModal = confirmDeleteModalEl ? (bootstrap.Modal.getInstance(confirmDeleteModalEl) || new bootstrap.Modal(confirmDeleteModalEl)) : null;
 
-    // Modal principal (el que abre este script)
     const myAlbumsModalEl = document.getElementById('myAlbumsModal');
 
-    // Modal para VER imágenes del álbum (el que abriremos al hacer clic)
     const imagesModalEl = document.getElementById('imagesAlbumModal');
     const imagesModalInstance = imagesModalEl ? (bootstrap.Modal.getInstance(imagesModalEl) || new bootstrap.Modal(imagesModalEl)) : null;
     const imagesModalTitleEl = document.getElementById('imagesAlbumLabel');
@@ -79,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. FUNCIONES DE ACCIÓN (FETCH A LA BD)
     // =========================================================================
 
-    // --- Borrar Álbum ---
     const deleteAlbum = async (albumId) => {
         let deleteEndpoint = './BACKEND/FuncionesPHP/eliminarAlbum.php'; 
         let formData = new FormData();
@@ -107,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- Borrar Imagen ---
     const deleteImage = async (imageId, albumIdToRefresh) => {
         let deleteEndpoint = './BACKEND/FuncionesPHP/eliminarImagen.php'; 
         let formData = new FormData();
@@ -121,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
             
             let callback = null;
             if (data.status === 'success') {
-                // Refrescar la lista de imágenes en el modal
                 callback = () => injectAlbumImages(albumIdToRefresh, imagesModalInstance); 
             } else if (data.status === 'errorSession') {
                 callback = () => window.location.href = './index.php';
@@ -136,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- Establecer Portada ---
     const setCoverImage = async (imageId, albumId) => {
         let formData = new FormData();
         formData.append('imageId', imageId);
@@ -148,7 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let callback = null;
             if (data.status === 'success') {
-                // Recarga la lista de álbumes (en el modal de fondo) para ver la nueva portada
                 callback = () => injectSelectAlbumList(); 
             } else if (data.status === 'errorSession') {
                 callback = () => window.location.href = './index.php';
@@ -163,18 +155,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- Usar como Foto de Perfil ---
     const setProfileImage = async (imageId) => {
         let formData = new FormData();
         formData.append('imageId', imageId); 
         
         try {
-            const res = await fetch('./BACKEND/FuncionesPHP/updateProfileImage.php', { method: 'POST', body: formData });
+            const res = await fetch('./BACKEND/FuncionesPHP/actualizarFotoPerfil.php', { method: 'POST', body: formData });
             const data = await res.json();
 
             let callback = null;
             if (data.status === 'success') {
-                // Recarga toda la página para ver el cambio en el header, etc.
                 callback = () => window.location.reload(); 
             } else if (data.status === 'errorSession') {
                 callback = () => window.location.href = './index.php';
@@ -190,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // =========================================================================
-    // 4. FUNCIÓN PARA INYECTAR IMÁGENES (NUEVA LÓGICA)
+    // 4. FUNCIÓN PARA INYECTAR IMÁGENES
     // =========================================================================
     
     const injectAlbumImages = (albumId, modalInstance) => {
@@ -199,10 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // 1. Mostrar Spinner
         imagesModalContainer.innerHTML = `<p class="text-center mt-3 text-secondary"><div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div> Cargando imágenes...</p>`;
-        
-        // 2. Limpiar errores
         limpiarErrores(); 
 
         async function fetchAlbumImages() {
@@ -210,8 +197,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 let formData = new FormData();
                 formData.append('albumId', albumId);
                 
+                // Usamos la variable global de modals.php
                 formData.append('isMyProfile', true); 
-                formData.append('profileUserId', logged_in_user_id);//variable definida en modal.php
+                formData.append('profileUserId', logged_in_user_id);
+                
                 const response = await fetch(`./BACKEND/FuncionesPHP/obtenerImagenesAlbum.php`, {
                     method: "POST",
                     body: formData
@@ -323,28 +312,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
 
-                // --- D. Listener para ver imagen (Futuro) ---
+                // --- D. Listener para ver imagen (con fix de stack) ---
                 imagesModalContainer.querySelectorAll('img[data-action="view-single-image"]').forEach(img => {
                     img.addEventListener('click', (e) => {
                         const imgId = e.currentTarget.dataset.imageId;
-                        // 1. Obtener la instancia del modal actual (el de la lista de imágenes)
                         const currentModalEl = document.getElementById('imagesAlbumModal');
                         if (!currentModalEl) return;
                         
                         const currentModalInstance = bootstrap.Modal.getInstance(currentModalEl);
                         if (!currentModalInstance) return;
 
-                        // 2. Adjuntar un listener "una-sola-vez" para cuando se oculte
                         currentModalEl.addEventListener('hidden.bs.modal', () => {
-                            // 3. Ahora que el modal 1 está cerrado, abrimos el modal 2
                             if (typeof openImageModal === 'function') {
                                 openImageModal(imgId);
                             } else {
                                 console.error('La función openImageModal no está definida.');
                             }
-                        }, { once: true }); // {once: true} es clave: se ejecuta 1 vez y se borra
-
-                        // 4. Mandar a ocultar el modal 1 (esto dispara el evento)
+                        }, { once: true }); 
                         currentModalInstance.hide();
                     });
                 });
@@ -354,15 +338,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 imagesModalContainer.innerHTML = `<p class="text-danger text-center mt-3">No se pudieron cargar las imágenes.</p>`;
             }
         }
-
-        // 6. Ejecutar Fetch y Mostrar Modal
+        
         fetchAlbumImages();
         modalInstance.show(); 
     };
 
 
     // =========================================================================
-    // 5. FUNCIÓN INICIAL (MODIFICADA para la nueva lógica)
+    // 5. FUNCIÓN INICIAL (MODIFICADA CON FILTROS)
     // =========================================================================
     
     function injectSelectAlbumList() {
@@ -374,9 +357,23 @@ document.addEventListener("DOMContentLoaded", () => {
         limpiarErrores();
 
         async function fetchAlbums() {
+            
+            // --- Leer el filtro seleccionado del modal ---
+            let filterValue = 'all'; 
+            const checkedFilter = document.querySelector('#modalAlbumFilters input[name="albumFilterModal"]:checked');
+            if (checkedFilter) {
+                filterValue = checkedFilter.value;
+            }
+            
+            let formData = new FormData();
+            formData.append('filterType', filterValue);
+            // (No enviamos user_id, el backend usará la sesión)
+
             try {
-                // Fetch simple, usa la sesión
-                const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`); 
+                const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`, {
+                    method: "POST",
+                    body: formData
+                });
 
                 if (!response.ok) throw new Error('Fallo al obtener los álbumes.');
 
@@ -458,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.querySelectorAll('a[data-action="delete-album"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        e.stopPropagation(); // Evita que el label reciba el clic
+                        e.stopPropagation(); 
                         
                         let idToDelete = e.currentTarget.dataset.albumId;
                         let confirmBtn = document.getElementById('confirmDeleteButton');
@@ -488,7 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.querySelectorAll('label.album-card-select').forEach(label => {
                     label.addEventListener('click', (e) => {
                         
-                        // Si el clic fue en el dropdown (borrar), no abrimos el modal
                         if (e.target.closest('.dropdown')) {
                             return;
                         }
@@ -497,13 +493,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             const albumId = label.dataset.albumId;
                             const albumTitle = label.dataset.albumTitle;
                             
-                            // Poner el título en el modal de imágenes
                             if(imagesModalTitleEl) imagesModalTitleEl.textContent = albumTitle;
-
-                            // Cargar las imágenes en el *otro* modal
                             injectAlbumImages(albumId, imagesModalInstance);
 
-                            // Ocultar el modal actual (myAlbumsModal)
                             const currentModalInstance = bootstrap.Modal.getInstance(myAlbumsModalEl);
                             if (currentModalInstance) {
                                 currentModalInstance.hide();
@@ -526,16 +518,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================================
 
     if (myAlbumsModalEl) {
-        // Evento para cuando el modal se abre
         myAlbumsModalEl.addEventListener('shown.bs.modal', (e) => {
             injectSelectAlbumList();
         });
 
-        // Evento para cuando el modal se cierra
         myAlbumsModalEl.addEventListener('hidden.bs.modal', (e) => {
             const container = document.getElementById("myAlbumsContainer");
-            container.innerHTML = "";
+            if (container) {
+                container.innerHTML = "";
+            }
         });
     }
 
+    const modalFilterContainer = document.getElementById('modalAlbumFilters');
+    if (modalFilterContainer) {
+        const filterRadios = modalFilterContainer.querySelectorAll('.btn-check');
+        
+        filterRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                injectSelectAlbumList(); 
+            });
+        });
+    }
 });

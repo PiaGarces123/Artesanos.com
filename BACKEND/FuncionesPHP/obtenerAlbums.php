@@ -6,35 +6,35 @@
 
     session_start();
 
-    // Le dice al navegador que la respuesta del servidor no es HTML, sino JSON
     header("Content-Type: application/json");
-
 
     $conn = conexion();
 
     // ----------------------------------------------------
-    // LÓGICA CLAVE: DETERMINAR EL ID DEL PERFIL A CONSULTAR
+    // LÓGICA CLAVE: DETERMINAR ID Y FILTRO
     // ----------------------------------------------------
     
+    // 1. Determinar el ID del usuario (desde POST o SESIÓN)
     $idUser = $_POST['user_id'] ?? null;
 
     if (empty($idUser) && isset($_SESSION['user_id'])) {
-        // Si no se pasó un ID por POST (ej: no se está visitando un perfil),
-        // se usa el ID del usuario logueado.
         $idUser = $_SESSION['user_id'];
     }
     
-    // Si todavía no tenemos ID (ni por POST ni por SESIÓN), salimos.
     if (empty($idUser)) {
         echo json_encode([]);
         exit;
     }
     
-    // Verificación de existencia del usuario (requerida por User::getById)
+    // 2. --- ¡CAMBIO AQUÍ! OBTENER EL TIPO DE FILTRO ---
+    // El valor por defecto es 'all' si no se envía nada
+    $filterType = $_POST['filterType'] ?? 'all';
+
+    // 3. Verificación de existencia del usuario
     $user = User::getById($conn, $idUser);
 
     if (!$user) {
-        echo json_encode([]); // Devuelve array vacío si el usuario no existe.
+        echo json_encode([]); 
         exit;
     }
 
@@ -42,13 +42,13 @@
     // LÓGICA PRINCIPAL: OBTENER Y FORMATEAR ÁLBUMES
     // ----------------------------------------------------
     
-    // Asumimos que Album::getByUser y Album::getCoverImagePath existen y son correctos.
-    $resultadoAlbums = Album::getByUser($conn, $idUser);
+    // 4. --- ¡CAMBIO AQUÍ! PASAMOS EL FILTRO A LA FUNCIÓN ---
+    $resultadoAlbums = Album::getByUser($conn, $idUser, $filterType);
 
     $albums = [];
     foreach($resultadoAlbums as $album){
         
-        // Asumo que la función de portada está en la clase Album (según tu indicación).
+        // (El resto de tu lógica para buscar portada y conteo es correcta)
         $rutaPortada = Album::getCoverImagePath($conn, $album['A_id']); 
         $totalImagenes = Album::contarImagenes($conn, $album['A_id']);
 

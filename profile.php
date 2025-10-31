@@ -186,6 +186,30 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                 </div>
             </div>
         </div>
+        <?php if ($isMyProfile): ?>
+        <div class="container-fluid profile-container" style="max-width: 900px; margin: 0 auto 1.5rem auto;">
+            <div class="album-filter-container" id="profileAlbumFilters">
+                <div class="btn-group w-100" role="group" aria-label="Filtro de álbumes">
+                    
+                    <input type="radio" class="btn-check" name="albumFilterProfile" id="filterProfileAll" value="all" checked>
+                    <label class="btn btn-outline-secondary" for="filterProfileAll">
+                        <i class="uil uil-files-landscapes me-1"></i> Todos
+                    </label>
+
+                    <input type="radio" class="btn-check" name="albumFilterProfile" id="filterProfileOwn" value="own">
+                    <label class="btn btn-outline-secondary" for="filterProfileOwn">
+                        <i class="uil uil-user-square me-1"></i> Propios
+                    </label>
+
+                    <input type="radio" class="btn-check" name="albumFilterProfile" id="filterProfileSystem" value="system">
+                    <label class="btn btn-outline-secondary" for="filterProfileSystem">
+                        <i class="uil uil-heart-sign me-1"></i> Sistema (Likes)
+                    </label>
+
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <!-- SECCIÓN DE ÁLBUMES -->
         <section class="albums-section" id="myAlbumsProfileSection">
