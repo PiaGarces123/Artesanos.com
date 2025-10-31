@@ -815,11 +815,11 @@
     transform: scale(1.1);
 }
 
-/* ========================================= */
-/* RESPONSIVE */
-/* ========================================= */
 
-@media (max-width: 1200px) {
+/* ==================== RESPONSIVE ==================== */
+
+/* Tablet y desktop pequeño (3 columnas) */
+@media (min-width: 768px) and (max-width: 1200px) {
     .feed-grid-item {
         width: calc(33.333% - 10px);
     }
@@ -863,7 +863,74 @@
         width: 100%;
     }
 }
+/*================================================================================ */
+    /* -------------------------------------- */
+    /* --- LAYOUT DEL MODAL DE IMAGEN --- */
+    /* -------------------------------------- */
 
+    /* Define la altura máxima de las columnas (para que quepan en la pantalla) */
+    #imageModalImageCol,
+    #imageModalInfoCol {
+        max-height: 90vh; /* 90% de la altura de la ventana */
+    }
+
+    /* Ajusta la imagen dentro de la columna izquierda */
+    #imagePublic {
+        max-height: 90vh; /* Asegura que la imagen no sea más alta que la columna */
+        object-fit: contain; /* Evita que la imagen se estire */
+    }
+
+    /* Define el tamaño del avatar del usuario en la columna de info */
+    .avatar-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    /* (OPCIONAL - Pero recomendado) 
+    Estilos para el botón de Like y los comentarios 
+    (Son los mismos que te pasé antes)
+    */
+    .like-btn {
+        color: var(--bs-body-color);
+    }
+    .like-btn:hover {
+        color: var(--bs-body-color);
+        background-color: var(--bs-gray-200) !important;
+    }
+    .like-btn.active {
+        color: var(--bs-danger) !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .like-btn.active .bi-heart::before {
+        content: "\f415"; /* Ícono de corazón relleno */
+    }
+    .comment {
+        margin-bottom: 1rem;
+    }
+    .comment-user {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+    .comment-avatar img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px;
+    }
+    .comment-username {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    .comment-text {
+        font-size: 0.9rem;
+        padding-left: 40px;
+        word-break: break-word; 
+    }
 
 
 /* ==================== ESTILO PERSONALIZADO PARA MENSAJES ==================== */
