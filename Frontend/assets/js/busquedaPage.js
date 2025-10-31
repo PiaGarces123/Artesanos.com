@@ -33,15 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // =====================================================
     // FUNCIONES PRINCIPALES
     // =====================================================
-    
-    // Función para corregir la ruta relativa a la ubicación de busquedaPage.php
-    const corregirRutaImagen = (ruta) => {
-        if (!ruta) return '';
-        // Quitar './' inicial si existe
-        let rutaLimpia = ruta.replace(/^\.\/+/, '');
-        // Convertir en ruta absoluta desde la raíz del servidor
-        return '/' + rutaLimpia; 
-    };
+
 
     // -----------------------------------------------------
     //--> EJECUTA LA BÚSQUEDA AJAX
@@ -142,76 +134,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // -----------------------------------------------------
     //--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY (Adaptado del original)
-    function mostrarImagenes(images, container) {
-        console.log('📸 Total de imágenes recibidas:', images.length);
-        
-        // PASO 1: Destruir Masonry anterior si existe
-        if(msnry){
-            msnry.destroy();
-            msnry = null;
-        }
-        
-        // PASO 2: Limpiar contenedor
-        container.innerHTML = '';
-        
-        // PASO 3: Crear elementos de imagen
-        images.forEach((img, index) => {
-            const cardWrapper = document.createElement('div');
-            cardWrapper.classList.add('feed-grid-item');
+    // -----------------------------------------------------
+//--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY
+function mostrarImagenes(images, container) {
+    console.log('📸 Total de imágenes recibidas:', images.length);
 
-            const badge = img.visibility === 1 
-                ? `<div class="feed-img-privacy"><i class="uil uil-lock"></i></div>` 
-                : '';
-
-            // Altura aleatoria para efecto "Pinterest"
-            let randHeight;
-            if(window.innerWidth <= 767) {
-                randHeight = Math.floor(Math.random() * (260 - 200 + 1)) + 200;
-            } else if(window.innerWidth <= 1200) {
-                randHeight = Math.floor(Math.random() * (340 - 240 + 1)) + 240;
-            } else {
-                randHeight = Math.floor(Math.random() * (400 - 250 + 1)) + 250;
-            }
-
-            // Construir tarjeta
-            cardWrapper.innerHTML = `
-                <div class="feed-img-card" style="height:${randHeight}px;">
-                    <a href="./image.php?id=${img.id}" class="text-decoration-none d-block position-relative h-100">
-                        ${badge}
-                        <img src="${img.imageUrl}" 
-                             alt="${img.title || 'Imagen'}" 
-                             loading="lazy"
-                             style="height:100%; width:100%; object-fit:cover;">
-                        <div class="feed-img-overlay">
-                            <div class="feed-img-header">
-                                <img src="${img.profileImage || './Frontend/assets/images/appImages/default.jpg'}" 
-                                     alt="${img.username}">
-                                <p>@${img.username}</p>
-                            </div>
-                            <div class="feed-img-actions">
-                                <button class="btn btn-light btn-sm" 
-                                        onclick="event.preventDefault(); toggleLike(${img.id}, this);">
-                                    <i class="uil uil-heart"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm" 
-                                        onclick="event.preventDefault(); window.location.href='./image.php?id=${img.id}#comments';">
-                                    <i class="uil uil-comment-dots"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="feed-img-title">${img.title || 'Sin título'}</div>
-                    </a>
-                </div>
-            `;
-
-            container.appendChild(cardWrapper);
-        });
-
-        // PASO 4: Inicializar Masonry
-        setTimeout(() => {
-            initMasonry(container);
-        }, 100);
+    // Destruir Masonry anterior si existe
+    if(msnry){
+        msnry.destroy();
+        msnry = null;
     }
+
+    // Limpiar contenedor
+    container.innerHTML = '';
+
+    // Crear elementos de imagen
+    images.forEach((img) => {
+        const cardWrapper = document.createElement('div');
+        cardWrapper.classList.add('feed-grid-item');
+
+        const badge = img.visibility === 1 
+            ? `<div class="feed-img-privacy"><i class="uil uil-lock"></i></div>` 
+            : '';
+
+        // Altura aleatoria tipo "Pinterest"
+        let randHeight;
+        if(window.innerWidth <= 767) {
+            randHeight = Math.floor(Math.random() * (260 - 200 + 1)) + 200;
+        } else if(window.innerWidth <= 1200) {
+            randHeight = Math.floor(Math.random() * (340 - 240 + 1)) + 240;
+        } else {
+            randHeight = Math.floor(Math.random() * (400 - 250 + 1)) + 250;
+        }
+
+        // Construir tarjeta
+        cardWrapper.innerHTML = `
+            <div class="feed-img-card" style="height:${randHeight}px;">
+                <a href="./image.php?id=${img.id}" class="text-decoration-none d-block position-relative h-100">
+                    ${badge}
+                    <img src="${img.imageUrl}" 
+                         alt="${img.title || 'Imagen'}" 
+                         loading="lazy"
+                         style="height:100%; width:100%; object-fit:cover;">
+                    <div class="feed-img-overlay">
+                        <div class="feed-img-header">
+                            <img src="${img.profileImage || './Frontend/assets/images/appImages/default.jpg'}" 
+                                 alt="${img.username}">
+                            <p>@${img.username}</p>
+                        </div>
+                    </div>
+                    <div class="feed-img-title">${img.title || ''}</div>
+                </a>
+            </div>
+        `;
+
+        container.appendChild(cardWrapper);
+    });
+
+    // Inicializar Masonry
+    setTimeout(() => {
+        initMasonry(container);
+    }, 100);
+}
+
     
     // -----------------------------------------------------
     //--> CONFIGURA E INICIALIZA MASONRY

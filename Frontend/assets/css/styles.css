@@ -797,21 +797,9 @@
     backdrop-filter: blur(6px);
 }
 
-/* Acciones del overlay */
+
 .feed-img-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.feed-img-actions .btn {
-    opacity: 0.95;
-    backdrop-filter: blur(4px);
-}
-
-.feed-img-actions .btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
+    display: none !important;
 }
 
 

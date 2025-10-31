@@ -117,18 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                      alt="${img.username}">
                                 <p>@${img.username}</p>
                             </div>
-                            <div class="feed-img-actions">
-                                <button class="btn btn-light btn-sm" 
-                                        onclick="event.preventDefault(); toggleLike(${img.id}, this);">
-                                    <i class="uil uil-heart"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm" 
-                                        onclick="event.preventDefault(); window.location.href='./image.php?id=${img.id}#comments';">
-                                    <i class="uil uil-comment-dots"></i>
-                                </button>
-                            </div>
+
                         </div>
-                        <div class="feed-img-title">${img.title || 'Sin título'}</div>
+                        <div class="feed-img-title">${img.title || ''}</div>
                     </a>
                 </div>
             `;

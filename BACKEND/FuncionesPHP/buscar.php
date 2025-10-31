@@ -98,10 +98,10 @@
                         FROM images i
                         INNER JOIN users u ON i.I_idUser = u.U_id
                         WHERE i.I_title LIKE '%$query%'
-                            AND i.I_visibility = 0
+
                             AND i.I_revisionStatus = 0
-                            AND i.I_isProfile = 0
-                            AND u.U_status = 1
+                            AND i.I_visibility = 0
+                            AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
                         ORDER BY i.I_publicationDate DESC
                         LIMIT 30";
             } else {
@@ -109,18 +109,19 @@
                 // - Imágenes públicas
                 // - Imágenes privadas de usuarios a los que sigue
                 $currentUserId = (int)$currentUserId;
+
                 $sql = "SELECT i.I_id, i.I_title, i.I_ruta, i.I_publicationDate, i.I_visibility,
                             u.U_id, u.U_nameUser, u.U_name, u.U_lastName
                         FROM images i
                         INNER JOIN users u ON i.I_idUser = u.U_id
                         WHERE i.I_title LIKE '%$query%'
                             AND i.I_revisionStatus = 0
-                            AND i.I_isProfile = 0
-                            AND u.U_status = 1
+                            AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
                             AND (
                                 i.I_visibility = 0
+                                OR i.I_idUser = $currentUserId
                                 OR (
-                                    i.I_visibility = 1 
+                                    i.I_visibility = 1
                                     AND EXISTS (
                                         SELECT 1 FROM follow f
                                         WHERE f.F_idFollower = $currentUserId
@@ -128,7 +129,7 @@
                                         AND f.F_status = 1
                                     )
                                 )
-                                OR i.I_idUser = $currentUserId
+                                
                             )
                         ORDER BY i.I_publicationDate DESC
                         LIMIT 30";
