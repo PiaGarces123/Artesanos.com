@@ -219,7 +219,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                             id="modalCurrentProfilePic">
                     </div>
                     
-                    <!-- 2. Botón de Cerrar (Invisible sobre la imagen) -->
+                    <!-- 2. Botón de Cerrar  -->
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2 z-20" 
                             data-bs-dismiss="modal" aria-label="Cerrar" style="filter: drop-shadow(0 0 2px black);">
                     </button>
@@ -533,7 +533,6 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!-- Para Fecha de Nacimiento -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<!-- EL flactpickr lo ocmento porque me esta mostrando algo en la pantalla (REVISAR MOTIVO) -->
 
 <script>
     // Variable global JS que indica si el usuario inició sesión
@@ -544,6 +543,8 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     var user_id = <?= $user->id ?>;
     var isMyProfile = <?= $isMyProfile ? 'true' : 'false' ?>;
 </script>
+
+
 
 <!-- Para trabajar los albumes en la pagina profile.php -->
 <script src="./Frontend/assets/js/myAlbumsProfile.js"></script>

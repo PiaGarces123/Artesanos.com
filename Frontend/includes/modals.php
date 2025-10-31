@@ -195,66 +195,55 @@
     </div>
 
      <!-- Modal para visualización de imágenes -->
-    <div class="modal fade image-modal" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Contenedor de la imagen -->
-                    <div class="image-container">
-                        <img src="" alt="Imagen de ejemplo" class="img-fluid" id="imagePublic">
-                    </div>
-                    
-                    <!-- Contenedor de información -->
-                    <div class="info-container">
-                        <!-- Sección de usuario y título -->
-                        <div class="user-section">
-                            <div class="user-info">
-                                <div class="user-avatar">
-                                    <img src="" alt="Avatar del usuario" id="avatarUser">
-                                </div>
-                                <div class="user-details">
-                                    <h5 id="nameUser"></h5>
-                                    <div class="image-title" id="TitleImage"></div>
-                                </div>
-                            </div>
+                
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+
+                        <div class="col-lg-7 d-flex align-items-center justify-content-center bg-black" id="imageModalImageCol">
+                            
+                            <img src="" alt="Imagen" class="img-fluid" id="imagePublic">
+                        
                         </div>
 
-                        <!-- Botón de Me Gusta (Corazón) -->
-                            <div class="like-section mt-3">
-                                <button class="btn btn-outline-primary btn-sm like-btn" id="likeButton">
-                                    <i class="bi bi-heart"></i> <span id="likeCount"></span> Me gusta
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Sección de comentarios -->
-                        <div class="comments-section">
-                            <h6 class="mb-3">Comentarios</h6>
+                        <div class="col-lg-5 d-flex flex-column" id="imageModalInfoCol">
                             
-                            <!-- Comentarios -->
-                            <div class="comment">
-                                <div class="comment-user">
-                                    <div class="comment-avatar">
-                                        <img src="" alt="Avatar del comentarista" id="commentAvatar">
+                            <div class="p-3 border-bottom">
+                                
+                                <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                                <div class="d-flex align-items-center mb-3">
+                                    <img src="" alt="Avatar" class="rounded-circle me-2 avatar-img" id="avatarUser">
+                                    <div>
+                                        <h5 class="mb-0 fs-6 fw-bold" id="nameUser"></h5>
+                                        <div class="text-muted small" id="TitleImage"></div>
                                     </div>
-                                    <div class="comment-username" id="commentName"></div>
                                 </div>
-                                <div class="comment-text" id="comment"></div>
+                                
+                                <div class="like-section mt-3">
+                                    <button class="btn btn-light border-0 btn-lg like-btn" id="likeButton">
+                                        <i class="uil uil-heart"></i> 
+                                        <span id="likeCount" class="ms-1">0</span>
+                                    </button>
+                                </div>
                             </div>
-                        
-                        <!-- Sección para agregar comentario -->
-                        <div class="add-comment">
-                            <div class="input-group">
-                                <input type="text" class="form-control comment-input" placeholder="Añade un comentario...">
-                                <button class="btn btn-comment" type="button">Publicar</button>
+
+                            <div class="p-3 flex-grow-1 overflow-y-auto" id="commentListContainer">
+                                <p class="text-center text-secondary small">Cargando comentarios...</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+                            <div class="p-3 border-top bg-light">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Añade un comentario..." id="newCommentInput">
+                                    <button class="btn btn-primary" type="button" id="postCommentButton">Publicar</button>
+                                </div>
+                                <div class="error" id="errorPostComment"></div>
+                            </div>
+
+                        </div> </div> </div> </div>
         </div>
     </div>
 
@@ -411,13 +400,16 @@
 
 
     
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <!--Scripts Personalizados -->
 <script>
     // 💡 Definimos una variable global *solo* para el ID del usuario logueado
     var logged_in_user_id = <?= json_encode($loggedInUserId_php) ?>;
 </script>
+
+<!-- JS para el Modal de Imagen -->
+<script src="./Frontend/assets/js/imageModal.js"></script>
 
 <!--Scripts de Acciones normales (cerrar sesion, buscar) -->
 <script src="./Frontend/assets/js/actionNormal.js"></script>
@@ -440,4 +432,5 @@
 
 <!-- Para manejar los seguimientos -->
 <script src="./Frontend/assets/js/seguimientos.js"></script>
+
     

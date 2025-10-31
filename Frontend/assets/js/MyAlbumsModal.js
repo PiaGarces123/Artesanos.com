@@ -327,8 +327,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 imagesModalContainer.querySelectorAll('img[data-action="view-single-image"]').forEach(img => {
                     img.addEventListener('click', (e) => {
                         const imgId = e.currentTarget.dataset.imageId;
-                        console.log(`TODO: Abrir modal de vista única para la imagen ${imgId}`);
-                        // Aquí llamarías a: openSingleImageView(imgId);
+                        // 1. Obtener la instancia del modal actual (el de la lista de imágenes)
+                        const currentModalEl = document.getElementById('imagesAlbumModal');
+                        if (!currentModalEl) return;
+                        
+                        const currentModalInstance = bootstrap.Modal.getInstance(currentModalEl);
+                        if (!currentModalInstance) return;
+
+                        // 2. Adjuntar un listener "una-sola-vez" para cuando se oculte
+                        currentModalEl.addEventListener('hidden.bs.modal', () => {
+                            // 3. Ahora que el modal 1 está cerrado, abrimos el modal 2
+                            if (typeof openImageModal === 'function') {
+                                openImageModal(imgId);
+                            } else {
+                                console.error('La función openImageModal no está definida.');
+                            }
+                        }, { once: true }); // {once: true} es clave: se ejecuta 1 vez y se borra
+
+                        // 4. Mandar a ocultar el modal 1 (esto dispara el evento)
+                        currentModalInstance.hide();
                     });
                 });
 
