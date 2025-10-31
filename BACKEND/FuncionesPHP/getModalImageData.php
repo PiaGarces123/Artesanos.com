@@ -4,6 +4,7 @@ require_once "../Clases/User.php";
 require_once "../Clases/Album.php";
 require_once "../Clases/Like.php";
 require_once "../Clases/Comment.php";
+require_once "../Clases/Follow.php";
 require_once "../conexion.php"; 
 
 session_start();
@@ -45,7 +46,18 @@ try {
     // 5. Obtener Comentarios (Usando la nueva función que crearás)
     $comments = Comment::getByImagenConAvatar($conn, $imageId);
 
-    // 6. Construir y devolver el JSON
+    // 6. Verificar propiedad
+    $isMyImage = ($idUsuarioLogueado == $idDueño);
+
+    // 7. Obtener Estado de Seguimiento
+    $followStatus = null;
+    if ($idDueño != $idUsuarioLogueado) {
+        // (Asegúrate de incluir Follow.php)
+        require_once "../Clases/Follow.php";
+        $followStatus = Follow::estado($conn, $idUsuarioLogueado, $idDueño);
+    }
+
+    // 8. Construir y devolver el JSON
     echo json_encode([
         "status" => "success",
         
@@ -60,9 +72,13 @@ try {
         // Info de Likes
         "likeCount" => $likeCount,
         "hasLiked" => $hasLiked, // boolean
+        "followStatus" => $followStatus, // <-- AÑADIDO: '1', '0' o null
         
         // Info de Comentarios
-        "comments" => $comments // array
+        "comments" => $comments, // array
+        
+        // Propiedad
+        "isMyImage" => $isMyImage // boolean
     ]);
 
 } catch (Exception $e) {

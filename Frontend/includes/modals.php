@@ -156,28 +156,8 @@
             </div>
         </div>
     </div>
+
     
-    <!-- Modal para preguntar si desea o no eleminar un album -->
-        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content p-3 rounded-4 shadow-lg">
-                    
-                    <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title text-danger fw-bold" id="confirmDeleteLabel">⚠️ Confirmar Eliminación</h5>
-                    </div>
-                    
-                    <div class="modal-body text-center pt-2 pb-3">
-                        <p id="deleteMessage">¿Estás seguro de que deseas ELIMINAR?</p>
-                        <p class="small text-muted mb-0">Esta acción no se puede deshacer.</p>
-                    </div>
-                    
-                    <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     <!-- ---------------------- FAVORITOS ------------------------ -->
     <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
@@ -247,6 +227,27 @@
         </div>
     </div>
 
+    <!-- Modal para preguntar si desea o no eliminar -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content p-3 rounded-4 shadow-lg">
+                    
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title text-danger fw-bold" id="confirmDeleteLabel">⚠️ Confirmar Eliminación</h5>
+                    </div>
+                    
+                    <div class="modal-body text-center pt-2 pb-3">
+                        <p id="deleteMessage">¿Estás seguro de que deseas ELIMINAR?</p>
+                        <p class="small text-muted mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 <!-----------------  MODAL DE LOGIN ----------------->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -432,5 +433,6 @@
 
 <!-- Para manejar los seguimientos -->
 <script src="./Frontend/assets/js/seguimientos.js"></script>
+
 
     

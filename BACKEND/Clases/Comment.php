@@ -82,5 +82,19 @@ class Comment {
         }
         return $comentarios;
     }
+
+    /**
+     * 🔹 Obtiene el ID del autor de un comentario.
+     */
+    public static function getCommentOwner($conn, $idComentario) {
+        $idComentario = (int)$idComentario;
+        $sql = "SELECT C_idUser FROM comments WHERE C_id = $idComentario LIMIT 1";
+        $resultado = mysqli_query($conn, $sql);
+        
+        if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
+            return (int)$fila['C_idUser'];
+        }
+        return null;
+    }
 }
 ?>
