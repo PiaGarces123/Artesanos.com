@@ -56,13 +56,14 @@
         
         <!-- Masonry -->
         <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-        
-        <!-- Script principal -->
-        <script src="./Frontend/assets/js/actionNormal.js"></script>
 
-        
+        <!-- Módulos del sistema (en orden) -->
+        <script src="./Frontend/assets/js/feed.js"></script>           <!-- 1. Feed + Masonry -->
+        <script src="./Frontend/assets/js/busqueda.js"></script>       <!-- 2. Búsqueda -->
+        <script src="./Frontend/assets/js/interaccionBusqueda.js"></script>   <!-- 3. Orquestador -->
     </body>
 </html>
+
 
 
 
