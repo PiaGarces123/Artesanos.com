@@ -558,12 +558,11 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 <!-- EL flactpickr lo ocmento porque me esta mostrando algo en la pantalla (REVISAR MOTIVO) -->
 <!-- Para Fecha de Nacimiento -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<<<<<<< HEAD
+
 
 <!-- Masonry (para búsqueda de imágenes) -->
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-=======
->>>>>>> d94ed99a1af1c445cda8fd207a8a216e3b5f80ca
+
 
 <script>
     // Variable global JS que indica si el usuario inició sesión
