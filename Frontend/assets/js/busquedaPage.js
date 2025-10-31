@@ -34,17 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // FUNCIONES PRINCIPALES
     // =====================================================
     
-    // Función auxiliar para corregir la ruta de la imagen si no empieza por '/'
+    // Función para corregir la ruta relativa a la ubicación de busquedaPage.php
     const corregirRutaImagen = (ruta) => {
         if (!ruta) return '';
-        // 1. Quitar cualquier barra inicial (./ o ../) si existen.
-        let rutaLimpia = ruta.replace(/^(\.\/|\.\.\/)+/, ''); 
-        
-        // 2. Asegurar que inicie con una sola barra '/' (ruta absoluta desde la raíz)
-        if (rutaLimpia.substring(0, 1) !== '/') {
-            rutaLimpia = '/' + rutaLimpia;
-        }
-        return rutaLimpia;
+        // Quitar './' inicial si existe
+        let rutaLimpia = ruta.replace(/^\.\/+/, '');
+        // Convertir en ruta absoluta desde la raíz del servidor
+        return '/' + rutaLimpia; 
     };
 
     // -----------------------------------------------------
@@ -124,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             msnry = null;
         }
         
-        container.innerHTML = '<h2>Resultados de Perfiles</h2><div class="row">';
+        container.innerHTML = '<h4>Resultados de Perfiles</h4><div class="row">';
         
         profiles.forEach(profile => {
              // Ejemplo de tarjeta de perfil
@@ -133,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card p-3 text-center">
                         <img src="${profile.profileImage || './Frontend/assets/images/appImages/default.jpg'}" class="rounded-circle mx-auto" style="width: 80px; height: 80px;">
                         <h5 class="mt-2">@${profile.username}</h5>
-                        <p>${profile.name || 'Sin nombre'}</p>
+                        <p>${profile.fullName || 'Sin nombre'}</p>
                         <a href="./profile.php?user=${profile.username}" class="btn btn-primary btn-sm">Ver Perfil</a>
                     </div>
                 </div>
