@@ -64,10 +64,15 @@
                 </button>
             </div>
             
+            <?php
+                // Determinar el estado activo. Si $searchType no existe
+                // (porque no estamos en busqueda.php), 'perfil' es el default.
+                $perfilActive = (!isset($searchType) || $searchType === 'perfil') ? 'active' : '';
+                $imagenActive = (isset($searchType) && $searchType === 'imagen') ? 'active' : '';
+            ?>
             <div class="buscarPor d-flex gap-2 me-4">
-                <button class="buscarPor-btn btn btn-outline-primary btn-sm active" data-buscar-por="perfil">👤 Perfil</button>
-                <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="imagen">🔍 Imagen</button>
-                <!-- <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="ambos">✨ Ambos</button> -->
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm <?= $perfilActive ?>" data-buscar-por="perfil">👤 Perfil</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm <?= $imagenActive ?>" data-buscar-por="imagen">🔍 Imagen</button>
             </div>
         </div>
 
@@ -150,8 +155,8 @@
             
             <h6 class="small text-uppercase fw-bold mb-2">Filtrar por:</h6>
             <div class="buscarPor d-flex gap-2 justify-content-start">
-                <button class="buscarPor-btn btn btn-outline-primary btn-sm active" data-buscar-por="perfil">👤 Perfil</button>
-                <button class="buscarPor-btn btn btn-outline-primary btn-sm" data-buscar-por="imagen">🔍 Imagen</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm <?= $perfilActive ?>" data-buscar-por="perfil">👤 Perfil</button>
+                <button class="buscarPor-btn btn btn-outline-primary btn-sm <?= $imagenActive ?>" data-buscar-por="imagen">🔍 Imagen</button>
             </div>
         </div>
         
@@ -188,3 +193,6 @@
         </div>
     </div>
 </div>
+
+<!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
+<script src="./Frontend/assets/js/headerSearch.js"></script>

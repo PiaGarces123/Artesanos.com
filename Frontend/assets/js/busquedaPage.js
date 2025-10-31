@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try{
             const formData = new FormData();
             formData.append('query', searchQuery);
-            formData.append('type', searchType); // 'perfil' o 'imagen'
+            formData.append('searchType', searchType); // 'perfil' o 'imagen'
             
             // Petición al backend que devuelve los resultados de la búsqueda
             // (Asegúrate de que este archivo PHP exista y maneje los parámetros)
@@ -73,9 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                 } else {
                     // Decide cómo mostrar los resultados
-                    if (searchType === 'perfil') {
+                    if (data.searchType === 'perfil') {
                         mostrarPerfiles(data.results, resultsContainer);
-                    } else if (searchType === 'imagen') {
+                    } else if (data.searchType === 'imagen') {
                         mostrarImagenes(data.results, resultsContainer);
                     } else {
                         // Por defecto, muestra como imágenes si no es un tipo conocido
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <img src="${profile.profileImage || './Frontend/assets/images/appImages/default.jpg'}" class="rounded-circle mx-auto" style="width: 80px; height: 80px;">
                         <h5 class="mt-2">@${profile.username}</h5>
                         <p>${profile.fullName || 'Sin nombre'}</p>
-                        <a href="./profile.php?user=${profile.username}" class="btn btn-primary btn-sm">Ver Perfil</a>
+                        <a href="./profile.php?user_id=${profile.id}" class="btn btn-primary btn-sm">Ver Perfil</a>
                     </div>
                 </div>
              `;
@@ -135,67 +135,91 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------------------------------------
     //--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY (Adaptado del original)
     // -----------------------------------------------------
-//--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY
-function mostrarImagenes(images, container) {
-    console.log('📸 Total de imágenes recibidas:', images.length);
+    //--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY (MODIFICADO PARA MODAL)
+    function mostrarImagenes(images, container) {
+        console.log('📸 Total de imágenes recibidas:', images.length);
 
-    // Destruir Masonry anterior si existe
-    if(msnry){
-        msnry.destroy();
-        msnry = null;
-    }
-
-    // Limpiar contenedor
-    container.innerHTML = '';
-
-    // Crear elementos de imagen
-    images.forEach((img) => {
-        const cardWrapper = document.createElement('div');
-        cardWrapper.classList.add('feed-grid-item');
-
-        const badge = img.visibility === 1 
-            ? `<div class="feed-img-privacy"><i class="uil uil-lock"></i></div>` 
-            : '';
-
-        // Altura aleatoria tipo "Pinterest"
-        let randHeight;
-        if(window.innerWidth <= 767) {
-            randHeight = Math.floor(Math.random() * (260 - 200 + 1)) + 200;
-        } else if(window.innerWidth <= 1200) {
-            randHeight = Math.floor(Math.random() * (340 - 240 + 1)) + 240;
-        } else {
-            randHeight = Math.floor(Math.random() * (400 - 250 + 1)) + 250;
+        // Destruir Masonry anterior si existe
+        if(msnry){
+            msnry.destroy();
+            msnry = null;
         }
 
-        // Construir tarjeta
-        cardWrapper.innerHTML = `
-            <div class="feed-img-card" style="height:${randHeight}px;">
-                <a href="./image.php?id=${img.id}" class="text-decoration-none d-block position-relative h-100">
+        // Limpiar contenedor
+        container.innerHTML = '';
+
+        // Crear elementos de imagen
+        images.forEach((img) => {
+            const cardWrapper = document.createElement('div');
+            cardWrapper.classList.add('feed-grid-item');
+
+            const badge = img.visibility === 1 
+                ? `<div class="feed-img-privacy"><i class="uil uil-lock"></i></div>` 
+                : '';
+
+            // Altura aleatoria tipo "Pinterest"
+            let randHeight;
+            if(window.innerWidth <= 767) {
+                randHeight = Math.floor(Math.random() * (260 - 200 + 1)) + 200;
+            } else if(window.innerWidth <= 1200) {
+                randHeight = Math.floor(Math.random() * (340 - 240 + 1)) + 240;
+            } else {
+                randHeight = Math.floor(Math.random() * (400 - 250 + 1)) + 250;
+            }
+
+            // --- ¡CAMBIO AQUÍ! ---
+            // 1. Eliminamos la etiqueta <a>
+            // 2. Añadimos 'data-action' y 'data-image-id' al div principal
+            cardWrapper.innerHTML = `
+                <div class="feed-img-card" 
+                    style="height:${randHeight}px; cursor: pointer;" 
+                    data-action="view-single-image" 
+                    data-image-id="${img.id}">
+                    
                     ${badge}
                     <img src="${img.imageUrl}" 
-                         alt="${img.title || 'Imagen'}" 
-                         loading="lazy"
-                         style="height:100%; width:100%; object-fit:cover;">
+                        alt="${img.title || 'Imagen'}" 
+                        loading="lazy"
+                        style="height:100%; width:100%; object-fit:cover;">
                     <div class="feed-img-overlay">
                         <div class="feed-img-header">
                             <img src="${img.profileImage || './Frontend/assets/images/appImages/default.jpg'}" 
-                                 alt="${img.username}">
+                                alt="${img.username}">
                             <p>@${img.username}</p>
                         </div>
                     </div>
                     <div class="feed-img-title">${img.title || ''}</div>
-                </a>
-            </div>
-        `;
+                </div>
+            `;
 
-        container.appendChild(cardWrapper);
-    });
+            container.appendChild(cardWrapper);
+        });
 
-    // Inicializar Masonry
-    setTimeout(() => {
-        initMasonry(container);
-    }, 100);
-}
+        // --- ¡CAMBIO AÑADIDO! ---
+        // Adjuntamos los listeners a las tarjetas que acabamos de crear
+        container.querySelectorAll('div[data-action="view-single-image"]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Evitamos que el clic se dispare si se hace clic en un botón dentro de la card (si añades uno en el futuro)
+                if (e.target.closest('button')) return; 
+                
+                const imgId = e.currentTarget.dataset.imageId;
+                
+                // Verificamos que la función exista (que imageModal.js esté cargado)
+                if (typeof openImageModal === 'function') {
+                    openImageModal(imgId);
+                } else {
+                    console.error('La función openImageModal no está definida. ¿Cargaste imageModal.js?');
+                }
+            });
+        });
+        // --- FIN DEL CAMBIO ---
+
+
+        // Inicializar Masonry
+        setTimeout(() => {
+            initMasonry(container);
+        }, 100);
+    }
 
     
     // -----------------------------------------------------

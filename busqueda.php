@@ -100,12 +100,8 @@ if (!in_array($searchType, ['perfil', 'imagen'])) {
     <!-- Sistema de búsqueda -->
     <script src="./Frontend/assets/js/busquedaPage.js"></script>
     
-    <!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
-    <script src="./Frontend/assets/js/headerSearch.js"></script>
+    
 
-    <!-- Orquestador general (logout) -->
-    <script src="./Frontend/assets/js/actionNormal.js"></script>
-
-
+    
 </body>
 </html>

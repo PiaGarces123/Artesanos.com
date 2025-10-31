@@ -57,8 +57,7 @@
         <!-- Masonry (para el feed de imágenes) -->
         <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
-        <!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
-        <script src="./Frontend/assets/js/headerSearch.js"></script>
+        
 
         <!-- Sistema de feed (carga imágenes con Masonry) -->
         <script src="./Frontend/assets/js/feedLoader.js"></script>

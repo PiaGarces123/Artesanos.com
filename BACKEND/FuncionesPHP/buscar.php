@@ -59,7 +59,6 @@
                     WHERE (U_nameUser LIKE '%$query%' 
                         OR U_name LIKE '%$query%' 
                         OR U_lastName LIKE '%$query%')
-                    AND U_status = 1
                     ORDER BY U_nameUser ASC
                     LIMIT 20";
             
@@ -98,7 +97,6 @@
                         FROM images i
                         INNER JOIN users u ON i.I_idUser = u.U_id
                         WHERE i.I_title LIKE '%$query%'
-
                             AND i.I_revisionStatus = 0
                             AND i.I_visibility = 0
                             AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
@@ -111,28 +109,28 @@
                 $currentUserId = (int)$currentUserId;
 
                 $sql = "SELECT i.I_id, i.I_title, i.I_ruta, i.I_publicationDate, i.I_visibility,
-                            u.U_id, u.U_nameUser, u.U_name, u.U_lastName
-                        FROM images i
-                        INNER JOIN users u ON i.I_idUser = u.U_id
-                        WHERE i.I_title LIKE '%$query%'
-                            AND i.I_revisionStatus = 0
-                            AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
-                            AND (
-                                i.I_visibility = 0
-                                OR i.I_idUser = $currentUserId
-                                OR (
-                                    i.I_visibility = 1
-                                    AND EXISTS (
-                                        SELECT 1 FROM follow f
-                                        WHERE f.F_idFollower = $currentUserId
-                                        AND f.F_idFollowed = u.U_id
-                                        AND f.F_status = 1
-                                    )
-                                )
-                                
+                    u.U_id, u.U_nameUser, u.U_name, u.U_lastName
+                FROM images i
+                INNER JOIN users u ON i.I_idUser = u.U_id
+                WHERE i.I_title LIKE '%$query%'
+                    AND i.I_revisionStatus = 0
+                    AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
+                    AND (
+                        i.I_visibility = 0
+                        OR i.I_idUser = $currentUserId
+                        OR (
+                            i.I_visibility = 1
+                            AND EXISTS (
+                                SELECT 1 FROM follow f
+                                WHERE f.F_idFollower = $currentUserId
+                                AND f.F_idFollowed = u.U_id
+                                AND f.F_status = 1
                             )
-                        ORDER BY i.I_publicationDate DESC
-                        LIMIT 30";
+                        )
+                        
+                    )
+                ORDER BY i.I_publicationDate DESC
+                LIMIT 30";
             }
             
             // Ejecuta la consulta SQL

@@ -596,8 +596,6 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     var isMyProfile = <?= $isMyProfile ? 'true' : 'false' ?>;
 </script>
 
-<!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
-<script src="./Frontend/assets/js/headerSearch.js"></script>
 
 <!-- Orquestador general (logout, etc.) -->
 <script src="./Frontend/assets/js/actionNormal.js"></script>
