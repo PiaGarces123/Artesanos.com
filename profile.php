@@ -528,11 +528,39 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     <?php 
         require_once("./Frontend/includes/modals.php");
     ?>
-</body>
+
+    <!-- DESPUÉS DE LA SECCIÓN DE ÁLBUMES, ANTES DE CERRAR </main> -->
+
+        <!-- SECCIÓN DE ÁLBUMES -->
+        <section class="albums-section" id="myAlbumsProfileSection">
+            <!-- Los álbumes se cargan aquí dinámicamente -->
+        </section>
+        <div class="error" id="errorMyAlbumsProfile"></div>
+
+        <!-- ✅ NUEVO: Contenedor para resultados de búsqueda -->
+        <section class="search-results-section d-none" id="searchResultsSection">
+            <div id="searchResultsContainer" class="feed-grid">
+                <!-- Los resultados de búsqueda se mostrarán aquí -->
+            </div>
+        </section>
+
+    </main>
+
+
+
+
+
+
+
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <!-- Para Fecha de Nacimiento -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+<!-- Masonry (para búsqueda de imágenes) -->
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
 
 <script>
     // Variable global JS que indica si el usuario inició sesión
@@ -544,9 +572,13 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     var isMyProfile = <?= $isMyProfile ? 'true' : 'false' ?>;
 </script>
 
+<!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
+<script src="./Frontend/assets/js/headerSearch.js"></script>
 
+<!-- Orquestador general (logout, etc.) -->
+<script src="./Frontend/assets/js/actionNormal.js"></script>
 
-<!-- Para trabajar los albumes en la pagina profile.php -->
+ <!-- Para trabajar los albumes en la pagina profile.php -->
 <script src="./Frontend/assets/js/myAlbumsProfile.js"></script>
 
 <!-- Para el modal de editar perfil -->
@@ -563,4 +595,7 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
 <!-- Para manejar el seguimiento en los botones del perfil-->
 <script src="./Frontend/assets/js/followActions.js"></script>
+
+
+</body>
 </html>

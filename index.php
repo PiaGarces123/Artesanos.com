@@ -43,6 +43,7 @@
             // Variable global JS que indica si el usuario inició sesión
             window.isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
         </script>
+        
         <!-- MODALES -->
         <?php
             include("./Frontend/includes/modals.php");
@@ -53,10 +54,16 @@
     <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         
-        <!-- Masonry -->
+        <!-- Masonry (para el feed de imágenes) -->
         <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-        
-        <!-- Script principal -->
+
+        <!-- Sistema de búsqueda desde header (redirecciona a busqueda.php) -->
+        <script src="./Frontend/assets/js/headerSearch.js"></script>
+
+        <!-- Sistema de feed (carga imágenes con Masonry) -->
+        <script src="./Frontend/assets/js/feedLoader.js"></script>
+
+        <!-- Orquestador general (logout) -->
         <script src="./Frontend/assets/js/actionNormal.js"></script>
 
         
