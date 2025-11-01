@@ -28,14 +28,14 @@
         </a>
     </nav>
     
-    <div class="albums-list px-3 mt-auto pt-3 border-top">
+    <!-- <div class="albums-list px-3 mt-auto pt-3 border-top">
         <div class="albums-title d-flex justify-content-between mb-2 small text-uppercase fw-bold">
             Álbumes recientes
             <span class="text-secondary small" id="albumsCount">0</span>
         </div>
         <div id="sidebarAlbums">
             </div>
-    </div>
+    </div> -->
 </aside>
 
 <header class="header navbar navbar-expand-lg navbar-light">
@@ -180,14 +180,14 @@
             </a>
         </nav>
         
-        <div class="albums-list p-3 mt-auto">
+        <!-- <div class="albums-list p-3 mt-auto">
             <div class="albums-title d-flex justify-content-between mb-2 small text-uppercase fw-bold">
                 Álbumes recientes
                 <span class="text-secondary small" id="albumsCount">0</span>
             </div>
             <div id="sidebarAlbums">
                 </div>
-        </div>
+        </div> -->
     </div>
 </div>
 

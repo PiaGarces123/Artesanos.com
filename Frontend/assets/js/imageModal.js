@@ -17,6 +17,22 @@ if (imageModalEl) {
     imageModalInstance = new bootstrap.Modal(imageModalEl);
 }
 
+/**
+ * Formatea una fecha MySQL (YYYY-MM-DD HH:MM:SS) a un formato simple (DD/MM/YYYY).
+ */
+function formatSimpleDate(mysqlDate) {
+    if (!mysqlDate) return '';
+    try {
+        const date = new Date(mysqlDate);
+        // Opciones para un formato corto (ej: 31/10/2025)
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('es-ES', options); // 'es-ES' nos da el formato DD/MM/YYYY
+    } catch (e) {
+        console.error('Error al formatear la fecha:', e);
+        return ''; // Devuelve vacío si la fecha es inválida
+    }
+}
+
 // =========================================================================
 // 2. LÓGICA DE APERTURA Y CARGA DE DATOS
 // =========================================================================
@@ -110,6 +126,9 @@ function populateCommentList(comments, isMyImage) {
                 `;
             }
 
+            // --- Formateamos la fecha ---
+            const formattedDate = formatSimpleDate(comment.C_publicationDate);
+
             commentsHTML += `
                 <div class="comment">
                     <div class="comment-user d-flex justify-content-between align-items-center">
@@ -118,6 +137,7 @@ function populateCommentList(comments, isMyImage) {
                                 <img src="${comment.U_profilePic}" alt="Avatar de ${comment.U_nameUser}">
                             </div>
                             <div class="comment-username">${comment.U_nameUser}</div>
+                            <div class="comment-date text-muted small ms-2">${formattedDate}</div>
                         </div>
                         ${deleteButtonHTML}
                     </div>
