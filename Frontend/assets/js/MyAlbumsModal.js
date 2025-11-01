@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (input) input.classList.add("errorInput");
     };
  
+
     // =========================================================================
     // 2. INSTANCIAS DE MODALES
     // =========================================================================
@@ -33,6 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const imagesModalTitleEl = document.getElementById('imagesAlbumLabel');
     const imagesModalContainer = document.getElementById('imagesAlbumContainer');
     const imagesModalErrorDiv = document.getElementById('errorImagesAlbum');
+
+    // --- ¡NUEVO! Instancia del modal de edición ---
+    const editAlbumModalEl = document.getElementById('editAlbumModal');
+    const editAlbumModal = editAlbumModalEl ? (bootstrap.Modal.getInstance(editAlbumModalEl) || new bootstrap.Modal(editAlbumModalEl)) : null;
 
 
     // =========================================================================
@@ -142,6 +147,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // --- ¡NUEVA! Función para guardar la edición del álbum ---
+    const handleEditAlbum = async (form) => {
+        const errorDiv = document.getElementById('errorEditAlbum');
+        const saveBtn = document.getElementById('saveEditAlbumButton');
+        limpiarErrores();
+        saveBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const newTitle = formData.get('editAlbumTitle');
+
+            // Validación
+            const regex = /^[a-zA-Z0-9._+()ÁÉÍÓÚáéíóúÑñ\s-]{1,30}$/;
+            if (!newTitle || !regex.test(newTitle)) {
+                mostrarError(errorDiv, null, "Título de álbum inválido (1-30 caracteres).");
+                saveBtn.disabled = false;
+                return;
+            }
+
+            const res = await fetch('./BACKEND/FuncionesPHP/editarAlbum.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                editAlbumModal.hide();
+                showStaticNotificationModal('success', data.message, () => {
+                    injectSelectAlbumList(); // Recargar la lista de álbumes
+                });
+            } else {
+                mostrarError(errorDiv, null, data.message);
+            }
+
+        } catch (error) {
+            console.error('Error al editar álbum:', error);
+            mostrarError(errorDiv, null, 'Error de conexión.');
+        } finally {
+            saveBtn.disabled = false;
+        }
+    };
+
     // =========================================================================
     // 4. FUNCIÓN PARA INYECTAR IMÁGENES
     // =========================================================================
@@ -182,8 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     images.forEach(image => {
                         const dropdownId = `imageMenu-${image.I_id}`;
                         let menuHTML = '';
-                        // Como este modal siempre es "mío", mostramos el menú siempre a no ser que sea de sistema
-                        if (image.isSystemAlbum != 1) {
+                        
+                        // Ocultar menú para imágenes en álbumes de sistema
+                        const isSystemImage = (image.A_isSystemAlbum == 1); 
+                        
+                        if (!isSystemImage) { // Solo mostrar menú si NO es de sistema
                             menuHTML = `
                                 <div class="dropdown position-absolute top-0 end-0 m-1" style="z-index: 10;">
                                     <button class="btn btn-sm btn-light py-0 px-1 rounded-circle" type="button" 
@@ -211,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 </div>
                             `;
                         }
-                        // Tarjeta de imagen
+                        
                         imagesHTML += `
                             <div class="col">
                                 <div class="profile-image-card position-relative"> 
@@ -225,19 +275,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                         `;
                     });
-                    imagesHTML += `</div>`; // Cierre .row
+                    imagesHTML += `</div>`;
                 }
 
-                // 5. Renderizar y adjuntar listeners
                 imagesModalContainer.innerHTML = imagesHTML;
 
                 // --- A. Listener para Establecer Portada ---
                 imagesModalContainer.querySelectorAll('a[data-action="set-cover"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault(); e.stopPropagation();
-                        const imgId = e.currentTarget.dataset.imageId;
-                        const albId = e.currentTarget.dataset.albumId;
-                        setCoverImage(imgId, albId);
+                        setCoverImage(e.currentTarget.dataset.imageId, e.currentTarget.dataset.albumId);
                     });
                 });
 
@@ -245,12 +292,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 imagesModalContainer.querySelectorAll('a[data-action="set-profile"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault(); e.stopPropagation();
-                        const imgId = e.currentTarget.dataset.imageId;
-                        setProfileImage(imgId);
+                        setProfileImage(e.currentTarget.dataset.imageId);
                     });
                 });
 
-                // --- C. Listener para Borrar Imagen (Usa tu lógica de modal) ---
+                // --- C. Listener para Borrar Imagen ---
                 imagesModalContainer.querySelectorAll('a[data-action="delete-image"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault(); e.stopPropagation();
@@ -289,8 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         currentModalEl.addEventListener('hidden.bs.modal', () => {
                             if (typeof openImageModal === 'function') {
                                 openImageModal(imgId);
-                            } else {
-                                console.error('La función openImageModal no está definida.');
                             }
                         }, { once: true }); 
                         currentModalInstance.hide();
@@ -307,9 +351,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modalInstance.show(); 
     };
 
-
     // =========================================================================
-    // 5. FUNCIÓN INICIAL (MODIFICADA CON FILTROS)
+    // 5. FUNCIÓN INICIAL (MODIFICADA CON FILTROS Y EDICIÓN)
     // =========================================================================
     
     function injectSelectAlbumList() {
@@ -322,7 +365,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         async function fetchAlbums() {
             
-            // --- Leer el filtro seleccionado del modal ---
             let filterValue = 'all'; 
             const checkedFilter = document.querySelector('#modalAlbumFilters input[name="albumFilterModal"]:checked');
             if (checkedFilter) {
@@ -331,7 +373,6 @@ document.addEventListener("DOMContentLoaded", () => {
             
             let formData = new FormData();
             formData.append('filterType', filterValue);
-            // (No enviamos user_id, el backend usará la sesión)
 
             try {
                 const response = await fetch(`./BACKEND/FuncionesPHP/obtenerAlbums.php`, {
@@ -340,11 +381,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 if (!response.ok) throw new Error('Fallo al obtener los álbumes.');
-
                 const albums = await response.json();
                 
                 let albumsHTML = '';
-                
                 if (albums.length === 0) {
                     albumsHTML = `<div class="alert alert-info text-center mt-3">No tienes álbumes existentes.</div>`;
                 } else {
@@ -377,13 +416,21 @@ document.addEventListener("DOMContentLoaded", () => {
                                        style="border: none; cursor: pointer;">
                                     
                                     <div class="dropdown position-absolute top-0 end-0 m-1" style='z-index:100;'>
-                                        <button class="btn btn-sm p-0 border-0" type="button" 
+                                        <button class="btn btn-sm btn-light p-0 px-1 rounded-circle border-0" type="button" 
                                                 id="${dropdownId}" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="uil uil-ellipsis-h fs-5"></i>
+                                            <i class="uil uil-ellipsis-v fs-6"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="${dropdownId}">
                                             
                                             ${showDeleteOption ? `
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center" href="#" 
+                                                    data-album-id="${album.A_id}" 
+                                                    data-album-title="${album.A_title}" 
+                                                    data-action="edit-album">
+                                                    <i class="uil uil-edit me-2"></i> Editar Título
+                                                </a>
+                                            </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center text-danger" href="#" 
@@ -414,8 +461,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 container.innerHTML = albumsHTML;
 
-
-                // --- Listener de borrado de ÁLBUM (con mensaje) ---
+                // --- Listener de borrado de ÁLBUM ---
                 container.querySelectorAll('a[data-action="delete-album"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -441,6 +487,39 @@ document.addEventListener("DOMContentLoaded", () => {
                             }, { once: true }); 
                             
                             confirmDeleteModal.show();
+                        }
+                    });
+                });
+                
+                // --- ¡NUEVO! Listener para EDITAR ÁLBUM ---
+                container.querySelectorAll('a[data-action="edit-album"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); 
+                        
+                        if (!editAlbumModal) return;
+
+                        const albumId = e.currentTarget.dataset.albumId;
+                        const albumTitle = e.currentTarget.dataset.albumTitle;
+
+                        const form = document.getElementById('editAlbumForm');
+                        const titleInput = document.getElementById('editAlbumTitleInput');
+                        const idInput = document.getElementById('editAlbumIdInput');
+                        const saveBtn = document.getElementById('saveEditAlbumButton');
+
+                        if (form && titleInput && idInput && saveBtn) {
+                            titleInput.value = albumTitle;
+                            idInput.value = albumId;
+                            
+                            let newSaveBtn = saveBtn.cloneNode(true);
+                            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+                            newSaveBtn.addEventListener('click', (ev) => {
+                                ev.preventDefault();
+                                handleEditAlbum(form);
+                            }); 
+
+                            editAlbumModal.show();
                         }
                     });
                 });
@@ -478,7 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // =========================================================================
-    // 6. LLAMADA INICIAL (Se dispara al abrir el modal)
+    // 6. LLAMADA INICIAL Y LISTENERS DE FILTRO
     // =========================================================================
 
     if (myAlbumsModalEl) {

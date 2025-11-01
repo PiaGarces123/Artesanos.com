@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const imagesModalContainer = document.getElementById('imagesAlbumContainer');
     const imagesModalErrorDiv = document.getElementById('errorImagesAlbum');
 
+    const editAlbumModalEl = document.getElementById('editAlbumModal');
+    const editAlbumModal = editAlbumModalEl ? (bootstrap.Modal.getInstance(editAlbumModalEl) || new bootstrap.Modal(editAlbumModalEl)) : null;
 
     // =========================================================================
     // 3. FUNCIONES DE ACCIÓN (FETCH A LA BD)
@@ -138,6 +140,49 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error('Error al usar como perfil:', error);
             showStaticNotificationModal('error', 'Fallo de red al usar como perfil.', null);
+        }
+    };
+
+
+    // --- ¡NUEVA! Función para guardar la edición del álbum ---
+    const handleEditAlbum = async (form) => {
+        const errorDiv = document.getElementById('errorEditAlbum');
+        const saveBtn = document.getElementById('saveEditAlbumButton');
+        limpiarErrores();
+        saveBtn.disabled = true;
+
+        try {
+            const formData = new FormData(form);
+            const newTitle = formData.get('editAlbumTitle');
+
+            // Validación (misma regex que en 'publicarContenido.php')
+            const regex = /^[a-zA-Z0-9._+()ÁÉÍÓÚáéíóúÑñ\s-]{1,30}$/;
+            if (!newTitle || !regex.test(newTitle)) {
+                mostrarError(errorDiv, null, "Título de álbum inválido (1-30 caracteres).");
+                saveBtn.disabled = false;
+                return;
+            }
+
+            const res = await fetch('./BACKEND/FuncionesPHP/editarAlbum.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                editAlbumModal.hide();
+                showStaticNotificationModal('success', data.message, () => {
+                    injectSelectAlbumList(); // Recargar la lista de álbumes
+                });
+            } else {
+                mostrarError(errorDiv, null, data.message);
+            }
+
+        } catch (error) {
+            console.error('Error al editar álbum:', error);
+            mostrarError(errorDiv, null, 'Error de conexión.');
+        } finally {
+            saveBtn.disabled = false;
         }
     };
 
@@ -389,6 +434,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="${dropdownId}">
                                             
                                             ${showDeleteOption ? `
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center" href="#" 
+                                                    data-album-id="${album.A_id}" 
+                                                    data-album-title="${album.A_title}" 
+                                                    data-action="editAlbumProfile">
+                                                    <i class="uil uil-edit me-2"></i> Editar Título
+                                                </a>
+                                            </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center text-danger" href="#" 
@@ -422,6 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 container.innerHTML = albumsHTML;
 
+                // --- (Listener de borrado de ÁLBUM) ---
                 document.querySelectorAll('a[data-action="deleteAlbumProfile"]').forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -440,6 +494,43 @@ document.addEventListener("DOMContentLoaded", () => {
                             }, { once: true });
                             
                             confirmDeleteModal.show();
+                        }
+                    });
+                });
+
+                // --- ¡NUEVO! Listener para EDITAR ÁLBUM ---
+                document.querySelectorAll('a[data-action="editAlbumProfile"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // Evitar que el label reciba el clic
+                        
+                        if (!editAlbumModal) return;
+
+                        // 1. Obtener datos del álbum
+                        const albumId = e.currentTarget.dataset.albumId;
+                        const albumTitle = e.currentTarget.dataset.albumTitle;
+
+                        // 2. Poblar el modal de edición
+                        const form = document.getElementById('editAlbumForm');
+                        const titleInput = document.getElementById('editAlbumTitleInput');
+                        const idInput = document.getElementById('editAlbumIdInput');
+                        const saveBtn = document.getElementById('saveEditAlbumButton');
+
+                        if (form && titleInput && idInput && saveBtn) {
+                            titleInput.value = albumTitle;
+                            idInput.value = albumId;
+                            
+                            // 3. Limpiar listener viejo y adjuntar el nuevo
+                            let newSaveBtn = saveBtn.cloneNode(true);
+                            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+                            newSaveBtn.addEventListener('click', (ev) => {
+                                ev.preventDefault();
+                                handleEditAlbum(form);
+                            }); // Usamos { once: true }
+
+                            // 4. Mostrar el modal
+                            editAlbumModal.show();
                         }
                     });
                 });

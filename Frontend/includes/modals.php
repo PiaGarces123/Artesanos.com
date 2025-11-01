@@ -150,6 +150,40 @@
         </div>
     </div>
 
+    <!-- MODAL PARA EDITAR ALBUM (TITULO) -->
+    <div class="modal fade" id="editAlbumModal" tabindex="-1" aria-labelledby="editAlbumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="editAlbumModalLabel">Editar Título del Álbum</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <form id="editAlbumForm">
+                    <div class="modal-body">
+                        
+                        <input type="hidden" id="editAlbumIdInput" name="albumId">
+
+                        <div class="form-groupLogin mt-3 mb-2 position-relative">
+                            <label for="editAlbumTitleInput" class="form-label visually-hidden">Título del Álbum</label>
+                            <input type="text" class="form-style form-control" placeholder="Nuevo título del álbum" 
+                                name="editAlbumTitle" id="editAlbumTitleInput" required>
+                            <i class="input-icon uil uil-folder"></i>
+                        </div>
+                        
+                        <div class="error" id="errorEditAlbum"></div>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="saveEditAlbumButton">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL PARA VER FOTOS DE UN ALBUM -->
     <div class="modal fade" id="imagesAlbumModal" tabindex="-1" aria-labelledby="imagesAlbumLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
