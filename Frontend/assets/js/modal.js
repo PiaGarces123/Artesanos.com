@@ -164,8 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await res.json();
                     
                     if (data.status == "success") { 
-                        alert(`✅ Bienvenid @${data.user.username}`); 
-                        window.location.reload(); 
+                        showStaticNotificationModal('success', `Bienvenid @${data.user.username}`, () => window.location.reload());                         
                     }
                     else { 
                         mostrarError(errorPassLogin, null, data.message);
@@ -204,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await res.json();
                     
                     if (data.status==="success"){ 
-                        alert("✅ Registro exitoso"); 
+                        showStaticNotificationModal('success', `Registro exitoso`,null);
                         limpiarErrores();
                         
                         // Cambiar a la pestaña de Login de Bootstrap programáticamente

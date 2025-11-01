@@ -62,8 +62,7 @@
         <!-- Sistema de feed (carga imágenes con Masonry) -->
         <script src="./Frontend/assets/js/feedLoader.js"></script>
 
-        <!-- Orquestador general (logout) -->
-        <script src="./Frontend/assets/js/actionNormal.js"></script>
+       
 
         
     </body>

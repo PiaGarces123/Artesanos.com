@@ -420,6 +420,35 @@
         </div>
     </div>
 
+    <!-- 
+    MODAL PARA CONFIRMAR CERRAR SESIÓN 
+    (IDs únicos: confirmLogoutModal, confirmLogoutButton, etc.)
+    -->
+    <div class="modal fade" id="confirmLogoutModal" tabindex="-1" aria-labelledby="confirmLogoutLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content p-3 rounded-4 shadow-lg">
+                
+                <div class="modal-header border-0 pb-0">
+                    <!-- Título (usamos un ícono de "salir") -->
+                    <h5 class="modal-title text-primary fw-bold" id="confirmLogoutLabel">
+                        <i class="uil uil-sign-out-alt me-1"></i> Cerrar Sesión
+                    </h5>
+                </div>
+                
+                <div class="modal-body text-center pt-2 pb-3">
+                    <!-- Mensaje (ID único) -->
+                    <p id="logoutMessage">¿Estás seguro de que deseas cerrar sesión?</p>
+                </div>
+                
+                <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <!-- Botón de confirmación (ID único y clase 'btn-primary') -->
+                    <button type="button" class="btn btn-primary" id="confirmLogoutButton">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

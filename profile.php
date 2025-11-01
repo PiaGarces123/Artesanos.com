@@ -596,10 +596,6 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
     var isMyProfile = <?= $isMyProfile ? 'true' : 'false' ?>;
 </script>
 
-
-<!-- Orquestador general (logout, etc.) -->
-<script src="./Frontend/assets/js/actionNormal.js"></script>
-
  <!-- Para trabajar los albumes en la pagina profile.php -->
 <script src="./Frontend/assets/js/myAlbumsProfile.js"></script>
 

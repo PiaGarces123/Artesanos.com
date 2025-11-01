@@ -11,42 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (input) input.classList.add("errorInput");
     };
  
-    const showStaticNotificationModal = (type, message, acceptCallback = null) => {
-        // ... (Tu código de showStaticNotificationModal sin cambios) ...
-        let modalEl = document.getElementById('staticNotificationModal');
-        let modalIcon = document.getElementById('notificationIconStatic');
-        let modalMessage = document.getElementById('notificationMessageStatic');
-        let acceptBtn = document.getElementById('notificationAcceptButton');
-        
-        if (!modalEl || !modalIcon || !modalMessage || !acceptBtn) return;
-
-        let modalContent = modalEl.querySelector('.modal-content');
-        modalContent.classList.remove('alert-success', 'alert-danger');
-        
-        if (type === 'success') {
-            modalIcon.innerHTML = '🎉';
-            modalContent.classList.add('alert-success');
-        } else {
-            modalIcon.innerHTML = '⚠️';
-            modalContent.classList.add('alert-danger');
-        }
-        
-        modalMessage.textContent = message;
-        
-        let newAcceptBtn = acceptBtn.cloneNode(true);
-        acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
-        
-        let finalAcceptBtn = document.getElementById('notificationAcceptButton');
-        let staticModalInstance = new bootstrap.Modal(modalEl);
-
-        finalAcceptBtn.addEventListener('click', () => {
-            if (acceptCallback) {
-                acceptCallback();
-            }
-            staticModalInstance.hide();
-        });
-        staticModalInstance.show();
-    };
 
 
     //Funcion para rechazar solicitud de seguimiento

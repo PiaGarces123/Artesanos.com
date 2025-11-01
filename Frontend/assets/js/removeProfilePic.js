@@ -7,50 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (input) input.classList.add("errorInput");
     };
 
-    const showStaticNotificationModal = (type, message, acceptCallback = null) => {
-        let modalEl = document.getElementById('staticNotificationModal');
-        let modalIcon = document.getElementById('notificationIconStatic');
-        let modalMessage = document.getElementById('notificationMessageStatic');
-        let acceptBtn = document.getElementById('notificationAcceptButton');
-        
-        if (!modalEl || !modalIcon || !modalMessage || !acceptBtn) return;
-
-        // Configurar estilos y contenido
-        let modalContent = modalEl.querySelector('.modal-content');
-        
-        // Limpiamos clases de estado
-        modalContent.classList.remove('alert-success', 'alert-danger');
-        
-        if (type === 'success') {
-            modalIcon.innerHTML = '🎉';
-            modalContent.classList.add('alert-success');
-        } else {
-            modalIcon.innerHTML = '⚠️';
-            modalContent.classList.add('alert-danger');
-        }
-        
-        modalMessage.textContent = message;
-        
-        // 💡 1. Limpiamos y recreamos el listener del botón Aceptar
-        // Clonar para eliminar listeners antiguos
-        let newAcceptBtn = acceptBtn.cloneNode(true);
-        acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
-        
-        let finalAcceptBtn = document.getElementById('notificationAcceptButton');
-        let staticModalInstance = new bootstrap.Modal(modalEl); // Creamos la instancia para mostrar
-
-        finalAcceptBtn.addEventListener('click', () => {
-            // 2. Ejecutar la acción de callback (redirección/recarga)
-            if (acceptCallback) {
-                acceptCallback();
-            }
-            // 3. Cerrar el modal (si la acción no fue una redirección que ya lo cerraría)
-            staticModalInstance.hide();
-        });
-
-        // Mostrar el modal
-        staticModalInstance.show();
-    };
 
     // Objeto Modal
     const confirmRemoveProfilePicModalEl = document.getElementById('confirmRemoveProfilePicModal');
