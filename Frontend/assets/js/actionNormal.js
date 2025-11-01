@@ -7,18 +7,22 @@
         let modalIcon = document.getElementById('notificationIconStatic');
         let modalMessage = document.getElementById('notificationMessageStatic');
         let acceptBtn = document.getElementById('notificationAcceptButton');
-        
-        if (!modalEl || !modalIcon || !modalMessage || !acceptBtn) return;
+        let staticNotificationModalLabel = document.getElementById('staticNotificationModalLabel');
+
+        if (!modalEl || !modalIcon || !modalMessage || !acceptBtn || !staticNotificationModalLabel) return;
 
         let modalContent = modalEl.querySelector('.modal-content');
         modalContent.classList.remove('alert-success', 'alert-danger');
+        staticNotificationModalLabel.classList.remove('text-primary');
         
         if (type === 'success') {
             modalIcon.innerHTML = '✅';
             modalContent.classList.add('alert-success');
+            staticNotificationModalLabel.classList.add('text-primary');
         } else {
             modalIcon.innerHTML = '⚠️';
             modalContent.classList.add('alert-danger');
+            staticNotificationModalLabel.classList.remove('text-primary');
         }
         
         modalMessage.textContent = message;

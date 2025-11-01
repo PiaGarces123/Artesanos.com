@@ -340,13 +340,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (albums.length === 0) {
                     albumsHTML =    `<div class="empty-albums">
                                         <i class="uil uil-folder-slash"></i>
-                                        <h5>No tienes álbumes todavía</h5>
-                                        <p class="mb-3">¡Crea tu primer álbum y comparte tus artesanías!</p>
-                                        <button class="btn btn-secondary" id="createFirstAlbum" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
-                                            <i class="uil uil-plus-circle me-1"></i>
-                                            <br> Crear Álbum
-                                        </button>
-                                    </div>`;
+                                        <h5>Sin álbumes todavía</h5>`;
+                                        if(isMyProfile){
+                                        albumsHTML += `<p class="mb-3">¡Crea tu primer álbum y comparte tus artesanías!</p>
+                                            <button class="btn btn-secondary" id="createFirstAlbum" data-bs-toggle="modal" data-bs-target="#createAlbumModal">
+                                                <i class="uil uil-plus-circle me-1"></i>
+                                                <br> Crear Álbum
+                                            </button>`;
+                                        }
+                                        albumsHTML += `</div>`;
+                                        
                 } else {
                     albumsHTML = `
                         <div class="albums-scroll-container" style="max-height: 1000px; overflow-y: auto;"> 
