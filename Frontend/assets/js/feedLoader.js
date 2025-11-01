@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // =====================================================
     // CARGA DEL FEED INICIAL
     // =====================================================
-    // Ejecuta la función principal al cargar la página
     cargarFeedInicial(); 
     
     // =====================================================
@@ -22,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     async function cargarFeedInicial(){
         if(!resultsContainer) return;
 
-        // Muestra un spinner (Cargando...) mientras carga el feed
         resultsContainer.innerHTML = `
             <div class="text-center mt-5 mb-5">
                 <div class="spinner-border text-primary"></div>
@@ -31,12 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         
         try{
-            // Petición al backend que devuelve las imágenes del feed
             const res = await fetch("./BACKEND/FuncionesPHP/obtenerFeed.php", {method: 'POST'});
             const data = await res.json();
             
             if(data.status === 'success'){
-                // Si no hay resultados, muestra mensaje
                 if(data.results.length === 0){
                     resultsContainer.innerHTML = `
                         <div class="text-center mt-5 text-secondary">
@@ -45,11 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `;
                 } else {
-                    // Si hay imágenes, las muestra con Masonry
                     mostrarImagenes(data.results, resultsContainer);
                 }
             } else {
-                // Error del backend
                 resultsContainer.innerHTML = `
                     <div class="alert alert-danger text-center mt-3">
                         <i class="uil uil-exclamation-triangle fs-3"></i>
@@ -58,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }
         } catch(err){
-            // Error de conexión o de red
             console.error(err);
             resultsContainer.innerHTML = `
                 <div class="alert alert-danger text-center mt-3">
@@ -70,21 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------------------------------------
-    //--> MUESTRA RESULTADOS DE IMÁGENES CON MASONRY
+    //--> MUESTRA RESULTADOS DE IMÁGENES (MODIFICADO PARA MODAL)
 
     function mostrarImagenes(images, container) {
         console.log('📸 Total de imágenes recibidas:', images.length);
         
-        // PASO 1: Destruir Masonry anterior si existe
         if(msnry){
             msnry.destroy();
             msnry = null;
         }
         
-        // PASO 2: Limpiar contenedor
         container.innerHTML = '';
         
-        // PASO 3: Crear elementos de imagen
         images.forEach((img, index) => {
             const cardWrapper = document.createElement('div');
             cardWrapper.classList.add('feed-grid-item');
@@ -93,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? `<div class="feed-img-privacy"><i class="uil uil-lock"></i></div>` 
                 : '';
 
+            // --- (Lógica de altura aleatoria sin cambios) ---
             let randHeight;
             if(window.innerWidth <= 767) {
                 randHeight = Math.floor(Math.random() * (260 - 200 + 1)) + 200;
@@ -102,32 +93,53 @@ document.addEventListener("DOMContentLoaded", () => {
                 randHeight = Math.floor(Math.random() * (400 - 250 + 1)) + 250;
             }
 
-            // Construir tarjeta
+            // --- ¡CAMBIO AQUÍ! ---
+            // 1. Eliminamos la etiqueta <a>
+            // 2. Añadimos 'data-action', 'data-image-id' y 'cursor: pointer' al div
             cardWrapper.innerHTML = `
-                <div class="feed-img-card" style="height:${randHeight}px;">
-                    <a href="./image.php?id=${img.id}" class="text-decoration-none d-block position-relative h-100">
-                        ${badge}
-                        <img src="${img.imageUrl}" 
-                             alt="${img.title || 'Imagen'}" 
-                             loading="lazy"
-                             style="height:100%; width:100%; object-fit:cover;">
-                        <div class="feed-img-overlay">
-                            <div class="feed-img-header">
-                                <img src="${img.profileImage || './Frontend/assets/images/appImages/default.jpg'}" 
-                                     alt="${img.username}">
-                                <p>@${img.username}</p>
-                            </div>
-
+                <div class="feed-img-card" 
+                     style="height:${randHeight}px; cursor: pointer;"
+                     data-action="view-single-image"
+                     data-image-id="${img.id}">
+                    
+                    ${badge}
+                    <img src="${img.imageUrl}" 
+                         alt="${img.title || 'Imagen'}" 
+                         loading="lazy"
+                         style="height:100%; width:100%; object-fit:cover;">
+                    <div class="feed-img-overlay">
+                        <div class="feed-img-header">
+                            <img src="${img.profileImage || './Frontend/assets/images/appImages/default.jpg'}" 
+                                 alt="${img.username}">
+                            <p>@${img.username}</p>
                         </div>
-                        <div class="feed-img-title">${img.title || ''}</div>
-                    </a>
+                    </div>
+                    <div class="feed-img-title">${img.title || ''}</div>
                 </div>
             `;
 
             container.appendChild(cardWrapper);
         });
 
-        // PASO 4: Esperar a que el DOM esté listo e inicializar Masonry
+        // --- ¡CAMBIO AÑADIDO! ---
+        // Adjuntamos los listeners a las tarjetas que acabamos de crear
+        container.querySelectorAll('div[data-action="view-single-image"]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Evitamos que el clic se dispare si se hace clic en un botón dentro de la card
+                if (e.target.closest('button')) return; 
+                
+                const imgId = e.currentTarget.dataset.imageId;
+                
+                if (typeof openImageModal === 'function') {
+                    openImageModal(imgId);
+                } else {
+                    console.error('La función openImageModal no está definida. ¿Cargaste imageModal.js?');
+                }
+            });
+        });
+        // --- FIN DEL CAMBIO ---
+
+        // PASO 4: Inicializar Masonry
         setTimeout(() => {
             initMasonry(container);
         }, 100);
@@ -139,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const gutterSize = window.innerWidth <= 767 ? 8 : 10;
             
-            // Inicializa la cuadrícula Masonry
             msnry = new Masonry(container, {
                 itemSelector: '.feed-grid-item',
                 columnWidth: '.feed-grid-item',
@@ -147,10 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 gutter: gutterSize,
                 horizontalOrder: false,
                 transitionDuration: '0.3s',
-                initLayout: false // Control manual del layout
+                initLayout: false 
             });
             
-            // Layout manual inicial
             setTimeout(() => {
                 if(msnry) msnry.layout();
             }, 10);
@@ -189,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 250);
             });
 
-            // Layout inicial adicional
             setTimeout(() => {
                 if(msnry) msnry.layout();
             }, 200);

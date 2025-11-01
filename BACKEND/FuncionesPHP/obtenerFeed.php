@@ -35,8 +35,7 @@
                 INNER JOIN users u ON i.I_idUser = u.U_id
                 WHERE i.I_visibility = 0
                     AND i.I_revisionStatus = 0
-                    AND i.I_isProfile = 0
-                    AND u.U_status = 1
+                    AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL )
                 ORDER BY i.I_publicationDate DESC
                 LIMIT 50";
     } 
@@ -51,8 +50,7 @@
                 FROM images i
                 INNER JOIN users u ON i.I_idUser = u.U_id
                 WHERE i.I_revisionStatus = 0
-                    AND i.I_isProfile = 0
-                    AND u.U_status = 1
+                    AND (i.I_isProfile = 0 OR i.I_idAlbum IS NOT NULL)
                     AND i.I_idUser <> $currentUserId
                     AND (
                         i.I_visibility = 0

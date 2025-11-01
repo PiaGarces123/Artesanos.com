@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append('imageId', imageId); 
         
         try {
-            const res = await fetch('./BACKEND/FuncionesPHP/actualizarFotoPerfil.php', { method: 'POST', body: formData });
+            const res = await fetch('./BACKEND/FuncionesPHP/updateProfileImage.php', { method: 'POST', body: formData });
             const data = await res.json();
 
             let callback = null;
