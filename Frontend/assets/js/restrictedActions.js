@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Botones de navegación - Mobile
         { id: "navFavoritesMobile", action: () => openFavoritesModal() },
-        { id: "navProfileMobile", action: () => {window.location.href = './profile.php'}  },
+        { id: "navProfileMobile", action: () => {window.location.href = './profile.php'}  }
         
         // Botones de busqueda
-        { id: "searchButtonMobile", action: () => {} /* realizar busqueda */},
-        { id: "searchButtonDesktop", action: () => {} /* realizar busqueda */}
+        // { id: "searchButtonMobile", action: () => {} /* realizar busqueda */},
+        // { id: "searchButtonDesktop", action: () => {} /* realizar busqueda */}
     ];
 
     restrictedButtons.forEach(btnData => {

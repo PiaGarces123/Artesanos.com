@@ -8,10 +8,13 @@ session_start();
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
+    // header("Location: index.php");
+    // exit();
+    $isLoggedIn = false;
+}else{
+    $isLoggedIn = true;
 }
-$isLoggedIn = true;
+
 
 // Obtener parámetros de búsqueda de la URL
 $searchQuery = isset($_GET['q']) ? trim($_GET['q']) : '';

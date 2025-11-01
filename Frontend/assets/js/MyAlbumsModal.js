@@ -218,35 +218,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     images.forEach(image => {
                         const dropdownId = `imageMenu-${image.I_id}`;
-                        
-                        // Como este modal siempre es "mío", mostramos el menú siempre
-                        const menuHTML = `
-                            <div class="dropdown position-absolute top-0 end-0 m-1" style="z-index: 10;">
-                                <button class="btn btn-sm btn-light py-0 px-1 rounded-circle" type="button" 
-                                        id="${dropdownId}" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="uil uil-ellipsis-v fs-6"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="${dropdownId}">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="#" data-action="set-cover" data-image-id="${image.I_id}" data-album-id="${albumId}">
-                                            <i class="uil uil-image-check me-2"></i> Definir como portada
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="#" data-action="set-profile" data-image-id="${image.I_id}">
-                                            <i class="uil uil-user-check me-2"></i> Usar de Perfil
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger d-flex align-items-center" href="#" data-action="delete-image" data-image-id="${image.I_id}">
-                                            <i class="uil uil-trash-alt me-2"></i> Eliminar
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        `;
-
+                        let menuHTML = '';
+                        // Como este modal siempre es "mío", mostramos el menú siempre a no ser que sea de sistema
+                        if (image.isSystemAlbum != 1) {
+                            menuHTML = `
+                                <div class="dropdown position-absolute top-0 end-0 m-1" style="z-index: 10;">
+                                    <button class="btn btn-sm btn-light py-0 px-1 rounded-circle" type="button" 
+                                            id="${dropdownId}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="uil uil-ellipsis-v fs-6"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="${dropdownId}">
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center" href="#" data-action="set-cover" data-image-id="${image.I_id}" data-album-id="${albumId}">
+                                                <i class="uil uil-image-check me-2"></i> Definir como portada
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item d-flex align-items-center" href="#" data-action="set-profile" data-image-id="${image.I_id}">
+                                                <i class="uil uil-user-check me-2"></i> Usar de Perfil
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger d-flex align-items-center" href="#" data-action="delete-image" data-image-id="${image.I_id}">
+                                                <i class="uil uil-trash-alt me-2"></i> Eliminar
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            `;
+                        }
                         // Tarjeta de imagen
                         imagesHTML += `
                             <div class="col">

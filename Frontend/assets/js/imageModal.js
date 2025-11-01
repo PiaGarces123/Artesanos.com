@@ -137,13 +137,11 @@ function populateCommentList(comments, isMyImage) {
 // =========================================================================
 
 /**
- * Adjunta los listeners (Like y Publicar) usando el patrón cloneNode.
- * ESTA ES LA FUNCIÓN CORREGIDA.
+ * Adjunta los listeners (Like, Publicar y Perfil) usando el patrón cloneNode.
  */
 function attachImageModalListeners() {
     
     // --- 1. LÓGICA DE LIKE ---
-    // Re-buscamos el botón "Like" actual
     const likeBtn = document.getElementById('likeButton');
     if (likeBtn) {
         let newLikeBtn = likeBtn.cloneNode(true);
@@ -151,31 +149,21 @@ function attachImageModalListeners() {
         newLikeBtn.addEventListener('click', handleLikeClick);
     }
 
-    // --- 2. LÓGICA DE PUBLICAR COMENTARIO (CORREGIDA) ---
-    
-    // Re-buscamos los elementos actuales
+    // --- 2. LÓGICA DE PUBLICAR COMENTARIO (CON TU VALIDACIÓN) ---
     const postBtn = document.getElementById('postCommentButton');
     const input = document.getElementById('newCommentInput');
     
     if (postBtn && input) {
-        // Clonamos AMBOS para limpiar todos los listeners ('click' y 'input')
         let newPostBtn = postBtn.cloneNode(true);
         let newInput = input.cloneNode(true);
         
-        // Reemplazamos en el DOM
         postBtn.parentNode.replaceChild(newPostBtn, postBtn);
         input.parentNode.replaceChild(newInput, input);
         
-        // --- Ahora, adjuntamos los listeners a los NUEVOS elementos ---
-        
-        // 1. Deshabilitar el nuevo botón de publicar al inicio
         newPostBtn.disabled = true;
         
-        // 2. Adjuntar el listener de VALIDACIÓN al NUEVO input
         newInput.addEventListener('input', () => {
             const commentText = newInput.value.trim();
-            
-            // Lógica de validación (vacío o demasiado largo)
             if (commentText.length === 0 || commentText.length > 255) {
                 newPostBtn.disabled = true;
             } else {
@@ -183,8 +171,38 @@ function attachImageModalListeners() {
             }
         });
         
-        // 3. Adjuntar el listener de "CLICK" al NUEVO botón
         newPostBtn.addEventListener('click', handlePostComment);
+    }
+    
+    // --- 3. ¡NUEVA LÓGICA AÑADIDA! (CLIC EN PERFIL) ---
+    const avatarImg = document.getElementById('avatarUser');
+    const nameEl = document.getElementById('nameUser');
+    
+    if (avatarImg && nameEl) {
+        // Preparamos la URL (usando la variable global 'currentModalData')
+        const profileUrl = `./profile.php?user_id=${currentModalData.ownerId}`;
+
+        // Clonamos
+        let newAvatarImg = avatarImg.cloneNode(true);
+        let newNameEl = nameEl.cloneNode(true);
+        avatarImg.parentNode.replaceChild(newAvatarImg, avatarImg);
+        nameEl.parentNode.replaceChild(newNameEl, nameEl);
+
+        // Añadimos estilo para que parezca un enlace
+        newAvatarImg.style.cursor = 'pointer';
+        newNameEl.style.cursor = 'pointer';
+
+        // Función de redirección
+        const redirectToProfile = () => {
+            // No redirigir si el usuario está seleccionando texto
+            if (window.getSelection().toString() === '') {
+                window.location.href = profileUrl;
+            }
+        };
+
+        // Adjuntamos listeners
+        newAvatarImg.addEventListener('click', redirectToProfile);
+        newNameEl.addEventListener('click', redirectToProfile);
     }
 }
 
@@ -192,7 +210,7 @@ function attachImageModalListeners() {
  * Maneja el clic en el botón "Me Gusta"
  */
 async function handleLikeClick() {
-    const likeBtn = document.getElementById('likeButton'); // Obtener el botón (clonado)
+    const likeBtn = document.getElementById('likeButton'); 
     likeBtn.disabled = true;
 
     try {
@@ -331,7 +349,6 @@ async function executeDeleteComment(commentId) {
  * Pone el modal en estado de "carga"
  */
 function setModalToLoading() {
-    // Re-buscamos elementos para asegurarnos de que existan
     const img = document.getElementById('imagePublic');
     const avatar = document.getElementById('avatarUser');
     const name = document.getElementById('nameUser');
@@ -355,9 +372,14 @@ function setModalToLoading() {
  * Muestra un error dentro del modal
  */
 function setModalToError(message) {
-    document.getElementById('nameUser').textContent = 'Error';
-    document.getElementById('TitleImage').textContent = message;
-    document.getElementById('commentListContainer').innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    // Re-buscamos elementos para asegurarnos
+    const name = document.getElementById('nameUser');
+    const title = document.getElementById('TitleImage');
+    const comments = document.getElementById('commentListContainer');
+
+    if (name) name.textContent = 'Error';
+    if (title) title.textContent = message;
+    if (comments) comments.innerHTML = `<div class="alert alert-danger">${message}</div>`;
 }
 
 // Limpiar el modal al cerrar para que no muestre datos viejos

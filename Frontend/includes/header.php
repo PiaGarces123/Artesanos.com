@@ -17,9 +17,6 @@
     </div>
     
     <nav class="list-group list-group-flush">
-        <form action="./profile.php" method="post">
-            <button name="user_id" value="2">perfil Pia</button>
-        </form>
         <a href="./index.php" id="navHome" class="list-group-item list-group-item-action nav-item active" data-view="home">
             <span class="nav-icon me-2">🏠</span> Inicio
         </a>

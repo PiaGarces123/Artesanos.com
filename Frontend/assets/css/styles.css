@@ -968,7 +968,27 @@
 }
 
 /* ------------------------------- MEDIA QUERIES PARA RESPONSIVE ------------------------------- */
-    
+
+    /* --- Versión Móvil (Apilado) seccion de comentarios--- */
+    @media (max-width: 991px) {
+        
+        /* En móvil, la columna de la imagen se ajusta a su contenido */
+        #imagePublic {
+            max-height: 70vh; /* La imagen no puede ser más alta que el 70% de la pantalla */
+            object-fit: contain;
+        }
+        
+        /* ¡ESTA ES LA REGLA CLAVE!
+        Le damos a la columna de información una altura máxima (ej. 50% de la pantalla).
+        Esto obliga a que #commentListContainer (que tiene overflow-y-auto) 
+        cree la barra de scroll cuando sea necesario.
+        */
+        #imageModalInfoCol {
+            max-height: 50vh;
+        }
+    }
+
+
     @media (min-width: 992px) { 
         .header {
             margin-left: 250px; 

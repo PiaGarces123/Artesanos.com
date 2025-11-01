@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const dropdownId = `imageMenu-${image.I_id}`;
                         let menuHTML = '';
 
-                        if (isMyProfile) {
+                        if (isMyProfile && image.isSystemAlbum != 1) {
                             menuHTML = `
                                 <div class="dropdown position-absolute top-0 end-0 m-1" style="z-index: 10;">
                                     <button class="btn btn-sm btn-light py-0 px-1 rounded-circle" type="button" 

@@ -68,6 +68,7 @@ try {
         // Info del dueño
         "ownerName" => $ownerData->username,
         "ownerAvatar" => $ownerAvatar,
+        "ownerId" => $idDueño,
         
         // Info de Likes
         "likeCount" => $likeCount,
