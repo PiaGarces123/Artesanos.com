@@ -64,6 +64,9 @@ try {
         // Info de la imagen
         "imageRuta" => $imageData['I_ruta'],
         "imageTitle" => $imageData['I_title'],
+
+        // Fecha de publicación
+        "imagePublicationDate" => $imageData['I_publicationDate'],
         
         // Info del dueño
         "ownerName" => $ownerData->username,

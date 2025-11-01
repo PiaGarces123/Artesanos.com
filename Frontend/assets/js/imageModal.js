@@ -86,7 +86,28 @@ function populateImageModal(data) {
     document.getElementById('imagePublic').src = data.imageRuta;
     document.getElementById('avatarUser').src = data.ownerAvatar;
     document.getElementById('nameUser').textContent = data.ownerName;
-    document.getElementById('TitleImage').textContent = data.imageTitle;
+    
+    // --- AÑADIMOS FECHA Y TITULO ---
+    const titleEl = document.getElementById('TitleImage');
+    let titleHTML = '';
+    
+    // 1. Añadimos la fecha de la imagen primero
+    if (data.imagePublicationDate) {
+        titleHTML += formatSimpleDate(data.imagePublicationDate);
+    }
+    
+    // 2. Añadimos el título en una nueva línea
+    if (data.imageTitle) {
+        if (titleHTML !== '') {
+            // Si ya hay una fecha, añadimos un salto de línea
+            titleHTML += '<br>'; 
+        }
+        titleHTML += data.imageTitle;
+    }
+    
+    // 3. Usamos .innerHTML para que el navegador reconozca el <br>
+    titleEl.innerHTML = titleHTML;
+    // --- ---
 
     // --- Lógica de Likes ---
     const likeBtn = document.getElementById('likeButton');
