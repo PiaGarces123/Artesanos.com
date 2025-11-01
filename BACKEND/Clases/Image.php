@@ -129,8 +129,9 @@
 
             if ($fila['total'] >= 5) {
                 $sqlUpdate = "UPDATE images SET I_revisionStatus = 1 WHERE I_id = $idImagen";
-                mysqli_query($conn, $sqlUpdate);
+                return mysqli_query($conn, $sqlUpdate);
             }
+            return true;
         }
 
 
@@ -232,6 +233,21 @@
             $rutaImagen = mysqli_real_escape_string($conn, $rutaImagen);
             
             $sql = "UPDATE images SET I_ruta = '$rutaImagen' WHERE I_id = $idImagen";
+            return mysqli_query($conn, $sql);
+        }
+
+        /**
+         * 🔹 Edita el título y la visibilidad de una imagen
+        */
+        public static function editar($conn, $idImagen, $nuevoTitulo, $nuevaVisibilidad) {
+            $idImagen = (int)$idImagen;
+            $nuevoTitulo = mysqli_real_escape_string($conn, $nuevoTitulo);
+            $nuevaVisibilidad = (int)$nuevaVisibilidad;
+
+            $sql = "UPDATE images 
+                    SET I_title = '$nuevoTitulo', I_visibility = $nuevaVisibilidad 
+                    WHERE I_id = $idImagen";
+            
             return mysqli_query($conn, $sql);
         }
 

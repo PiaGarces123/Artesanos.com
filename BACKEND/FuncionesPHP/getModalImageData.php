@@ -67,6 +67,9 @@ try {
 
         // Fecha de publicación
         "imagePublicationDate" => $imageData['I_publicationDate'],
+
+        // Visibilidad
+        "imageVisibility" => (int)$imageData['I_visibility'],
         
         // Info del dueño
         "ownerName" => $ownerData->username,

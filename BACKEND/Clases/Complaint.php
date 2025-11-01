@@ -9,7 +9,13 @@ class Complaint {
 
         $sql = "INSERT INTO complaints (D_idImage, D_idUser, D_reason) 
                 VALUES ($idImagen, $idUsuario, '$razon')";
-        return mysqli_query($conn, $sql);
+
+        $result = mysqli_query($conn, $sql);
+        
+        if ($result) {
+            return mysqli_insert_id($conn); // <-- Devuelve el ID
+        }
+        return false; // Devuelve false si falló
     }
 
     // 🔹 Obtener denuncias de una imagen

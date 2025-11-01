@@ -264,7 +264,12 @@
                                         <span id="likeCount" class="ms-1">0</span>
                                     </button>
                                 </div>
+
+                                <div class="image-actions-container pt-2" id="imageActionsContainer">
+                                </div>
                             </div>
+
+                            
 
                             <div class="p-3 flex-grow-1 overflow-y-auto" id="commentListContainer">
                                 <p class="text-center text-secondary small">Cargando comentarios...</p>
@@ -279,6 +284,79 @@
                             </div>
 
                         </div> </div> </div> </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA EDITAR IMAGEN -->
+    <div class="modal fade" id="editImageModal" tabindex="-1" aria-labelledby="editImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="editImageModalLabel">Editar Imagen</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <form id="editImageForm">
+                    <div class="modal-body">
+                        
+                        <input type="hidden" id="editImageIdInput" name="imageId">
+
+                        <div class="form-groupLogin mt-3 mb-2 position-relative">
+                            <label for="editImageTitleInput" class="form-label visually-hidden">Título</label>
+                            <input type="text" class="form-style form-control" placeholder="Título de la imagen" 
+                                name="editImageTitle" id="editImageTitleInput" required>
+                            <i class="input-icon uil uil-comment-alt-edit"></i>
+                        </div>
+                        
+                        <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="editImageVisibilityInput" name="editImageVisibility">
+                        <label class="form-check-label" for="editImageVisibilityInput">
+                            Privado (solo seguidores)
+                        </label>
+                        </div>
+                        
+                        <div class="error" id="errorEditImage"></div>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="saveEditImageButton">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA DENUNCIAR -->
+    <div class="modal fade" id="reportImageModal" tabindex="-1" aria-labelledby="reportImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-danger" id="reportImageModalLabel">Denunciar Imagen</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <form id="reportImageForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="reportImageIdInput" name="imageId">
+
+                        <div class="mb-3">
+                            <label for="reportReasonInput" class="form-label">Motivo de la denuncia:</label>
+                            <textarea class="form-control" id="reportReasonInput" name="reportReason" rows="4" 
+                                    placeholder="Describe por qué esta imagen infringe las normas..."></textarea>
+                        </div>
+                        
+                        <div class="error" id="errorReportImage"></div>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-end border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" id="sendReportButton">Enviar Denuncia</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

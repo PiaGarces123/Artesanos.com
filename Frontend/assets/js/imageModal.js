@@ -6,7 +6,9 @@ let imageModalInstance = null;
 let currentModalData = { // Almacena los datos de la imagen abierta
     imageId: null,
     ownerId: null,
-    followStatus: null
+    followStatus: null,
+    imageTitle: null,   
+    imageVisibility: null
 };
 
 // --- Elementos del DOM (Solo el modal principal) ---
@@ -16,6 +18,12 @@ const imageModalEl = document.getElementById('imageModal');
 if (imageModalEl) {
     imageModalInstance = new bootstrap.Modal(imageModalEl);
 }
+
+// (Nuevos Modales)
+const editImageModalEl = document.getElementById('editImageModal');
+const editImageModal = editImageModalEl ? new bootstrap.Modal(editImageModalEl) : null;
+const reportImageModalEl = document.getElementById('reportImageModal');
+const reportImageModal = reportImageModalEl ? new bootstrap.Modal(reportImageModalEl) : null;
 
 /**
  * Formatea una fecha MySQL (YYYY-MM-DD HH:MM:SS) a un formato simple (DD/MM/YYYY).
@@ -63,7 +71,9 @@ async function openImageModal(imageId) {
         currentModalData = {
             imageId: imageId,
             ownerId: data.ownerId,
-            followStatus: data.followStatus
+            followStatus: data.followStatus,
+            imageTitle: data.imageTitle,             
+            imageVisibility: data.imageVisibility
         };
         
         // Rellenamos el modal con los datos
@@ -117,6 +127,24 @@ function populateImageModal(data) {
     } else {
         likeBtn.classList.remove('active');
     }
+
+    // --- Lógica de Botones Edit/Report ---
+    const actionsContainer = document.getElementById('imageActionsContainer');
+    let actionButtonHTML = '';
+    if (data.isMyImage) {
+        actionButtonHTML = `
+            <button class="btn btn-outline-secondary btn-sm w-auto" id="editImageButton">
+                <i class="uil uil-edit me-1"></i> Editar Imagen
+            </button>
+        `;
+    } else {
+        actionButtonHTML = `
+            <button class="btn btn-outline-danger btn-sm w-auto" id="reportImageButton">
+                <i class="uil uil-exclamation-triangle me-1"></i> Denunciar
+            </button>
+        `;
+    }
+    actionsContainer.innerHTML = actionButtonHTML;
 
     // --- Lógica de Comentarios (Usa la función de abajo) ---
     populateCommentList(data.comments, data.isMyImage);
@@ -215,7 +243,7 @@ function attachImageModalListeners() {
         newPostBtn.addEventListener('click', handlePostComment);
     }
     
-    // --- 3. ¡NUEVA LÓGICA AÑADIDA! (CLIC EN PERFIL) ---
+    // --- 3. LÓGICA (CLIC EN PERFIL) ---
     const avatarImg = document.getElementById('avatarUser');
     const nameEl = document.getElementById('nameUser');
     
@@ -244,6 +272,22 @@ function attachImageModalListeners() {
         // Adjuntamos listeners
         newAvatarImg.addEventListener('click', redirectToProfile);
         newNameEl.addEventListener('click', redirectToProfile);
+    }
+
+    // Listener para el botón "Editar Imagen"
+    const editBtn = document.getElementById('editImageButton');
+    if (editBtn) {
+        let newEditBtn = editBtn.cloneNode(true);
+        editBtn.parentNode.replaceChild(newEditBtn, editBtn);
+        newEditBtn.addEventListener('click', handleEditImageClick);
+    }
+
+    // Listener para el botón "Denunciar Imagen"
+    const reportBtn = document.getElementById('reportImageButton');
+    if (reportBtn) {
+        let newReportBtn = reportBtn.cloneNode(true);
+        reportBtn.parentNode.replaceChild(newReportBtn, reportBtn);
+        newReportBtn.addEventListener('click', handleReportImageClick);
     }
 }
 
@@ -382,6 +426,137 @@ async function executeDeleteComment(commentId) {
     }
 }
 
+/**
+ * Maneja el clic en "Editar Imagen". Pre-popula y muestra el modal de edición.
+ */
+function handleEditImageClick() {
+    if (!editImageModal) return;
+
+    // 1. Poblar el modal de edición
+    const form = document.getElementById('editImageForm');
+    const titleInput = document.getElementById('editImageTitleInput');
+    const idInput = document.getElementById('editImageIdInput');
+    const visibilityInput = document.getElementById('editImageVisibilityInput');
+    const saveBtn = document.getElementById('saveEditImageButton');
+
+    titleInput.value = currentModalData.imageTitle;
+    idInput.value = currentModalData.imageId;
+    // (1 = Privado, 0 = Público). El checkbox es 'true' si es 1.
+    visibilityInput.checked = (currentModalData.imageVisibility === 1); 
+    
+    // 2. Limpiar listener y adjuntar el nuevo
+    let newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+    newSaveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        executeEditImage(form);
+    });
+
+    // 3. Mostrar el modal de edición
+    editImageModal.show();
+}
+
+/**
+ * Ejecuta el fetch para guardar los cambios de la imagen
+ */
+async function executeEditImage(form) {
+    const errorDiv = document.getElementById('errorEditImage');
+    const saveBtn = document.getElementById('saveEditImageButton');
+    errorDiv.style.display = 'none';
+    saveBtn.disabled = true;
+
+    try {
+        const formData = new FormData(form);
+        const res = await fetch('./BACKEND/FuncionesPHP/editarImagen.php', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+            editImageModal.hide(); // Ocultar modal de edición
+
+            // Actualizar los datos en el modal de imagen (sin recargar)
+            document.getElementById('TitleImage').innerHTML = `${formatSimpleDate(new Date())}<br>${data.newTitle}`; // Asumimos fecha de hoy
+            currentModalData.imageTitle = data.newTitle;
+            currentModalData.imageVisibility = data.newVisibility;
+            
+            showStaticNotificationModal('success', data.message);
+
+        } else {
+            errorDiv.textContent = data.message;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Error de conexión.';
+        errorDiv.style.display = 'block';
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+/**
+ * Maneja el clic en "Denunciar Imagen". Pre-popula y muestra el modal.
+ */
+function handleReportImageClick() {
+    if (!reportImageModal) return;
+
+    // 1. Poblar el modal de denuncia
+    const form = document.getElementById('reportImageForm');
+    const idInput = document.getElementById('reportImageIdInput');
+    const reasonInput = document.getElementById('reportReasonInput');
+    const saveBtn = document.getElementById('sendReportButton');
+    
+    idInput.value = currentModalData.imageId;
+    reasonInput.value = ''; // Limpiar razón anterior
+
+    // 2. Limpiar listener y adjuntar el nuevo
+    let newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+    newSaveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        executeReportImage(form);
+    });
+    
+    reportImageModal.show();
+}
+
+/**
+ * Ejecuta el fetch para enviar la denuncia
+ */
+async function executeReportImage(form) {
+    const errorDiv = document.getElementById('errorReportImage');
+    const saveBtn = document.getElementById('sendReportButton');
+    errorDiv.style.display = 'none';
+    saveBtn.disabled = true;
+
+    try {
+        const formData = new FormData(form);
+        if (formData.get('reportReason').trim().length === 0) {
+            errorDiv.textContent = 'Debes escribir un motivo.';
+            errorDiv.style.display = 'block';
+            saveBtn.disabled = false;
+            return;
+        }
+
+        const res = await fetch('./BACKEND/FuncionesPHP/denunciarImagen.php', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+            reportImageModal.hide();
+            showStaticNotificationModal('success', data.message);
+        } else {
+            errorDiv.textContent = data.message;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Error de conexión.';
+        errorDiv.style.display = 'block';
+    } finally {
+        saveBtn.disabled = false;
+    }
+}
+
+
 // =========================================================================
 // 4. LÓGICA DE ESTADO (CARGA Y LIMPIEZA)
 // =========================================================================
@@ -431,7 +606,9 @@ if (imageModalEl) {
         currentModalData = {
             imageId: null,
             ownerId: null,
-            followStatus: null
+            followStatus: null,
+            imageTitle: null,
+            imageVisibility: null
         };
     });
 }

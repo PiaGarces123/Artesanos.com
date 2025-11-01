@@ -116,7 +116,7 @@ class User {
 
         // Contar imágenes en revisión
         $sql = "SELECT COUNT(*) AS total 
-                FROM imagenes 
+                FROM images 
                 WHERE I_idUser = $idUsuario AND I_revisionStatus = 1";
         $resultado = mysqli_query($conn, $sql);
         $fila = mysqli_fetch_assoc($resultado);
@@ -128,10 +128,8 @@ class User {
         $nuevoEstado = ($fila['total'] >= 3) ? 0 : 1; 
 
         $sqlUpdate = "UPDATE users SET U_status = $nuevoEstado WHERE U_id = $idUsuario";
-        mysqli_query($conn, $sqlUpdate);
 
-        // Devuelve true si el nuevo estado permite publicar (es decir, el estado es Activo)
-        return $nuevoEstado === 1; 
+        return mysqli_query($conn, $sqlUpdate);
     }
 
 
