@@ -111,6 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 div.textContent = "";
                 div.classList.remove("visible-error");
             });
+            document.getElementById('cantidadImagenes').textContent = "";
+            document.getElementById('cantidadImagenes').classList.remove("visible-success");
             document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
         };
 
@@ -172,9 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+
+        function mostrarCantidad(div,msg){
+            if (!div) return;
+            div.textContent = msg;
+            div.classList.add("visible-success");
+        }
+
         // Esto es solamente para quitar el cartel de error caundo selecciona imagenes
         inputFile.addEventListener('change', (e) => {
             limpiarErrores();
+            mostrarCantidad(document.getElementById("cantidadImagenes"),`Imagenes Seleccionadas: ${inputFile.files.length}`);
         });
 
         

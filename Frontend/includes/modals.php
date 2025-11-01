@@ -34,7 +34,9 @@
 
                     <!-- Si hubo un error -->
                     <div class="error" id="errorCreateAlbum"></div>
-                    
+                    <!-- cantidad de imagenes -->
+                    <div class="success" id="cantidadImagenes"></div>
+
                     <!-- Botones -->
                     <div class="d-flex justify-content-end gap-3 mt-4">
                         <button type="button" class="btn btn-outline-secondary" id="cancelCreate" data-bs-dismiss="modal">Cancelar</button>
