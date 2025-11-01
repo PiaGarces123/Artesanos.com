@@ -109,11 +109,19 @@
         );
 
         if($idImage){
-            // 2. Almacenar archivo físico y obtener ruta real
+            // 2. Intentar almacenar archivo físico y obtener ruta
             $rutaImagen = almacenaImagen($uploadedFiles, $i, $user->id, $idAlbumDestino, $idImage);
             
-            // 3. Actualizar la ruta en la BD (Si falla almacenaImagen, la ruta será la de error)
-            Imagen::actualizarRuta($conn, $idImage, $rutaImagen); 
+            // --- ¡CAMBIO 2! ---
+            // 3. Comprobar si el almacenamiento falló
+            if ($rutaImagen==null) {
+                // 3a. Fallo: Eliminar la fila de la BD (Rollback)
+                Imagen::eliminar($conn, $idImage); 
+                $cont++; // Incrementar contador de fallos
+            } else {
+                // 3b. Éxito: Actualizar la ruta en la BD
+                Imagen::actualizarRuta($conn, $idImage, $rutaImagen); 
+            }
         }else{
             $cont++; // Cuenta fallo al crear la fila en BD
         }
@@ -145,7 +153,7 @@
         $originalFileName = $fileArray['name'][$imageIndex];
         $fileError = $fileArray['error'][$imageIndex];
 
-        if ($fileError !== UPLOAD_ERR_OK) { return $rutaError; }
+        if ($fileError !== UPLOAD_ERR_OK) { return null; }
         
         $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
         $base_dir = __DIR__ . '/../../FILES/';
@@ -158,6 +166,6 @@
             return './FILES/' . $idUser . '/' . $idAlbum . '/' . $final_filename;
         }
 
-        return $rutaError;
+        return null;
     }
 ?>
