@@ -102,7 +102,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputFile = document.getElementById("imageInput");
         const errorInputFile = document.getElementById("errorCreateAlbum");
         const btnContinueCreate = document.getElementById('continueCreate');
+        
+        const cantidadImagenesDiv = document.getElementById("cantidadImagenes");
 
+        const createAlbumModal = document.getElementById('createAlbumModal');
+
+        if (createAlbumModal) {
+            createAlbumModal.addEventListener('shown.bs.modal', (e) => {
+                limpiarErrores();
+                mostrarCantidad(cantidadImagenesDiv,`Imagenes Seleccionadas: ${inputFile.files.length}`);
+        
+            });
+        }
         
 
         // Función para limpiar todos los errores visuales
@@ -115,6 +126,13 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('cantidadImagenes').classList.remove("visible-success");
             document.querySelectorAll(".errorInput").forEach(inp => inp.classList.remove("errorInput"));
         };
+
+        //muestra cantidad de imagenes seleccionadas
+        function mostrarCantidad(div,msg){
+            if (!div) return;
+            div.textContent = msg;
+            div.classList.add("visible-success");
+        }
 
         // Función para mostrar errores
         const mostrarError = (div, input, msg) => {
@@ -175,16 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        function mostrarCantidad(div,msg){
-            if (!div) return;
-            div.textContent = msg;
-            div.classList.add("visible-success");
-        }
+        
 
         // Esto es solamente para quitar el cartel de error caundo selecciona imagenes
         inputFile.addEventListener('change', (e) => {
             limpiarErrores();
-            mostrarCantidad(document.getElementById("cantidadImagenes"),`Imagenes Seleccionadas: ${inputFile.files.length}`);
+            mostrarCantidad(cantidadImagenesDiv,`Imagenes Seleccionadas: ${inputFile.files.length}`);
         });
 
         
