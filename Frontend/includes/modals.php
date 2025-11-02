@@ -216,20 +216,7 @@
 
     
 
-    <!-- ---------------------- FAVORITOS ------------------------ -->
-    <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4 rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <h2 class="modal-title fs-4" id="favoritesModalLabel">Mis Favoritos</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Contenido de la sección de favoritos...</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
      <!-- Modal para visualización de imágenes -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -564,6 +551,32 @@
     </div>
 
 
+    <!-- ---------------------- FAVORITOS ------------------------ -->
+    <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content p-4 rounded-4">
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="favoritesModalLabel">
+                        <i class="uil uil-heart me-2"></i>
+                        Mis Favoritos
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="favoritesContainer">
+                    <!-- Las imágenes favoritas se cargarán aquí mediante JavaScript -->
+                </div>
+                 <!-- Botones -->
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+                <div class="error" id="errorFavorites"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
@@ -597,6 +610,9 @@
 
 <!-- Para manejar los seguimientos -->
 <script src="./Frontend/assets/js/seguimientos.js"></script>
+
+<!-- ✅ NUEVO: Modal de favoritos -->
+<script src="./Frontend/assets/js/favoritesModal.js"></script>
 
 
     

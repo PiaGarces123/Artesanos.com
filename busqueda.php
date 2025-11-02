@@ -102,7 +102,7 @@ if (!in_array($searchType, ['perfil', 'imagen'])) {
 
     <!-- Sistema de búsqueda -->
     <script src="./Frontend/assets/js/busquedaPage.js"></script>
-    
+
     
 
     

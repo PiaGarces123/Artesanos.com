@@ -57,8 +57,8 @@
         <!-- Masonry (para el feed de imágenes) -->
         <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
-        
 
+        
         <!-- Sistema de feed (carga imágenes con Masonry) -->
         <script src="./Frontend/assets/js/feedLoader.js"></script>
 
