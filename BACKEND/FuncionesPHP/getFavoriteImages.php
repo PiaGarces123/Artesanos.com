@@ -79,11 +79,11 @@ try {
     // RESPUESTA JSON
     // =====================================================
     
-    // Devolvemos el array directamente (como en tus otros endpoints)
+    // Devolvemos el array directamente
     echo json_encode($images);
     
 } catch (Exception $e) {
-    // En caso de error, devolvemos array vacío (consistente con tu patrón)
+    // En caso de error, devolvemos array vacío 
     echo json_encode([]);
 } finally {
     desconexion($conn);
