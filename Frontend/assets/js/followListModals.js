@@ -3,38 +3,29 @@
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    // ==============================
-    // Función auxiliar para mostrar errores
-    // ==============================
     const mostrarError = (div, msg) => {
         if (!div) return;
         div.textContent = msg;
         div.classList.add("visible-error");
     };
 
-    // ==============================
-    // Actualizar Contadores de Seguidores y Siguiendo
-    // ==============================
     window.updateFollowCounters = async (user_id) => {
         try {
             let formData = new FormData();
             formData.append('user_id', user_id);
 
-            // Obtener seguidores
             const followersRes = await fetch('./BACKEND/FuncionesPHP/getFollowers.php', {
                 method: 'POST',
                 body: formData
             });
             const followersData = await followersRes.json();
 
-            // Obtener siguiendo
             const followingRes = await fetch('./BACKEND/FuncionesPHP/getFollowing.php', {
                 method: 'POST',
                 body: formData
             });
             const followingData = await followingRes.json();
 
-            // Actualizar contadores
             if (followersData.status === 'success') {
                 const followersCountEl = document.getElementById('followersCount');
                 if (followersCountEl) followersCountEl.textContent = followersData.seguidores.length;
@@ -51,13 +42,12 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // ==============================
-    // Cargar Seguidores
+    // CARGAR SEGUIDORES
     // ==============================
     async function loadFollowers(user_id) {
         const container = document.getElementById('followersModalContainer');
         const errorDiv = document.getElementById('errorFollowersModal');
 
-        // Limpiar errores previos
         if(errorDiv) {
             errorDiv.textContent = '';
             errorDiv.classList.remove("visible-error");
@@ -93,11 +83,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 seguidores.forEach(u => {
                     html += `
                         <li class="list-group-item d-flex align-items-center">
-                            <img src="${u.U_profilePic}" class="rounded-circle me-3" width="50" height="50">
-                            <div>
-                                <strong>${u.U_nameUser}</strong>
-                                <small class="text-muted">${u.U_name} ${u.U_lastName}</small>
-                            </div>
+                            <a href="profile.php?user_id=${u.U_id}" class="d-flex align-items-center text-decoration-none flex-grow-1">
+                                <img src="${u.U_profilePic}" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong class="text-dark">${u.U_nameUser}</strong>
+                                    <small class="text-muted">${u.U_name} ${u.U_lastName}</small>
+                                </div>
+                            </a>
                         </li>
                     `;
                 });
@@ -117,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ==============================
-    // Cargar Siguiendo
+    // CARGAR SIGUIENDO
     // ==============================
     async function loadFollowing(user_id) {
         const container = document.getElementById('followingModalContainer');
@@ -158,11 +150,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 siguiendo.forEach(u => {
                     html += `
                         <li class="list-group-item d-flex align-items-center">
-                            <img src="${u.U_profilePic}" class="rounded-circle me-3" width="50" height="50">
-                            <div>
-                                <strong>${u.U_nameUser}</strong>
-                                <small class="text-muted">${u.U_name} ${u.U_lastName}</small>
-                            </div>
+                            <a href="profile.php?user_id=${u.U_id}" class="d-flex align-items-center text-decoration-none flex-grow-1">
+                                <img src="${u.U_profilePic}" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <strong class="text-dark">${u.U_nameUser}</strong>
+                                    <small class="text-muted">${u.U_name} ${u.U_lastName}</small>
+                                </div>
+                            </a>
                         </li>
                     `;
                 });
@@ -182,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ==============================
-    // Event listeners para los modales
+    // EVENT LISTENERS PARA LOS MODALES
     // ==============================
     const followersModalEl = document.getElementById('followersModal');
     if (followersModalEl) {
