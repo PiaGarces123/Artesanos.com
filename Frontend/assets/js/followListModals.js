@@ -9,37 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         div.classList.add("visible-error");
     };
 
-    window.updateFollowCounters = async (user_id) => {
-        try {
-            let formData = new FormData();
-            formData.append('user_id', user_id);
-
-            const followersRes = await fetch('./BACKEND/FuncionesPHP/getFollowers.php', {
-                method: 'POST',
-                body: formData
-            });
-            const followersData = await followersRes.json();
-
-            const followingRes = await fetch('./BACKEND/FuncionesPHP/getFollowing.php', {
-                method: 'POST',
-                body: formData
-            });
-            const followingData = await followingRes.json();
-
-            if (followersData.status === 'success') {
-                const followersCountEl = document.getElementById('followersCount');
-                if (followersCountEl) followersCountEl.textContent = followersData.seguidores.length;
-            }
-
-            if (followingData.status === 'success') {
-                const followingCountEl = document.getElementById('followingCount');
-                if (followingCountEl) followingCountEl.textContent = followingData.siguiendo.length;
-            }
-
-        } catch (error) {
-            console.error('Error al actualizar contadores:', error);
-        }
-    };
+    
 
     // ==============================
     // CARGAR SEGUIDORES
@@ -183,10 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
         followersModalEl.addEventListener('shown.bs.modal', () => loadFollowers(user_id));
         followersModalEl.addEventListener('hidden.bs.modal', () => {
             const container = document.getElementById('followersModalContainer');
-            container.innerHTML = `<p class="text-center mt-3 text-secondary">
-                                      <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
-                                      Cargando seguidores...
-                                   </p>`;
+            container.innerHTML = ``;
         });
     }
 

@@ -50,10 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Actualizar el botón al nuevo estado
                 updateButtonState(data.newState, targetUserId);
                 
-                // ✅ NUEVO: Actualizar contadores de seguidores/siguiendo
-                if (typeof window.updateFollowCounters === 'function') {
-                    window.updateFollowCounters(targetUserId);
-                }
                 
             } else if (data.status === 'errorSession') {
                 window.location.href = './index.php'; // Redirigir si la sesión expiró

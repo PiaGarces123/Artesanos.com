@@ -227,6 +227,55 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
     </main>
 
+    <!-- ---------------------- SEGUIDORES Y SEGUIDOS ------------------------ -->
+    <!-- ==================== MODAL SEGUIDORES ==================== -->
+    <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followersModalLabel">
+                        <i class="uil uil-users-alt me-2"></i>Seguidores
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body" id="followersModalContainer">
+                    <p class="text-center mt-3 text-secondary">
+                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                        Cargando seguidores...
+                    </p>
+                </div>
+                
+                <div class="error" id="errorFollowersModal"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL SIGUIENDO ==================== -->
+    <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followingModalLabel">
+                        <i class="uil uil-user-check me-2"></i>Siguiendo
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body" id="followingModalContainer">
+                    <p class="text-center mt-3 text-secondary">
+                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                        Cargando siguiendo...
+                    </p>
+                </div>
+                
+                <div class="error" id="errorFollowingModal"></div>
+            </div>
+        </div>
+    </div>
+
 
     
     <!-- MODAL VER FOTO DE PERFIL -->
@@ -554,24 +603,17 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                 </div>
             </div>
         </div>
+
+    
+
+
+
     <?php 
         require_once("./Frontend/includes/modals.php");
     ?>
 
-    <!-- DESPUÉS DE LA SECCIÓN DE ÁLBUMES, ANTES DE CERRAR </main> -->
-
-        <!-- SECCIÓN DE ÁLBUMES -->
-        <section class="albums-section" id="myAlbumsProfileSection">
-            <!-- Los álbumes se cargan aquí dinámicamente -->
-        </section>
-        <div class="error" id="errorMyAlbumsProfile"></div>
-
-        <!-- ✅ NUEVO: Contenedor para resultados de búsqueda -->
-        <section class="search-results-section d-none" id="searchResultsSection">
-            <div id="searchResultsContainer" class="feed-grid">
-                <!-- Los resultados de búsqueda se mostrarán aquí -->
-            </div>
-        </section>
+    
+        
 
     </main>
 
@@ -616,8 +658,10 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 <!-- Para manejar el historial de fotos de perfil -->
 <script src="./Frontend/assets/js/profileHistory.js"></script>
 
-<!-- Para manejar el seguimiento en los botones del perfil-->
+<!-- Para manejar los modales de seguidores/siguiendo -->
+<script src="./Frontend/assets/js/followListModals.js"></script>
 <script src="./Frontend/assets/js/followActions.js"></script>
+
 
 </body>
 </html>

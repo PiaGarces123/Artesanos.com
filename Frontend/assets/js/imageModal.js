@@ -371,9 +371,9 @@ async function handlePostComment() {
  * Adjunta listeners a los botones de BORRAR comentario
  */
 function attachDeleteCommentListeners() {
-    const confirmModalEl = document.getElementById('confirmDeleteModal');
-    const confirmBtn = document.getElementById('confirmDeleteButton');
-    const confirmMessage = document.getElementById('deleteMessage');
+    const confirmModalEl = document.getElementById('confirmDeleteCommentModal');
+    const confirmBtn = document.getElementById('confirmDeleteCommentButton');
+    const confirmMessage = document.getElementById('deleteCommentMessage');
     
     if (!confirmModalEl || !confirmBtn || !confirmMessage) {
         console.error("No se encuentra el modal de confirmación de borrado.");

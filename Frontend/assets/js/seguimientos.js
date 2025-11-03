@@ -42,10 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // También actualizamos la insignia de la campana
                 updateNotificationBadge(); 
 
-                // Actualizar contadores si estamos en el perfil
-                if (typeof window.updateFollowCounters === 'function' && typeof user_id !== 'undefined') {
-                    window.updateFollowCounters(user_id);
-                }
+                
                 
             } else if (data.status === 'errorSession') {
                 // Si la sesión expira, cerramos el modal y mostramos la notificación global
@@ -104,11 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // 4. (Opcional) Mostrar una notificación de éxito
                 // showStaticNotificationModal('success', data.message);
 
-                //5. Actualizar contadores si estamos en el perfil
-                if (typeof window.updateFollowCounters === 'function' && typeof user_id !== 'undefined') {
-                    window.updateFollowCounters(user_id);
-                }
-
+                
             } else if (data.status === 'errorSession') {
                 // Manejo de sesión (igual que en reject)
                 const requestsModalEl = document.getElementById('requestsModal');

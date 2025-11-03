@@ -370,6 +370,27 @@
                 </div>
             </div>
         </div>
+    <!-- Modal para preguntar si desea o no eliminar comentarios -->
+        <div class="modal fade" id="confirmDeleteCommentModal" tabindex="-1" aria-labelledby="confirmDeleteCommentLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content p-3 rounded-4 shadow-lg">
+                    
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title text-danger fw-bold" id="confirmDeleteCommentLabel">⚠️ Confirmar Eliminación</h5>
+                    </div>
+                    
+                    <div class="modal-body text-center pt-2 pb-3">
+                        <p id="deleteCommentMessage">¿Estás seguro de que deseas ELIMINAR este comentario?</p>
+                        <p class="small text-muted mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex justify-content-center border-0 pt-0 gap-3">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteCommentButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 <!-----------------  MODAL DE LOGIN ----------------->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -577,54 +598,7 @@
     </div>
 
 
-    <!-- ---------------------- SEGUIDORES Y SEGUIDOS ------------------------ -->
-    <!-- ==================== MODAL SEGUIDORES ==================== -->
-    <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
-                
-                <div class="modal-header border-0 pb-0 mb-3">
-                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followersModalLabel">
-                        <i class="uil uil-users-alt me-2"></i>Seguidores
-                    </h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                
-                <div class="modal-body" id="followersModalContainer">
-                    <p class="text-center mt-3 text-secondary">
-                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
-                        Cargando seguidores...
-                    </p>
-                </div>
-                
-                <div class="error" id="errorFollowersModal"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL SIGUIENDO ==================== -->
-    <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
-                
-                <div class="modal-header border-0 pb-0 mb-3">
-                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followingModalLabel">
-                        <i class="uil uil-user-check me-2"></i>Siguiendo
-                    </h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                
-                <div class="modal-body" id="followingModalContainer">
-                    <p class="text-center mt-3 text-secondary">
-                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
-                        Cargando siguiendo...
-                    </p>
-                </div>
-                
-                <div class="error" id="errorFollowingModal"></div>
-            </div>
-        </div>
-    </div>
+    
 
 
     
@@ -664,10 +638,8 @@
 <!-- ✅ NUEVO: Modal de favoritos -->
 <script src="./Frontend/assets/js/favoritesModal.js"></script>
 
-<!-- Para manejar los modales de seguidores/siguiendo -->
-<script src="./Frontend/assets/js/followListModals.js"></script>
-<script src="./Frontend/js/followActions.js"></script>
-<script src="./Frontend/js/seguimientos.js"></script>
+
+
 
 
     
