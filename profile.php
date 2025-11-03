@@ -99,15 +99,23 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
-                                <div class="stats-card">
-                                    <div class="stat-value"><?= $followers ?></div>
+                                <div class="stats-card clickable-stat" id="followersCount"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#followersModal" style="cursor:pointer;">
+                                    <div class="stat-value">
+                                        <div class="stat-value"><?= $followers ?></div>
+                                    </div> 
                                     <div class="stat-label">Followers</div>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
-                                <div class="stats-card">
-                                    <div class="stat-value"><?= $following ?></div>
-                                    <div class="stat-label">Following</div>
+                                <div class="stats-card clickable-stat" id="followingCount"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#followingModal" style="cursor:pointer;">
+                                    <div class="stats-value">
+                                        <div class="stat-value"><?= $following ?></div>
+                                        <div class="stat-label">Following</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,9 +227,6 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
     </main>
 
-
-    
-    
 
     
     <!-- MODAL VER FOTO DE PERFIL -->
@@ -613,7 +618,6 @@ $cantAlbums = count(Album::getByUser($conn, $user->id));
 
 <!-- Para manejar el seguimiento en los botones del perfil-->
 <script src="./Frontend/assets/js/followActions.js"></script>
-
 
 </body>
 </html>

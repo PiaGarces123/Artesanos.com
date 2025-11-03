@@ -577,6 +577,56 @@
     </div>
 
 
+    <!-- ---------------------- SEGUIDORES Y SEGUIDOS ------------------------ -->
+    <!-- ==================== MODAL SEGUIDORES ==================== -->
+    <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followersModalLabel">
+                        <i class="uil uil-users-alt me-2"></i>Seguidores
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body" id="followersModalContainer">
+                    <p class="text-center mt-3 text-secondary">
+                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                        Cargando seguidores...
+                    </p>
+                </div>
+                
+                <div class="error" id="errorFollowersModal"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL SIGUIENDO ==================== -->
+    <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content p-4 rounded-4 border shadow-lg" style="background-color: var(--background-color);">
+                
+                <div class="modal-header border-0 pb-0 mb-3">
+                    <h2 class="modal-title fs-4 fw-bold text-primary" id="followingModalLabel">
+                        <i class="uil uil-user-check me-2"></i>Siguiendo
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body" id="followingModalContainer">
+                    <p class="text-center mt-3 text-secondary">
+                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                        Cargando siguiendo...
+                    </p>
+                </div>
+                
+                <div class="error" id="errorFollowingModal"></div>
+            </div>
+        </div>
+    </div>
+
+
     
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
@@ -613,6 +663,11 @@
 
 <!-- ✅ NUEVO: Modal de favoritos -->
 <script src="./Frontend/assets/js/favoritesModal.js"></script>
+
+<!-- Para manejar los modales de seguidores/siguiendo -->
+<script src="./Frontend/assets/js/followListModals.js"></script>
+<script src="./Frontend/js/followActions.js"></script>
+<script src="./Frontend/js/seguimientos.js"></script>
 
 
     
