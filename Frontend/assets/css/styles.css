@@ -858,15 +858,18 @@
     /* -------------------------------------- */
 
     /* Define la altura máxima de las columnas (para que quepan en la pantalla) */
-    #imageModalImageCol,
-    #imageModalInfoCol {
-        max-height: 90vh; /* 90% de la altura de la ventana */
-    }
+    @media (min-width: 992px) {
+        /* En escritorio, ambas columnas tienen una altura máxima */
+        #imageModalImageCol,
+        #imageModalInfoCol {
+            max-height: 90vh;
+        }
 
-    /* Ajusta la imagen dentro de la columna izquierda */
-    #imagePublic {
-        max-height: 90vh; /* Asegura que la imagen no sea más alta que la columna */
-        object-fit: contain; /* Evita que la imagen se estire */
+        /* La imagen se ajusta a la columna */
+        #imagePublic {
+            max-height: 90vh;
+            object-fit: contain;
+        }
     }
 
     /* Define el tamaño del avatar del usuario en la columna de info */
