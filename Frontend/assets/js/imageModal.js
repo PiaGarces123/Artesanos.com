@@ -97,25 +97,32 @@ function populateImageModal(data) {
     document.getElementById('avatarUser').src = data.ownerAvatar;
     document.getElementById('nameUser').textContent = data.ownerName;
     
-    // --- AÑADIMOS FECHA Y TITULO ---
+    // --- AÑADIMOS FECHA, TITULO ALBUM Y TITULO IMAGEN ---
     const titleEl = document.getElementById('TitleImage');
     let titleHTML = '';
     
-    // 1. Añadimos la fecha de la imagen primero
+    // 1. Añadimos la fecha de la imagen
     if (data.imagePublicationDate) {
         titleHTML += formatSimpleDate(data.imagePublicationDate);
     }
     
-    // 2. Añadimos el título en una nueva línea
+    // 2. Añadimos el título del álbum (si existe)
+    if (data.albumTitle) {
+        if (titleHTML !== '') {
+            titleHTML += '<br>'; // Salto de línea si ya hay fecha
+        }
+        // Usamos text-uppercase de Bootstrap para que se vea "ALBUM:"
+        titleHTML += `<span class="text-uppercase small fw-bold">Álbum:</span> ${data.albumTitle}`;
+    }
+
+    // 3. Añadimos el título de la imagen (si existe)
     if (data.imageTitle) {
         if (titleHTML !== '') {
-            // Si ya hay una fecha, añadimos un salto de línea
-            titleHTML += '<br>'; 
+            titleHTML += '<br>'; // Salto de línea
         }
         titleHTML += data.imageTitle;
     }
     
-    // 3. Usamos .innerHTML para que el navegador reconozca el <br>
     titleEl.innerHTML = titleHTML;
     // --- ---
 

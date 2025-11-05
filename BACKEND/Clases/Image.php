@@ -110,7 +110,11 @@
         public static function getById($conn, $idImagen) {
             $idImagen = (int)$idImagen;
 
-            $sql = "SELECT * FROM images WHERE I_id = $idImagen LIMIT 1";
+            $sql = "SELECT i.*, a.A_title 
+                    FROM images i
+                    LEFT JOIN albums a ON i.I_idAlbum = a.A_id
+                    WHERE i.I_id = $idImagen 
+                    LIMIT 1";
             $resultado = mysqli_query($conn, $sql);
 
             return $resultado && mysqli_num_rows($resultado) > 0

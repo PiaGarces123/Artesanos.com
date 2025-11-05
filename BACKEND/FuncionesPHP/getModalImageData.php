@@ -64,6 +64,7 @@ try {
         // Info de la imagen
         "imageRuta" => $imageData['I_ruta'],
         "imageTitle" => $imageData['I_title'],
+        "albumTitle" => $imageData['A_title'], // Título del álbum
 
         // Fecha de publicación
         "imagePublicationDate" => $imageData['I_publicationDate'],

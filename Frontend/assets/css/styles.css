@@ -988,7 +988,7 @@
         cree la barra de scroll cuando sea necesario.
         */
         #imageModalInfoCol {
-            max-height: 50vh;
+            max-height: 60vh;
         }
     }
 

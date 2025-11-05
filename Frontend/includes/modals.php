@@ -243,9 +243,10 @@
                                     <img src="" alt="Avatar" class="rounded-circle me-2 avatar-img" id="avatarUser">
                                     <div>
                                         <h5 class="mb-0 fs-6 fw-bold" id="nameUser"></h5>
-                                        <div class="text-muted small" id="TitleImage"></div>
+                                        
                                     </div>
                                 </div>
+                                <div class="text-muted small" id="TitleImage"></div>
                                 
                                 <div class="like-section mt-3">
                                     <button class="btn btn-light border-0 btn-lg like-btn" id="likeButton">
