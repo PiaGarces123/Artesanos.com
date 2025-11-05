@@ -222,6 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     imagesHTML = `<div class="row row-cols-2 row-cols-md-3 g-3">`;
 
                     images.forEach(image => {
+                        const badge = image.I_visibility == 1 
+                        ? `<div class="feed-img-privacy" style="right:auto; left:0.5rem;"><i class="uil uil-lock"></i></div>` 
+                        : '';
                         const dropdownId = `imageMenu-${image.I_id}`;
                         let menuHTML = '';
 
@@ -258,6 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div class="col">
                                 <div class="profile-image-card position-relative"> 
                                     ${menuHTML}
+                                    ${badge}
                                     <img src="${image.I_ruta}" alt="${image.I_title || 'Imagen del álbum'}" 
                                          class="img-fluid rounded" 
                                          style="aspect-ratio: 1 / 1; object-fit: cover; cursor: pointer;"
