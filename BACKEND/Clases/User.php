@@ -227,7 +227,7 @@ class User {
     //@return bool True si está bloqueado, False si puede publicar.
     public function isBlockedForPublishing() {
         // Devuelve TRUE si el estado es 0 (Bloqueado/Inactivo)
-        return $this->status === 0;
+        return $this->status == 0;
     }
 
 

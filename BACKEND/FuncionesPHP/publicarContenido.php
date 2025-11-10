@@ -21,7 +21,7 @@
     // Verificación de sesión/bloqueo (Se mantiene tu lógica)
     if(!isset($_SESSION['user_id']) || !($user = User::getById($conn, $_SESSION['user_id'])) || $user->isBlockedForPublishing()){
         $status = (!isset($_SESSION['user_id']) || !$user) ? "errorSession" : "error";
-        $message = ($status == "errorSession") ? "Sesión inválida o cuenta bloqueada." : "EL USUARIO SE ENCUENTRA BLOQUEADO";
+        $message = ($status == "errorSession") ? "Sesión inválida" : "EL USUARIO SE ENCUENTRA BLOQUEADO";
         echo json_encode(["status" => $status, "message" => $message]);
         exit;
     }
